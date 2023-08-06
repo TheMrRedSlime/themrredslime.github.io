@@ -15,13 +15,13 @@ class world {
       image.onload = () => {
         this.ctx.drawImage(image, 0, 0);
       };
-      image.src = "/map.png";
+      image.src = "map.png";
   
       const plr = new Image();
       plr.onload = () => {
         this.ctx.drawImage(plr, 0, 0, 16, 16, this.x, this.y, 16, 16);
       };
-      plr.src = "/player.png";
+      plr.src = "player.png";
   
       document.onkeydown = (key) => {
         if (key.keyCode === 68) {
