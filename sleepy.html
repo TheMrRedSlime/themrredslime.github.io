@@ -160,7 +160,7 @@
 <body>
     <iframe id="ytplayer" type="text/html" width="0" height="0" src="https://www.youtube.com/embed/c4Ec3bH9Gbg?autoplay=1&loop=1&playlist=c4Ec3bH9Gbg" frameborder="0"></iframe>
     <script>
-        setTimeout(() => {
+        setInterval(() => {
             /* Fuck chrome & Firefox autoplay restrictions */
             if(document.querySelector('.ytp-play-button.ytp-button.ytp-play-button-playlist').getAttribute('title').includes("Play")){
                 document.querySelector('.ytp-play-button.ytp-button.ytp-play-button-playlist').click();
