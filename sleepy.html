@@ -303,8 +303,8 @@
                 }}
             ],
             dreamNavigate: [
-                { speaker: "Nate", text: "What the hell is that on the top?" },
-                { speaker: "Narrator", text: "It seems Nate can see the Task on the top. Which is not possible." },
+                { speaker: "Nate", text: "What the hell is that on the bottom?" },
+                { speaker: "Narrator", text: "It seems Nate can sense the dialogue box. Which is not possible." },
                 { speaker: "Nate", text: "Who was that?" },
                 { speaker: "Narrator", text: "It also seems that Nate can hear me. One second." },
                 { speaker: "Nate", text: "Huh?-", effect: "glitch", action: () => {
@@ -333,10 +333,15 @@
             enterWarzoneBuilding: [
                 { speaker: "Narrator", text: "He walks for some time until he sees a building." },
                 { speaker: "Nate", text: "Warzone? It can't be." },
-                { speaker: "Narrator", text: "Nate enters the building.", action: () => {
+/*                { speaker: "Narrator", text: "Nate enters the building.", action: () => {
                      showMessage("To be continued in Warzone Building...");
                      displayOptions([{ text: "Restart Intro", action: () => { currentScene = 'intro'; dialogueIndex = 0; objectiveBox.style.display = 'none'; loadDialogue(); }}]);
-                }}
+                }} */
+                { speaker: "Narrator", text: "Nate enters the building."},
+                { speaker: "Narrator", text: "Inside the building, there seems to be couple of people."},
+                { speaker: "Narrator", text: "Vallrak, Redslime, boruto"},
+                { speaker: "Nate", text: "Wait, i remember thi-"},
+                { speaker: "System", text: "Test"},
             ],
             inWarzoneBuilding: [
             ]
