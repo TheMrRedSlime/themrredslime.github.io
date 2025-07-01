@@ -159,14 +159,6 @@
 </head>
 <body>
     <iframe id="ytplayer" type="text/html" width="0" height="0" src="https://www.youtube.com/embed/c4Ec3bH9Gbg?autoplay=1&loop=1&playlist=c4Ec3bH9Gbg" frameborder="0"></iframe>
-    <script>
-        setInterval(() => {
-            /* Fuck chrome & Firefox autoplay restrictions */
-            if(document.querySelector('.ytp-play-button.ytp-button.ytp-play-button-playlist').getAttribute('title').includes("Play")){
-                document.querySelector('.ytp-play-button.ytp-button.ytp-play-button-playlist').click();
-            }
-        }, 1000);
-    </script>
     <div class="game-container">
         <div class="dialogue-box" id="dialogueBox">
             <p id="textLine"></p>
@@ -183,6 +175,15 @@
             <button id="messageBoxButton">OK</button>
         </div>
     </div>
+    <script>
+        setInterval(() => {
+            // Little hotfix for the autoplay blocking
+            // Fuck chrome & Firefox restrictions
+            if(document.querySelector('.ytp-play-button.ytp-button.ytp-play-button-playlist').getAttribute('title').includes("Play")){
+                document.querySelector('.ytp-play-button.ytp-button.ytp-play-button-playlist').click();
+            }
+        }, 1000);
+    </script>
 
     <script>
         // DOM Elements
