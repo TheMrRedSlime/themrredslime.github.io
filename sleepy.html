@@ -179,8 +179,8 @@
         setInterval(() => {
             // Little hotfix for the autoplay blocking
             // Fuck chrome & Firefox restrictions
-            if(document.querySelector('.ytp-play-button.ytp-button.ytp-play-button-playlist').getAttribute('title').includes("Play")){
-                document.querySelector('.ytp-play-button.ytp-button.ytp-play-button-playlist').click();
+            if(document.querySelector(".ytp-large-play-button")){
+                document.querySelector(".ytp-large-play-button").click();
             }
         }, 1000);
     </script>
