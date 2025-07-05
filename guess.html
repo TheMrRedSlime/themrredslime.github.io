@@ -1,173 +1,172 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guess My Name</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: arial, sans-serif;
-            background-color: #ffe5d9; /* Peach-ish color */
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-            text-align: center;
-        }
-        #container {
-            width: 100%;
-            max-width: 600px;
-            padding: 30px;
-            border: 4px solid #fa8072;  /* Coral border */
-            border-radius: 10px;
-            background-color: rgba(255, 228, 225, 0.8); /* semi-transparent peach */
-            box-shadow: 0 0 20px rgba(250, 128, 114, 0.5); /* Coral shadow */
-        }
-        h1 {
-            font-size: 2em;
-            margin-bottom: 20px;
-            color: #ff6347; /* Tomato color */
-            font-family: 'Press Start 2P', monospace;
-        }
-        p {
-            font-size: 0.8em;
-            margin-bottom: 10px;
-            color: #8b4513; /* SaddleBrown */
-        }
-        #hashDisplay {
-            font-family: monospace;
-            font-size: 1.2em;
-            background-color: #fff; /* White background */
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 2px solid #fa8072;
-            border-radius: 5px;
-            overflow-wrap: break-word;
-            word-break: break-all;
-            color: #8b0000; /* DarkRed */
-            text-align: center;
-        }
-        #inputForm {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        input[type="text"] {
-            padding: 12px;
-            font-size: 1em;
-            margin-bottom: 10px;
-            width: 100%;
-            max-width: 400px;
-            border: 2px solid #fa8072;
-            border-radius: 5px;
-            background-color: #fff; /* White background */
-            color: #8b0000;
-        }
-        button {
-            padding: 12px 24px;
-            font-size: 1em;
-            background-color: #ff6347; /* Tomato */
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            font-family: 'Press Start 2P', monospace;
-            width: 100%;
-            max-width: 400px;
-        }
-        button:hover {
-            background-color: #ff4500; /* OrangeRed */
-        }
-        #result {
-            font-size: 1em;
-            font-weight: bold;
-            margin-top: 20px;
-            color: #8b4513;
-            text-align: center;
-        }
-        #guesses {
-            font-size: 0.7em;
-            color: #a0522d; /* Sienna */
-            margin-top: 10px;
-            text-align: center;
-        }
-        @media (max-width: 640px) {
-            #container {
-                padding: 15px;
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Guess My Name</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+        <style>
+            body {
+                font-family: arial, sans-serif;
+                background-color: #ffe5d9; /* Peach-ish color */
+                margin: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                padding: 20px;
+                text-align: center;
             }
-            input[type="text"], button {
-                font-size: 0.9em;
-                padding: 10px;
+            #container {
+                width: 100%;
+                max-width: 600px;
+                padding: 30px;
+                border: 4px solid #fa8072; /* Coral border */
+                border-radius: 10px;
+                background-color: rgba(255, 228, 225, 0.8); /* semi-transparent peach */
+                box-shadow: 0 0 20px rgba(250, 128, 114, 0.5); /* Coral shadow */
             }
             h1 {
-                font-size: 1.75em;
+                font-size: 2em;
+                margin-bottom: 20px;
+                color: #ff6347; /* Tomato color */
+                font-family: "Press Start 2P", monospace;
             }
             p {
-                font-size: 0.7em;
+                font-size: 0.8em;
+                margin-bottom: 10px;
+                color: #8b4513; /* SaddleBrown */
             }
             #hashDisplay {
+                font-family: monospace;
+                font-size: 1.2em;
+                background-color: #fff; /* White background */
+                padding: 10px;
+                margin-bottom: 20px;
+                border: 2px solid #fa8072;
+                border-radius: 5px;
+                overflow-wrap: break-word;
+                word-break: break-all;
+                color: #8b0000; /* DarkRed */
+                text-align: center;
+            }
+            #inputForm {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin-bottom: 20px;
+            }
+            input[type="text"] {
+                padding: 12px;
                 font-size: 1em;
+                margin-bottom: 10px;
+                width: 100%;
+                max-width: 400px;
+                border: 2px solid #fa8072;
+                border-radius: 5px;
+                background-color: #fff; /* White background */
+                color: #8b0000;
             }
-        }
-    </style>
-</head>
-<body>
-    <div id="container">
-        <h1>Guess My Name</h1>
-        <p>Enter the correct name to match the SHA256 hash:</p>
-        <form id="inputForm">
-            <input type="text" id="guessInput" placeholder="Enter your guess" autocomplete="off">
-            <button type="submit">Submit Guess</button>
-        </form>
-        <div id="result"></div>
-        <div id="guesses"></div>
-    </div>
-    <script>
-        let attempts = 0;
-
-        const inputForm = document.getElementById('inputForm');
-        const guessInput = document.getElementById('guessInput');
-        const result = document.getElementById('result');
-        const guessesDisplay = document.getElementById('guesses');
-        
-        const a = [
-            '8402bec953d5f5f6b399fa821f9dcd17af90616969257ce3950986f84989652f',
-            'f918073db6b9337ae90efc39a394d91888a82f247380be93d7293bcd6750a62e',
-            '460e902ac2f22efa5a9f7bdb7f5024395f3b0eff4cb31530fd980ab24f3e26e0',
-            '5d192c270d8d63aedc0628454784485aa36209b381a19f97d03d66bd40aab53f',
-            '2f7b5e82702cd7fc68cdf232abd8440cf6dde1cc85afbc4d8c932e6a34ab996b',
-            'cb03b031f709281cd7f384a2ee420ab36744037f556ab10caa830c2430b41533',
-            'ce2a3fe2081e385a98759a5d019c87e587c31172901105b97c041318ce3fa663'
-        ]
-
-        
-        inputForm.addEventListener('submit', (event) => {
-            event.preventDefault();
-            const guess = guessInput.value.trim();
-            if (guess === "") {
-                result.textContent = "Please enter a guess.";
-                return;
+            button {
+                padding: 12px 24px;
+                font-size: 1em;
+                background-color: #ff6347; /* Tomato */
+                color: #fff;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+                font-family: "Press Start 2P", monospace;
+                width: 100%;
+                max-width: 400px;
             }
-
-            attempts++;
-            const guessHash = CryptoJS.SHA256(guess.toLowerCase()).toString();
-            if (a.includes(guessHash)) {
-                result.textContent = `One of my names.`;
-            } else {
-                result.textContent = "Incorrect guess. Try again!";
-                guessesDisplay.textContent = `Attempts: ${attempts}`;
+            button:hover {
+                background-color: #ff4500; /* OrangeRed */
             }
-            guessInput.value = '';
-        });
-    </script>
-</body>
+            #result {
+                font-size: 1em;
+                font-weight: bold;
+                margin-top: 20px;
+                color: #8b4513;
+                text-align: center;
+            }
+            #guesses {
+                font-size: 0.7em;
+                color: #a0522d; /* Sienna */
+                margin-top: 10px;
+                text-align: center;
+            }
+            @media (max-width: 640px) {
+                #container {
+                    padding: 15px;
+                }
+                input[type="text"],
+                button {
+                    font-size: 0.9em;
+                    padding: 10px;
+                }
+                h1 {
+                    font-size: 1.75em;
+                }
+                p {
+                    font-size: 0.7em;
+                }
+                #hashDisplay {
+                    font-size: 1em;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div id="container">
+            <h1>Guess My Name</h1>
+            <p>Enter the correct name to match the SHA256 hash:</p>
+            <form id="inputForm">
+                <input type="text" id="guessInput" placeholder="Enter your guess" autocomplete="off" />
+                <button type="submit">Submit Guess</button>
+            </form>
+            <div id="result"></div>
+            <div id="guesses"></div>
+        </div>
+        <script>
+            let attempts = 0;
+
+            const inputForm = document.getElementById("inputForm");
+            const guessInput = document.getElementById("guessInput");
+            const result = document.getElementById("result");
+            const guessesDisplay = document.getElementById("guesses");
+
+            const a = [
+                "8402bec953d5f5f6b399fa821f9dcd17af90616969257ce3950986f84989652f",
+                "f918073db6b9337ae90efc39a394d91888a82f247380be93d7293bcd6750a62e",
+                "460e902ac2f22efa5a9f7bdb7f5024395f3b0eff4cb31530fd980ab24f3e26e0",
+                "5d192c270d8d63aedc0628454784485aa36209b381a19f97d03d66bd40aab53f",
+                "2f7b5e82702cd7fc68cdf232abd8440cf6dde1cc85afbc4d8c932e6a34ab996b",
+                "cb03b031f709281cd7f384a2ee420ab36744037f556ab10caa830c2430b41533",
+                "ce2a3fe2081e385a98759a5d019c87e587c31172901105b97c041318ce3fa663"
+            ];
+
+            inputForm.addEventListener("submit", (event) => {
+                event.preventDefault();
+                const guess = guessInput.value.trim();
+                if (guess === "") {
+                    result.textContent = "Please enter a guess.";
+                    return;
+                }
+
+                attempts++;
+                const guessHash = CryptoJS.SHA256(guess.toLowerCase()).toString();
+                if (a.includes(guessHash)) {
+                    result.textContent = `One of my names.`;
+                } else {
+                    result.textContent = "Incorrect guess. Try again!";
+                    guessesDisplay.textContent = `Attempts: ${attempts}`;
+                }
+                guessInput.value = "";
+            });
+        </script>
+    </body>
 </html>
-
