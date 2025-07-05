@@ -1,3 +1,5 @@
+/* This is the code of reality. what shapes the universe as a whole */
+
 // DOM Elements
 const dialogueBox = document.getElementById("dialogueBox");
 const textLineElement = document.getElementById("textLine");
