@@ -4,7 +4,6 @@
 const dialogueBox = document.getElementById("dialogueBox");
 const textLineElement = document.getElementById("textLine");
 const optionsContainer = document.getElementById("optionsContainer");
-// characterArea DOM element removed
 const objectiveBox = document.getElementById("objectiveBox");
 const gameContainer = document.querySelector(".game-container");
 
@@ -27,16 +26,36 @@ let currentScene = "intro";
 let dialogueIndex = 0;
 let typingTimeout;
 
-// Character Definitions object removed
+// Fight System State
+let inFight = false;
+let currentFightEnemies = [];
+let currentFightAllies = [];
+let items = [];
+let selectedAction = null;
+let selectedItem = null;
+let selectedTarget = null;
+let currentFightVictoryScene = null;
+
+// Character Definitions
+const characters = {
+    "Nate": { color: "#00ffff", health: 100, damage: 15, isPlayer: true },
+    "Mom": { color: "#ff00fe", health: 120, damage: 10, isPlayer: false },
+    "Vallrak": { color: "#2ecc71", health: 80, damage: 20, isPlayer: true },
+    "Redslime": { color: "#ff0000", health: 90, damage: 18, isPlayer: true },
+    "Boruto": { color: "#ffff00", health: 70, damage: 25, isPlayer: true },
+    "Goblin": { color: "#00ff00", health: 75, damage: 12, isPlayer: false },
+    "Slime": { color: "#1abc9c", health: 50, damage: 5, isPlayer: false },
+    "Dummy": { color: "#a74e00", health: 100, damage: 0, isPlayer: false }
+};
 
 // --- Story Script ---
 const script = {
     intro: [
         { speaker: "Narrator", text: "Hello." },
-        { speaker: "Narrator", text: "I am the game." },
-        { speaker: "Narrator", text: "Yes I talk." },
+        { speaker: "Narrator", text: "I am the narrator." },
         { speaker: "Narrator", text: "Before you do anything. Some decisions you make..." },
-        { speaker: "Narrator", text: "It may heavily change the storyline." },
+        { speaker: "Narrator", text: "It may heavily change the story." },
+        { speaker: "Narrator", text: "And how you progress towards the game."},
         {
             speaker: "Narrator",
             text: "Would you like to play the game?",
@@ -44,6 +63,13 @@ const script = {
                 { text: "YES", action: () => advanceScene("startGame") },
                 { text: "NO", action: () => advanceScene("quitGame") }
             ]
+        }
+    ],
+    test: [
+        {
+            speaker: "Narrator",
+            text: "Suddenly, enemies appear!",
+            action: () => startFight(["Vallrak"], ["Goblin", "Slime"], "startGame")
         }
     ],
     startGame: [
@@ -65,22 +91,22 @@ const script = {
             action: () => {
                 showMessage("Game closed. Refresh to try again!");
                 optionsContainer.innerHTML = "";
+                localStorage.removeItem("scene");
             }
         }
     ],
     homeScene_WakeUp: [
-        // Removed setupScene call
         { speaker: "Mom", text: "Hey, sleepy head." },
         { speaker: "Nate", text: "..." },
         { speaker: "Mom", text: "Hey! Nate!" },
         { speaker: "Narrator", text: "Nate finally wakes up." },
-        { speaker: "Nate", text: "**wakes up** **yawns** Whaaaaattt mom?" },
+        { speaker: "Nate", text: "*wakes up* *yawns* Whaaaaattt mom?" },
         { speaker: "Mom", text: "You got an exam tomorrow! Study!" },
         { speaker: "Nate", text: "Uhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh." },
         { speaker: "Mom", text: "I need you to make me money after all!" },
         {
             speaker: "Nate",
-            text: "**sigh** Fine.",
+            text: "*sigh* Fine.",
             action: () => {
                 showObjective("Go to your room");
                 displayOptions([{ text: "Go to room", action: () => advanceScene("goToRoom") }]);
@@ -88,7 +114,6 @@ const script = {
         }
     ],
     goToRoom: [
-        // Removed setupScene call
         { speaker: "Narrator", text: "Nate is in his room." },
         { speaker: "Nate", text: "Do I really have to study?" },
         { speaker: "Nate", text: "I need to get good marks..." },
@@ -103,7 +128,7 @@ const script = {
     ],
     useLaptop: [
         { speaker: "Narrator", text: "Nate sits at the chair. The laptop turns on." },
-        { speaker: "Nate", text: "**Pen Click** Here we go." },
+        { speaker: "Nate", text: "*Pen Click* Here we go." },
         {
             action: () => {
                 dialogueBox.classList.add("fade-out");
@@ -125,14 +150,13 @@ const script = {
     afterStudy: [
         { speaker: "Nate", text: "Finally... Done." },
         { speaker: "Nate", text: "I need some slee-" },
-        { speaker: "Narrator", text: "**Nate sleeps on the keyboard abruptly**" },
+        { speaker: "Narrator", text: "*Nate sleeps on the keyboard abruptly*" },
         {
             speaker: "Narrator",
             text: "Suddenly. Everything becomes darker.",
             effect: "fadeOut",
             action: () => {
                 gameContainer.style.backgroundColor = "#000";
-                // characterArea.innerHTML = ''; // Removed
                 objectiveBox.style.display = "none";
                 setTimeout(() => advanceScene("dreamSequenceStart"), 1500);
             }
@@ -153,15 +177,14 @@ const script = {
         }
     ],
     dreamArrival: [
-        // Removed setupScene call
         {
             speaker: "Narrator",
             text: "The blue light soul thing's light fills the entire screen. Suddenly we see Nate sleeping... in the grass."
         },
-        { speaker: "Nate", text: "**wakes up** **visibly confused** Wha-" },
+        { speaker: "Nate", text: "*wakes up* *visibly confused* Wha-" },
         {
             speaker: "Nate",
-            text: "**panic** Where the frick am I?!",
+            text: "*panic* Where the frick am I?!",
             action: () => {
                 showObjective("Navigate");
                 displayOptions([{ text: "Look around", action: () => advanceScene("dreamNavigate") }]);
@@ -172,7 +195,7 @@ const script = {
         { speaker: "Nate", text: "What the hell is that on the bottom?" },
         { speaker: "Narrator", text: "It seems Nate can sense the dialogue box. Which is not possible." },
         { speaker: "Nate", text: "Who was that?" },
-        { speaker: "Narrator", text: "It also seems that Nate can hear me. One second." },
+        { speaker: "Narrator", text: "It also seems that Nate can hear me." },
         {
             speaker: "Nate",
             text: "Huh?-",
@@ -212,17 +235,28 @@ const script = {
     enterWarzoneBuilding: [
         { speaker: "Narrator", text: "He walks for some time until he sees a building." },
         { speaker: "Nate", text: "Warzone? It can't be." },
-        /*                { speaker: "Narrator", text: "Nate enters the building.", action: () => {
-             showMessage("To be continued in Warzone Building...");
-             displayOptions([{ text: "Restart Intro", action: () => { currentScene = 'intro'; dialogueIndex = 0; objectiveBox.style.display = 'none'; loadDialogue(); }}]);
-        }} */
         { speaker: "Narrator", text: "Nate enters the building." },
         { speaker: "Narrator", text: "Inside the building, there seems to be couple of people." },
         { speaker: "Narrator", text: "Vallrak, Redslime, boruto" },
         { speaker: "Nate", text: "Wait, i remember thi-" },
-        { speaker: "System", text: "To be Continued, Hopefully." }
+        { speaker: "Redslime", text: "So this is the server?" },
+        { speaker: "Boruto", text: "Yup! So now that you got unbanned lets play again!"},
+        { speaker: "Nate", text: "..." },
+        { speaker: "Narrator", text: "Boruto and red hop into a portal. " },
+        { speaker: "Nate", text: "Im soo confused" },
+        { speaker: "Narrator", text: "Vallrak has seemed to notice nate."},
+        { speaker: "Vallrak", text: "Hey, you new?", options: [
+            { text: "YES", action: () => advanceScene("vallrakLie") },
+            { text: "NO", action: () => advanceScene("vallrakTruth") }
+        ]}
     ],
-    inWarzoneBuilding: []
+    vallrakLie: [
+        { speaker: "Vallrak", text: "Really? You seem new and your account's new", action: () => setTimeout(() => advanceScene("vallrakTruth"), 2000) }
+    ],
+    vallrakTruth: [
+        { speaker: "Nate", text: "Im kind of new i guess"}
+    ]
+
 };
 
 // --- Game Logic Functions ---
@@ -230,7 +264,7 @@ const script = {
 function typeWriter(text, element, onComplete) {
     clearTimeout(typingTimeout);
     let i = 0;
-    const speed = 30;
+    const speed = 35;
     element.innerHTML = "";
 
     function type() {
@@ -249,21 +283,14 @@ function typeWriter(text, element, onComplete) {
             } else if (substr.startsWith("</span>")) {
                 element.innerHTML += "</span>";
                 i += "</span>".length;
-            } else if (text.substring(i, i + 2) === "**") {
-                if (element.innerHTML.endsWith("<strong>")) {
-                    element.innerHTML = element.innerHTML.slice(0, -8) + "</strong>";
-                } else {
-                    element.innerHTML += "<strong>";
-                }
-                i += 2;
             } else {
                 element.innerHTML += text.charAt(i);
                 i++;
             }
             typingTimeout = setTimeout(type, speed);
         } else {
-            if (element.innerHTML.includes("<strong>") && !element.innerHTML.endsWith("</strong>")) {
-                element.innerHTML += "</strong>";
+            if (element.innerHTML.includes("<em>") && !element.innerHTML.endsWith("</em>")) {
+                element.innerHTML += "</em>";
             }
             if (onComplete) {
                 onComplete();
@@ -275,7 +302,6 @@ function typeWriter(text, element, onComplete) {
 
 function displayDialogue(line) {
     textLineElement.className = "";
-    // optionsContainer.innerHTML = ''; // Moved: options are cleared by loadDialogue or when new options are set.
 
     let textForTypewriter = "";
     if (line.speaker === "Narrator") {
@@ -288,12 +314,6 @@ function displayDialogue(line) {
     }
 
     typeWriter(textForTypewriter, textLineElement, () => {
-        // This is the onComplete callback for typeWriter
-        // Check if a "Next >" button is needed
-        // It's needed if:
-        // 1. The current line object itself doesn't define `options`.
-        // 2. The `optionsContainer` is currently empty (meaning an inline `action` didn't already populate it).
-        // 3. It's not the last line of the current scene.
         if (
             !line.options &&
             optionsContainer.innerHTML.trim() === "" &&
@@ -311,15 +331,13 @@ function displayDialogue(line) {
         }
     });
 
-    // If options are directly defined on the line object, display them.
-    // This is separate from options potentially added by an inline `action`.
     if (line.options) {
         displayOptions(line.options);
     }
 }
 
 function displayOptions(options) {
-    optionsContainer.innerHTML = ""; // Clear any existing options (like a previous "Next >")
+    optionsContainer.innerHTML = "";
     options.forEach((option) => {
         const button = document.createElement("button");
         button.textContent = option.text;
@@ -337,7 +355,8 @@ function advanceScene(nextScene) {
     currentScene = nextScene;
     dialogueIndex = 0;
     objectiveBox.style.display = "none";
-    optionsContainer.innerHTML = ""; // Clear options when advancing to a new scene
+    optionsContainer.innerHTML = "";
+    localStorage.setItem("scene", nextScene);
 
     const firstLineOfNewScene = script[currentScene] && script[currentScene][0];
     if (firstLineOfNewScene && firstLineOfNewScene.effect) {
@@ -350,7 +369,6 @@ function advanceScene(nextScene) {
 function handleEffect(effectName, callback) {
     dialogueBox.classList.remove("fade-in", "fade-out");
     gameContainer.classList.remove("fade-in", "fade-out");
-    // characterArea references removed
 
     switch (effectName) {
         case "fadeOutIn":
@@ -392,8 +410,6 @@ function handleEffect(effectName, callback) {
     }
 }
 
-// setupScene function removed
-
 function showObjective(text) {
     objectiveBox.textContent = `OBJECTIVE: ${text}`;
     objectiveBox.style.display = "block";
@@ -401,7 +417,7 @@ function showObjective(text) {
 
 function loadDialogue() {
     clearTimeout(typingTimeout);
-    optionsContainer.innerHTML = ""; // Clear options before loading new line/processing actions
+    optionsContainer.innerHTML = "";
 
     if (!script[currentScene] || !script[currentScene][dialogueIndex]) {
         console.error(`Scene or dialogue index out of bounds: ${currentScene}[${dialogueIndex}]`);
@@ -422,7 +438,6 @@ function loadDialogue() {
 
     const line = script[currentScene][dialogueIndex];
 
-    // Case 1: Action-only line (no text, no options defined in *this* line object)
     if (line.action && !line.text && !line.options) {
         const sceneBeforeAction = currentScene;
         const indexBeforeAction = dialogueIndex;
@@ -433,28 +448,345 @@ function loadDialogue() {
             if (dialogueIndex < script[currentScene].length - 1) {
                 dialogueIndex++;
                 loadDialogue();
-            } else {
-                console.log("Action-only line executed, end of scene or waiting.");
             }
         }
         return;
     }
 
-    // Case 2: Line with text, and possibly an action and/or options.
-    // Execute inline action if present (this action might call displayOptions)
     if (line.action && (line.text || line.options)) {
-        // line.options here refers to options property on the line object itself
         if (typeof line.action === "function") {
-            line.action(); // This is where `displayOptions` for "Go to room" is called
+            line.action();
         }
     }
-    // Display the dialogue text. The onComplete callback of typeWriter will handle
-    // adding a "Next >" button IF no options were defined on the line object itself
-    // AND if the optionsContainer wasn't populated by an inline action.
     displayDialogue(line);
 }
 
+// --- Fight System Functions ---
+
+function startFight(alliesNames, enemyNames, victoryScene) {
+    inFight = true;
+    currentFightEnemies = enemyNames.map(name => ({ ...characters[name], name }));
+    currentFightAllies = alliesNames.map(name => ({ ...characters[name], name }));
+    currentFightVictoryScene = victoryScene || null;
+
+    localStorage.setItem("scene", currentScene);
+
+    document.getElementById("fightOverlay").style.display = "block";
+    renderFightScene();
+
+    dialogueBox.style.display = "none";
+    optionsContainer.style.display = "none";
+    objectiveBox.style.display = "none";
+}
+
+function endFight(victory) {
+    inFight = false;
+    document.getElementById("fightOverlay").style.display = "none";
+
+    dialogueBox.style.display = "block";
+    optionsContainer.style.display = "flex";
+
+    if (victory) {
+        if (currentFightVictoryScene) {
+            advanceScene(currentFightVictoryScene);
+        } else {
+            advanceScene(localStorage.getItem("scene") || "intro");
+        }
+    } else {
+        advanceScene(localStorage.getItem("scene") || "intro");
+    }
+}
+
+function renderFightScene() {
+    const arena = document.getElementById("fightArena");
+    arena.innerHTML = "";
+
+    currentFightAllies.forEach(ally => {
+        const cube = document.createElement("div");
+        cube.className = "character-cube";
+        cube.style.backgroundColor = characters[ally.name].color;
+        cube.dataset.name = ally.name;
+        cube.dataset.type = "ally";
+
+        const health = document.createElement("div");
+        health.className = "character-health";
+        health.textContent = `${ally.name}: ${ally.health} HP`;
+        health.id = `health-${ally.name}`;
+
+        cube.appendChild(health);
+        arena.appendChild(cube);
+    });
+
+    currentFightEnemies.forEach(enemy => {
+        const cube = document.createElement("div");
+        cube.className = "character-cube";
+        cube.style.backgroundColor = characters[enemy.name].color;
+        cube.dataset.name = enemy.name;
+        cube.dataset.type = "enemy";
+
+        const health = document.createElement("div");
+        health.className = "character-health";
+        health.textContent = `${enemy.name}: ${enemy.health} HP`;
+        health.id = `health-${enemy.name}`;
+
+        cube.appendChild(health);
+        arena.appendChild(cube);
+    });
+
+    setupFightOptions();
+}
+
+function setupFightOptions() {
+    const fightOptions = document.getElementById("fightOptions");
+    const subOptions = document.getElementById("fightSuboptions");
+    subOptions.style.display = "none";
+    subOptions.innerHTML = "";
+
+    Array.from(fightOptions.children).forEach(button => {
+        button.onclick = () => handleFightAction(button.dataset.action);
+    });
+}
+
+function handleFightAction(action) {
+    const subOptions = document.getElementById("fightSuboptions");
+
+    switch (action) {
+        case "fight":
+            selectedAction = "fight";
+            subOptions.innerHTML = currentFightAllies.map(ally =>
+                                                          `<button class="item-option" data-ally="${ally.name}">${ally.name} (${ally.damage} DMG)</button>`
+                                                         ).join("");
+            subOptions.style.display = "flex";
+            break;
+
+        case "use":
+            selectedAction = "use";
+            subOptions.innerHTML = items.map((item, index) =>
+                                             `<button class="item-option" data-item="${index}">${item.name} (${item.value} ${item.type.toUpperCase()})</button>`
+                                            ).join("");
+            subOptions.style.display = "flex";
+            break;
+
+        case "defend":
+            showMessage("You defend against the next attack!");
+            setTimeout(() => enemyTurn(), 1500);
+            break;
+
+        case "flee":
+            if (Math.random() > 0.5) {
+                endFight(false);
+                showMessage("You fled successfully!");
+            } else {
+                showMessage("Failed to flee!");
+                setTimeout(() => enemyTurn(), 1500);
+            }
+            break;
+    }
+
+    Array.from(subOptions.children).forEach(button => {
+        button.onclick = () => {
+            if (selectedAction === "fight") {
+                selectedTarget = button.dataset.ally;
+                showMessage(`Select a target for ${selectedTarget}'s attack!`);
+                setupTargetSelection();
+            } else if (selectedAction === "use") {
+                selectedItem = items[button.dataset.item];
+                if (selectedItem.type === "health") {
+                    showMessage(`Select who to heal with ${selectedItem.name}!`);
+                    setupTargetSelection(true);
+                } else if (selectedItem.type === "damage") {
+                    showMessage(`Select who to attack with ${selectedItem.name}!`);
+                    setupTargetSelection();
+                }
+            }
+        };
+    });
+}
+
+function setupTargetSelection(isHeal = false) {
+    const cubes = document.querySelectorAll(".character-cube");
+    cubes.forEach(cube => {
+        if ((isHeal && cube.dataset.type === "ally") ||
+            (!isHeal && cube.dataset.type === "enemy")) {
+            cube.style.border = "2px solid yellow";
+            cube.style.cursor = "pointer";
+            cube.onclick = () => {
+                if (selectedAction === "fight") {
+                    startTimingMiniGame(cube.dataset.name);
+                } else if (selectedAction === "use") {
+                    useItemOnTarget(cube.dataset.name);
+                }
+            };
+        } else {
+            cube.style.border = "none";
+            cube.style.cursor = "default";
+            cube.onclick = null;
+        }
+    });
+}
+
+function startTimingMiniGame(target) {
+    const timingBar = document.getElementById("timingBar");
+    timingBar.style.display = "block";
+
+    const indicator = timingBar.querySelector(".timing-indicator");
+    indicator.style.animation = "timingSwing 2s infinite linear";
+
+    timingBar.onclick = () => {
+        const indicator = timingBar.querySelector(".timing-indicator");
+        const perfectZone = timingBar.querySelector(".perfect-zone");
+
+        const indicatorRect = indicator.getBoundingClientRect();
+        const perfectZoneRect = perfectZone.getBoundingClientRect();
+
+        const perfectCenter = perfectZoneRect.left + (perfectZoneRect.width / 2);
+        const indicatorCenter = indicatorRect.left + (indicatorRect.width / 2);
+        const distanceFromPerfect = Math.abs(perfectCenter - indicatorCenter);
+        const maxDistance = timingBar.offsetWidth - perfectZoneRect.width;
+
+        let damageMultiplier = 1;
+        let message = "Hit!";
+
+        if (distanceFromPerfect < perfectZoneRect.width / 2) {
+            damageMultiplier = 1;
+            message = "PERFECT HIT! Massive damage!";
+        } else {
+            const accuracy = 1 - (distanceFromPerfect / maxDistance);
+            damageMultiplier = Math.max(0.2, accuracy);
+            message = accuracy > 0.7 ? "Good hit!" :
+            accuracy > 0.4 ? "Weak hit!" : "Poor hit!";
+        }
+
+        const baseDamage = characters[selectedTarget].damage;
+        const finalDamage = Math.round(baseDamage * damageMultiplier);
+
+        dealDamage(target, finalDamage);
+        showMessage(`${message} (${finalDamage} damage)`);
+
+        timingBar.style.display = "none";
+        timingBar.onclick = null;
+        resetFightUI();
+        setTimeout(() => enemyTurn(), 1000);
+    };
+}
+
+function useItemOnTarget(target) {
+    if (selectedItem.type === "health") {
+        const targetChar = currentFightAllies.find(a => a.name === target) ||
+              currentFightEnemies.find(e => e.name === target);
+
+        if (targetChar) {
+            targetChar.health = Math.min(
+                targetChar.health + selectedItem.value,
+                characters[target].health
+            );
+            showMessage(`${target} healed for ${selectedItem.value} HP!`);
+            showDamageEffect(target);
+        }
+    } else if (selectedItem.type === "damage") {
+        dealDamage(target, selectedItem.value);
+    }
+
+    items = items.filter(item => item !== selectedItem);
+    resetFightUI();
+    setTimeout(() => enemyTurn(), 1000);
+}
+
+function showDamageEffect(characterName) {
+    const healthElement = document.getElementById(`health-${characterName}`);
+    if (!healthElement) return;
+
+    healthElement.style.color = "#ff0000";
+    setTimeout(() => {
+        healthElement.style.color = "#ffffff";
+        renderFightScene();
+    }, 300);
+}
+
+function dealDamage(target, amount) {
+    showDamageEffect(target);
+
+    setTimeout(() => {
+        if (currentFightEnemies.some(e => e.name === target)) {
+            const enemy = currentFightEnemies.find(e => e.name === target);
+            enemy.health -= amount;
+
+            if (enemy.health <= 0) {
+                showMessage(`${target} was defeated!`);
+                currentFightEnemies = currentFightEnemies.filter(e => e.name !== target);
+            }
+        } else {
+            const ally = currentFightAllies.find(a => a.name === target);
+            if (ally) {
+                ally.health -= amount;
+
+                if (ally.health <= 0) {
+                    showMessage(`${target} was knocked out!`);
+                    currentFightAllies = currentFightAllies.filter(a => a.name !== target);
+                }
+            }
+        }
+
+        renderFightScene();
+
+        if (currentFightEnemies.length === 0) {
+            setTimeout(() => endFight(true), 1000);
+        } else if (currentFightAllies.length === 0) {
+            setTimeout(() => endFight(false), 1000);
+        }
+    }, 300);
+}
+
+function enemyTurn() {
+    if (!inFight || currentFightEnemies.length === 0) return;
+
+    currentFightEnemies.forEach((enemy, index) => {
+        if (currentFightAllies.length > 0) {
+            setTimeout(() => {
+                const randomAlly = currentFightAllies[Math.floor(Math.random() * currentFightAllies.length)];
+                const damage = Math.max(1, enemy.damage - Math.floor(Math.random() * 5));
+
+                dealDamage(randomAlly.name, damage);
+                showMessage(`${enemy.name} attacks ${randomAlly.name} for ${damage} damage!`);
+            }, index * 1500);
+        }
+    });
+}
+
+function resetFightUI() {
+    const subOptions = document.getElementById("fightSuboptions");
+    subOptions.style.display = "none";
+    subOptions.innerHTML = "";
+
+    const cubes = document.querySelectorAll(".character-cube");
+    cubes.forEach(cube => {
+        cube.style.border = "none";
+        cube.style.cursor = "default";
+        cube.onclick = null;
+    });
+
+    selectedAction = null;
+    selectedItem = null;
+    selectedTarget = null;
+}
+
 window.onload = () => {
+    document.getElementById("fightOptions").addEventListener("click", (e) => {
+        if (e.target.classList.contains("fight-option")) {
+            handleFightAction(e.target.dataset.action);
+        }
+    });
+
+    const savedScene = localStorage.getItem("scene");
+    if (savedScene && script[savedScene]) {
+        currentScene = savedScene;
+        dialogueIndex = 0;
+    } else {
+        currentScene = "intro";
+        dialogueIndex = 0;
+        localStorage.setItem("scene", "intro");
+    }
+
     if (script[currentScene] && script[currentScene][dialogueIndex]) {
         const firstLine = script[currentScene][dialogueIndex];
         if (firstLine.effect) {
@@ -463,7 +795,14 @@ window.onload = () => {
             loadDialogue();
         }
     } else {
-        textLineElement.innerHTML = "<p>Error: Initial game script not found.</p>";
-        console.error("Initial script not found for scene:", currentScene);
+        currentScene = "intro";
+        dialogueIndex = 0;
+        textLineElement.innerHTML = "<p>Welcome to the game!</p>";
+        displayOptions([
+            {
+                text: "Start Game",
+                action: () => advanceScene("intro")
+            }
+        ]);
     }
 };
