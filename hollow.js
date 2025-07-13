@@ -307,6 +307,9 @@ function displayDialogue(line) {
     if (line.speaker === "Narrator") {
         textLineElement.classList.add("narrator-text");
         textForTypewriter = line.text;
+    } else if (line.speaker === "Darkness") {
+        textLineElement.classList.add("darkness-text");
+        textForTypewriter = line.text;
     } else if (line.speaker && line.speaker !== "System") {
         textForTypewriter = `<span class="speaker">${line.speaker}:</span> ${line.text}`;
     } else {

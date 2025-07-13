@@ -44,6 +44,13 @@ body {
     color: #cccccc; /* Light gray for narrator */
     font-style: italic;
 }
+
+.darkness-text {
+    /* Applied to the p#textLine for narrator */
+    color: #646464; /* Light gray for narrator */
+    font-style: italic;
+}
+
 .options-container button {
     background-color: #222;
     color: #fff;
