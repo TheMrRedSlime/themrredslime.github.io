@@ -38,30 +38,38 @@ let currentFightVictoryScene = null;
 
 // Character Definitions
 const characters = {
-    "Nate": { color: "#00ffff", health: 100, damage: 15, isPlayer: true },
-    "Mom": { color: "#ff00fe", health: 120, damage: 10, isPlayer: false },
-    "Vallrak": { color: "#2ecc71", health: 80, damage: 20, isPlayer: true },
-    "Redslime": { color: "#ff0000", health: 90, damage: 18, isPlayer: true },
-    "Boruto": { color: "#ffff00", health: 70, damage: 25, isPlayer: true },
-    "Goblin": { color: "#00ff00", health: 75, damage: 12, isPlayer: false },
-    "Slime": { color: "#1abc9c", health: 50, damage: 5, isPlayer: false },
-    "Dummy": { color: "#a74e00", health: 100, damage: 0, isPlayer: false }
+    Nate: { color: "#00ffff", health: 100, damage: 15, isPlayer: true },
+    Mom: { color: "#ff00fe", health: 120, damage: 10, isPlayer: false },
+    Vallrak: { color: "#2ecc71", health: 80, damage: 20, isPlayer: true },
+    Redslime: { color: "#ff0000", health: 90, damage: 18, isPlayer: true },
+    Boruto: { color: "#ffff00", health: 70, damage: 25, isPlayer: true },
+    Goblin: { color: "#00ff00", health: 75, damage: 12, isPlayer: false },
+    Slime: { color: "#1abc9c", health: 50, damage: 5, isPlayer: false },
+    Dummy: { color: "#a74e00", health: 100, damage: 0, isPlayer: false },
+    Creator: { color: "#000000", health: Infinity, damage: 6143, isPlayer: false },
+    Darkened: { color: "#640000", health: 100, damage: 0, isPlayer: false }
 };
 
 // --- Story Script ---
 const script = {
     intro: [
-        { speaker: "Narrator", text: "Hello." },
+        {
+            speaker: "Narrator",
+            text: "Hello.",
+            action: () => {
+                document.body.style.backgroundColor = "#242424";
+            }
+        },
         { speaker: "Narrator", text: "I am the narrator." },
         { speaker: "Narrator", text: "Before you do anything. Some decisions you make..." },
         { speaker: "Narrator", text: "It may heavily change the story." },
-        { speaker: "Narrator", text: "And how you progress towards the game."},
+        { speaker: "Narrator", text: "And how you progress towards the game." },
         {
             speaker: "Narrator",
             text: "Would you like to play the game?",
             options: [
                 { text: "YES", action: () => advanceScene("startGame") },
-                { text: "NO", action: () => advanceScene("quitGame") }
+                { text: "NO", action: () => advanceScene("test") }
             ]
         }
     ],
@@ -79,6 +87,7 @@ const script = {
             effect: "fadeOutIn",
             action: () => {
                 gameContainer.style.backgroundColor = "#000";
+                document.body.style.backgroundColor = "#000";
                 textLineElement.innerHTML = "";
                 setTimeout(() => advanceScene("homeScene_WakeUp"), 1000);
             }
@@ -102,11 +111,11 @@ const script = {
         { speaker: "Narrator", text: "Nate finally wakes up." },
         { speaker: "Nate", text: "*wakes up* *yawns* Whaaaaattt mom?" },
         { speaker: "Mom", text: "You got an exam tomorrow! Study!" },
-        { speaker: "Nate", text: "Uhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh." },
+        { speaker: "Nate", text: "Uhhhhhhhhhhhhhhhhhhhhhhhhhhhhh." },
         { speaker: "Mom", text: "I need you to make me money after all!" },
         {
             speaker: "Nate",
-            text: "*sigh* Fine.",
+            text: "Fine.",
             action: () => {
                 showObjective("Go to your room");
                 displayOptions([{ text: "Go to room", action: () => advanceScene("goToRoom") }]);
@@ -128,7 +137,7 @@ const script = {
     ],
     useLaptop: [
         { speaker: "Narrator", text: "Nate sits at the chair. The laptop turns on." },
-        { speaker: "Nate", text: "*Pen Click* Here we go." },
+        { speaker: "Nate", text: "sigh. Here we go." },
         {
             action: () => {
                 dialogueBox.classList.add("fade-out");
@@ -181,10 +190,10 @@ const script = {
             speaker: "Narrator",
             text: "The blue light soul thing's light fills the entire screen. Suddenly we see Nate sleeping... in the grass."
         },
-        { speaker: "Nate", text: "*wakes up* *visibly confused* Wha-" },
+        { speaker: "Nate", text: "Woah Wha-" },
         {
             speaker: "Nate",
-            text: "*panic* Where the frick am I?!",
+            text: " Where the frick am I?!",
             action: () => {
                 showObjective("Navigate");
                 displayOptions([{ text: "Look around", action: () => advanceScene("dreamNavigate") }]);
@@ -192,26 +201,16 @@ const script = {
         }
     ],
     dreamNavigate: [
-        { speaker: "Nate", text: "What the hell is that on the bottom?" },
+        { speaker: "Nate", text: "What the hell is that?" },
         { speaker: "Narrator", text: "It seems Nate can sense the dialogue box. Which is not possible." },
         { speaker: "Nate", text: "Who was that?" },
         { speaker: "Narrator", text: "It also seems that Nate can hear me." },
-        {
-            speaker: "Nate",
-            text: "Huh?-",
-            effect: "glitch",
-            action: () => {
-                textLineElement.classList.add("glitch");
-                setTimeout(() => {
-                    textLineElement.classList.remove("glitch");
-                    advanceScene("NarratorFix");
-                }, 1500);
-            }
-        }
+        { speaker: "Nate", text: "Huh?-" },
+        { speaker: "System", text: "[PLEASE WAIT CHANGES IN PROGRESS]", effect: "crt", action: () => advanceScene("NarratorFix") }
     ],
     NarratorFix: [
         { speaker: "Narrator", text: "Here we go. Now I think it's fixed." },
-        { speaker: "Nate", text: "What the hell is that on the top?" },
+        { speaker: "Nate", text: "What the hell is that?" },
         { speaker: "Narrator", text: "Interesting." },
         {
             speaker: "Nate",
@@ -240,31 +239,69 @@ const script = {
         { speaker: "Narrator", text: "Vallrak, Redslime, boruto" },
         { speaker: "Nate", text: "Wait, i remember thi-" },
         { speaker: "Redslime", text: "So this is the server?" },
-        { speaker: "Boruto", text: "Yup! So now that you got unbanned lets play again!"},
+        { speaker: "Boruto", text: "Yup! So now that you got unbanned lets play again!" },
         { speaker: "Nate", text: "..." },
         { speaker: "Narrator", text: "Boruto and red hop into a portal. " },
         { speaker: "Nate", text: "Im soo confused" },
-        { speaker: "Narrator", text: "Vallrak has seemed to notice nate."},
-        { speaker: "Vallrak", text: "Hey, you new?", options: [
-            { text: "YES", action: () => advanceScene("vallrakLie") },
-            { text: "NO", action: () => advanceScene("vallrakTruth") }
-        ]}
+        { speaker: "Narrator", text: "Vallrak has seemed to notice nate." },
+        {
+            speaker: "Vallrak",
+            text: "Hey, you new?",
+            options: [
+                { text: "YES", action: () => advanceScene("vallrakLie") },
+                { text: "NO", action: () => advanceScene("vallrakTruth") }
+            ]
+        }
     ],
     vallrakLie: [
-        { speaker: "Vallrak", text: "Really? You seem new and your account's new", action: () => setTimeout(() => advanceScene("vallrakTruth"), 2000) }
+        {
+            speaker: "Vallrak",
+            text: "Really? You seem new and your account's new",
+            action: () => setTimeout(() => advanceScene("vallrakTruth"), 2000)
+        }
     ],
     vallrakTruth: [
-        { speaker: "Nate", text: "Im kind of new i guess"}
+        { speaker: "Nate", text: "Im kind of new i guess" },
+        { speaker: "Vallrak", text: "you play minecraft?" },
+        { speaker: "Nate", text: "Well not that much, only with my friend." },
+        { speaker: "Vallrak", text: "Dope. so get the ip in [IP HYPERLINK]" },
+        { speaker: "Nate", text: "Cool! ill join later" },
+        { speaker: "Vallrak", text: "K." },
+        {
+            speaker: "System",
+            text: "Join server?",
+            options: [{ text: "YES", action: () => advanceScene("warzoneJoin") }]
+        }
+    ],
+    warzoneJoin: [
+        { speaker: "Narrator", text: "Nate, staring at the portal which Red and boruto went to" },
+        { speaker: "Narrator", text: "Decides to hop in." },
+        {
+            speaker: "System",
+            text: "",
+            action: () => {
+                advanceScene("joinedWarzone");
+            }
+        }
+    ],
+    joinedWarzone: [
+        { speaker: "System", text: "...", typingSpeed: 150 },
+        { speaker: "Nate", text: "The spawn is still as good as i remember it." },
+        { speaker: "Nate", text: "Old times, nostalgic", action: () => setTimeout(() => {},1000) },
+        { speaker: "Narrator", text: "Nate gets interrupted by Redslime and boruto"},
+        { speaker: "Redslime", text: "so this is it? i heard the end's open here"},
+        { speaker:"Boruto", text: "Yup! and there's an enderman farm there!"},
+        { speaker: "Redslime", text: "Cool. so basically free money?"},
+        {}
     ]
-
 };
 
 // --- Game Logic Functions ---
 
-function typeWriter(text, element, onComplete) {
+function typeWriter(text, element, { typingSpeed = 35, jumble = false } = {}, onComplete) {
     clearTimeout(typingTimeout);
     let i = 0;
-    const speed = 35;
+    const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
     element.innerHTML = "";
 
     function type() {
@@ -284,22 +321,26 @@ function typeWriter(text, element, onComplete) {
                 element.innerHTML += "</span>";
                 i += "</span>".length;
             } else {
-                element.innerHTML += text.charAt(i);
+                if (jumble && i > 0 && Math.random() > 0.1) {
+                    const currentContent = element.innerHTML;
+                    const jumbledContent = currentContent
+                        .split("")
+                        .map((c) => (Math.random() > 0.1 ? chars[Math.floor(Math.random() * chars.length)] : c))
+                        .join("");
+                    element.innerHTML = jumbledContent + text.charAt(i);
+                } else {
+                    element.innerHTML += text.charAt(i);
+                }
                 i++;
             }
-            typingTimeout = setTimeout(type, speed);
+            typingTimeout = setTimeout(type, typingSpeed);
         } else {
-            if (element.innerHTML.includes("<em>") && !element.innerHTML.endsWith("</em>")) {
-                element.innerHTML += "</em>";
-            }
-            if (onComplete) {
-                onComplete();
-            }
+            if (onComplete) onComplete();
         }
     }
+
     type();
 }
-
 function displayDialogue(line) {
     textLineElement.className = "";
 
@@ -316,7 +357,20 @@ function displayDialogue(line) {
         textForTypewriter = line.text;
     }
 
-    typeWriter(textForTypewriter, textLineElement, () => {
+    const typingOptions = {
+        typingSpeed: line.typingSpeed || 35,
+        jumble: line.jumble || false
+    };
+
+    if (line.effect === "crt") {
+        textLineElement.classList.add("crt-flicker", "crt-scanlines");
+
+        setTimeout(() => {
+            textLineElement.classList.remove("crt-flicker", "crt-scanlines");
+        }, 2000);
+    }
+
+    typeWriter(textForTypewriter, textLineElement, typingOptions, () => {
         if (
             !line.options &&
             optionsContainer.innerHTML.trim() === "" &&
@@ -338,7 +392,6 @@ function displayDialogue(line) {
         displayOptions(line.options);
     }
 }
-
 function displayOptions(options) {
     optionsContainer.innerHTML = "";
     options.forEach((option) => {
@@ -370,7 +423,7 @@ function advanceScene(nextScene) {
 }
 
 function handleEffect(effectName, callback) {
-    dialogueBox.classList.remove("fade-in", "fade-out");
+    textLineElement.classList.remove("glitch", "fade-in", "fade-out");
     gameContainer.classList.remove("fade-in", "fade-out");
 
     switch (effectName) {
@@ -386,6 +439,7 @@ function handleEffect(effectName, callback) {
                 if (callback) setTimeout(callback, 500);
             }, 1000);
             break;
+
         case "fadeOut":
             dialogueBox.classList.add("fade-out");
             setTimeout(() => {
@@ -393,6 +447,7 @@ function handleEffect(effectName, callback) {
                 if (callback) callback();
             }, 1000);
             break;
+
         case "fadeIn":
             dialogueBox.style.opacity = "0";
             gameContainer.style.opacity = "0";
@@ -404,9 +459,7 @@ function handleEffect(effectName, callback) {
                 if (callback) callback();
             }, 10);
             break;
-        case "glitch":
-            if (callback) callback();
-            break;
+
         default:
             if (callback) callback();
             break;
@@ -468,8 +521,8 @@ function loadDialogue() {
 
 function startFight(alliesNames, enemyNames, victoryScene) {
     inFight = true;
-    currentFightEnemies = enemyNames.map(name => ({ ...characters[name], name }));
-    currentFightAllies = alliesNames.map(name => ({ ...characters[name], name }));
+    currentFightEnemies = enemyNames.map((name) => ({ ...characters[name], name }));
+    currentFightAllies = alliesNames.map((name) => ({ ...characters[name], name }));
     currentFightVictoryScene = victoryScene || null;
 
     localStorage.setItem("scene", currentScene);
@@ -504,7 +557,7 @@ function renderFightScene() {
     const arena = document.getElementById("fightArena");
     arena.innerHTML = "";
 
-    currentFightAllies.forEach(ally => {
+    currentFightAllies.forEach((ally) => {
         const cube = document.createElement("div");
         cube.className = "character-cube";
         cube.style.backgroundColor = characters[ally.name].color;
@@ -520,7 +573,7 @@ function renderFightScene() {
         arena.appendChild(cube);
     });
 
-    currentFightEnemies.forEach(enemy => {
+    currentFightEnemies.forEach((enemy) => {
         const cube = document.createElement("div");
         cube.className = "character-cube";
         cube.style.backgroundColor = characters[enemy.name].color;
@@ -545,7 +598,7 @@ function setupFightOptions() {
     subOptions.style.display = "none";
     subOptions.innerHTML = "";
 
-    Array.from(fightOptions.children).forEach(button => {
+    Array.from(fightOptions.children).forEach((button) => {
         button.onclick = () => handleFightAction(button.dataset.action);
     });
 }
@@ -556,17 +609,23 @@ function handleFightAction(action) {
     switch (action) {
         case "fight":
             selectedAction = "fight";
-            subOptions.innerHTML = currentFightAllies.map(ally =>
-                                                          `<button class="item-option" data-ally="${ally.name}">${ally.name} (${ally.damage} DMG)</button>`
-                                                         ).join("");
+            subOptions.innerHTML = currentFightAllies
+                .map(
+                    (ally) =>
+                        `<button class="item-option" data-ally="${ally.name}">${ally.name} (${ally.damage} DMG)</button>`
+                )
+                .join("");
             subOptions.style.display = "flex";
             break;
 
         case "use":
             selectedAction = "use";
-            subOptions.innerHTML = items.map((item, index) =>
-                                             `<button class="item-option" data-item="${index}">${item.name} (${item.value} ${item.type.toUpperCase()})</button>`
-                                            ).join("");
+            subOptions.innerHTML = items
+                .map(
+                    (item, index) =>
+                        `<button class="item-option" data-item="${index}">${item.name} (${item.value} ${item.type.toUpperCase()})</button>`
+                )
+                .join("");
             subOptions.style.display = "flex";
             break;
 
@@ -586,7 +645,7 @@ function handleFightAction(action) {
             break;
     }
 
-    Array.from(subOptions.children).forEach(button => {
+    Array.from(subOptions.children).forEach((button) => {
         button.onclick = () => {
             if (selectedAction === "fight") {
                 selectedTarget = button.dataset.ally;
@@ -608,9 +667,8 @@ function handleFightAction(action) {
 
 function setupTargetSelection(isHeal = false) {
     const cubes = document.querySelectorAll(".character-cube");
-    cubes.forEach(cube => {
-        if ((isHeal && cube.dataset.type === "ally") ||
-            (!isHeal && cube.dataset.type === "enemy")) {
+    cubes.forEach((cube) => {
+        if ((isHeal && cube.dataset.type === "ally") || (!isHeal && cube.dataset.type === "enemy")) {
             cube.style.border = "2px solid yellow";
             cube.style.cursor = "pointer";
             cube.onclick = () => {
@@ -642,8 +700,8 @@ function startTimingMiniGame(target) {
         const indicatorRect = indicator.getBoundingClientRect();
         const perfectZoneRect = perfectZone.getBoundingClientRect();
 
-        const perfectCenter = perfectZoneRect.left + (perfectZoneRect.width / 2);
-        const indicatorCenter = indicatorRect.left + (indicatorRect.width / 2);
+        const perfectCenter = perfectZoneRect.left + perfectZoneRect.width / 2;
+        const indicatorCenter = indicatorRect.left + indicatorRect.width / 2;
         const distanceFromPerfect = Math.abs(perfectCenter - indicatorCenter);
         const maxDistance = timingBar.offsetWidth - perfectZoneRect.width;
 
@@ -654,10 +712,9 @@ function startTimingMiniGame(target) {
             damageMultiplier = 1;
             message = "PERFECT HIT! Massive damage!";
         } else {
-            const accuracy = 1 - (distanceFromPerfect / maxDistance);
+            const accuracy = 1 - distanceFromPerfect / maxDistance;
             damageMultiplier = Math.max(0.2, accuracy);
-            message = accuracy > 0.7 ? "Good hit!" :
-            accuracy > 0.4 ? "Weak hit!" : "Poor hit!";
+            message = accuracy > 0.7 ? "Good hit!" : accuracy > 0.4 ? "Weak hit!" : "Poor hit!";
         }
 
         const baseDamage = characters[selectedTarget].damage;
@@ -675,14 +732,11 @@ function startTimingMiniGame(target) {
 
 function useItemOnTarget(target) {
     if (selectedItem.type === "health") {
-        const targetChar = currentFightAllies.find(a => a.name === target) ||
-              currentFightEnemies.find(e => e.name === target);
+        const targetChar =
+            currentFightAllies.find((a) => a.name === target) || currentFightEnemies.find((e) => e.name === target);
 
         if (targetChar) {
-            targetChar.health = Math.min(
-                targetChar.health + selectedItem.value,
-                characters[target].health
-            );
+            targetChar.health = Math.min(targetChar.health + selectedItem.value, characters[target].health);
             showMessage(`${target} healed for ${selectedItem.value} HP!`);
             showDamageEffect(target);
         }
@@ -690,7 +744,7 @@ function useItemOnTarget(target) {
         dealDamage(target, selectedItem.value);
     }
 
-    items = items.filter(item => item !== selectedItem);
+    items = items.filter((item) => item !== selectedItem);
     resetFightUI();
     setTimeout(() => enemyTurn(), 1000);
 }
@@ -710,22 +764,22 @@ function dealDamage(target, amount) {
     showDamageEffect(target);
 
     setTimeout(() => {
-        if (currentFightEnemies.some(e => e.name === target)) {
-            const enemy = currentFightEnemies.find(e => e.name === target);
+        if (currentFightEnemies.some((e) => e.name === target)) {
+            const enemy = currentFightEnemies.find((e) => e.name === target);
             enemy.health -= amount;
 
             if (enemy.health <= 0) {
                 showMessage(`${target} was defeated!`);
-                currentFightEnemies = currentFightEnemies.filter(e => e.name !== target);
+                currentFightEnemies = currentFightEnemies.filter((e) => e.name !== target);
             }
         } else {
-            const ally = currentFightAllies.find(a => a.name === target);
+            const ally = currentFightAllies.find((a) => a.name === target);
             if (ally) {
                 ally.health -= amount;
 
                 if (ally.health <= 0) {
                     showMessage(`${target} was knocked out!`);
-                    currentFightAllies = currentFightAllies.filter(a => a.name !== target);
+                    currentFightAllies = currentFightAllies.filter((a) => a.name !== target);
                 }
             }
         }
@@ -762,7 +816,7 @@ function resetFightUI() {
     subOptions.innerHTML = "";
 
     const cubes = document.querySelectorAll(".character-cube");
-    cubes.forEach(cube => {
+    cubes.forEach((cube) => {
         cube.style.border = "none";
         cube.style.cursor = "default";
         cube.onclick = null;
