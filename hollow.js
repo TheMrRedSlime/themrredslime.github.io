@@ -1,865 +1,976 @@
 /* This is the code of reality. what shapes the universe as a whole */
 
 // DOM Elements
-const dialogueBox = document.getElementById("dialogueBox");
-const textLineElement = document.getElementById("textLine");
-const optionsContainer = document.getElementById("optionsContainer");
-const objectiveBox = document.getElementById("objectiveBox");
-const gameContainer = document.querySelector(".game-container");
+const dialogueBox = document.getElementById('dialogueBox')
+const textLineElement = document.getElementById('textLine')
+const optionsContainer = document.getElementById('optionsContainer')
+const objectiveBox = document.getElementById('objectiveBox')
+const gameContainer = document.querySelector('.game-container')
 
 // Message Box Elements
-const messageBoxOverlay = document.getElementById("messageBoxOverlay");
-const messageBoxText = document.getElementById("messageBoxText");
-const messageBoxButton = document.getElementById("messageBoxButton");
+const messageBoxOverlay = document.getElementById('messageBoxOverlay')
+const messageBoxText = document.getElementById('messageBoxText')
+const messageBoxButton = document.getElementById('messageBoxButton')
 
-messageBoxButton.addEventListener("click", () => {
-    messageBoxOverlay.classList.remove("active");
-});
+messageBoxButton.addEventListener('click', () => {
+  messageBoxOverlay.classList.remove('active')
+})
 
-function showMessage(message) {
-    messageBoxText.textContent = message;
-    messageBoxOverlay.classList.add("active");
+function showMessage (message) {
+  messageBoxText.textContent = message
+  messageBoxOverlay.classList.add('active')
 }
 
 // Game State
-let currentScene = "intro";
-let dialogueIndex = 0;
-let typingTimeout;
+let currentScene = 'intro'
+let dialogueIndex = 0
+let typingTimeout
 
 // Fight System State
-let inFight = false;
-let currentFightEnemies = [];
-let currentFightAllies = [];
-let items = [];
-let selectedAction = null;
-let selectedItem = null;
-let selectedTarget = null;
-let currentFightVictoryScene = null;
+let inFight = false
+let currentFightEnemies = []
+let currentFightAllies = []
+let items = []
+let selectedAction = null
+let selectedItem = null
+let selectedTarget = null
+let currentFightVictoryScene = null
 
 // Character Definitions
 const characters = {
-    Nate: { color: "#00ffff", health: 100, damage: 15, isPlayer: true },
-    Mom: { color: "#ff00fe", health: 120, damage: 10, isPlayer: false },
-    Vallrak: { color: "#2ecc71", health: 80, damage: 20, isPlayer: true },
-    Redslime: { color: "#ff0000", health: 90, damage: 18, isPlayer: true },
-    Boruto: { color: "#ffff00", health: 70, damage: 25, isPlayer: true },
-    Goblin: { color: "#00ff00", health: 75, damage: 12, isPlayer: false },
-    Slime: { color: "#1abc9c", health: 50, damage: 5, isPlayer: false },
-    Dummy: { color: "#a74e00", health: 100, damage: 0, isPlayer: false },
-    Creator: { color: "#000000", health: Infinity, damage: 6143, isPlayer: false },
-    Darkened: { color: "#640000", health: 100, damage: 0, isPlayer: false }
-};
+  Nate: { color: '#00ffff', health: 100, damage: 15, isPlayer: true },
+  Mom: { color: '#ff00fe', health: 120, damage: 10, isPlayer: false },
+  Vallrak: { color: '#2ecc71', health: 80, damage: 20, isPlayer: true },
+  Redslime: { color: '#ff0000', health: 90, damage: 18, isPlayer: true },
+  Boruto: { color: '#ffff00', health: 70, damage: 25, isPlayer: true },
+  Goblin: { color: '#00ff00', health: 75, damage: 12, isPlayer: false },
+  Slime: { color: '#1abc9c', health: 50, damage: 5, isPlayer: false },
+  Dummy: { color: '#a74e00', health: 100, damage: 0, isPlayer: false },
+  Creator: {
+    color: '#000000',
+    health: Infinity,
+    damage: 6143,
+    isPlayer: false
+  },
+  Darkened: { color: '#640000', health: 100, damage: 0, isPlayer: false }
+}
 
 // --- Story Script ---
 const script = {
-    intro: [
-        {
-            speaker: "Narrator",
-            text: "Hello.",
-            action: () => {
-                document.body.style.backgroundColor = "#242424";
-            }
-        },
-        { speaker: "Narrator", text: "I am the narrator." },
-        { speaker: "Narrator", text: "Before you do anything. Some decisions you make..." },
-        { speaker: "Narrator", text: "It may heavily change the story." },
-        { speaker: "Narrator", text: "And how you progress towards the game." },
-        {
-            speaker: "Narrator",
-            text: "Would you like to play the game?",
-            options: [
-                { text: "YES", action: () => advanceScene("startGame") },
-                { text: "NO", action: () => advanceScene("test") }
-            ]
-        }
-    ],
-    test: [
-        {
-            speaker: "Narrator",
-            text: "Suddenly, enemies appear!",
-            action: () => startFight(["Vallrak"], ["Goblin", "Slime"], "startGame")
-        }
-    ],
-    startGame: [
-        {
-            speaker: "Narrator",
-            text: "Excellent!",
-            effect: "fadeOutIn",
-            action: () => {
-                gameContainer.style.backgroundColor = "#000";
-                document.body.style.backgroundColor = "#000";
-                textLineElement.innerHTML = "";
-                setTimeout(() => advanceScene("homeScene_WakeUp"), 1000);
-            }
-        }
-    ],
-    quitGame: [
-        {
-            speaker: "Narrator",
-            text: "Understandable. The game will now close.",
-            action: () => {
-                showMessage("Game closed. Refresh to try again!");
-                optionsContainer.innerHTML = "";
-                localStorage.removeItem("scene");
-            }
-        }
-    ],
-    homeScene_WakeUp: [
-        { speaker: "Mom", text: "Hey, sleepy head." },
-        { speaker: "Nate", text: "..." },
-        { speaker: "Mom", text: "Hey! Nate!" },
-        { speaker: "Narrator", text: "Nate finally wakes up." },
-        { speaker: "Nate", text: "*wakes up* *yawns* Whaaaaattt mom?" },
-        { speaker: "Mom", text: "You got an exam tomorrow! Study!" },
-        { speaker: "Nate", text: "Uhhhhhhhhhhhhhhhhhhhhhhhhhhhhh." },
-        { speaker: "Mom", text: "I need you to make me money after all!" },
-        {
-            speaker: "Nate",
-            text: "Fine.",
-            action: () => {
-                showObjective("Go to your room");
-                displayOptions([{ text: "Go to room", action: () => advanceScene("goToRoom") }]);
-            }
-        }
-    ],
-    goToRoom: [
-        { speaker: "Narrator", text: "Nate is in his room." },
-        { speaker: "Nate", text: "Do I really have to study?" },
-        { speaker: "Nate", text: "I need to get good marks..." },
-        {
-            speaker: "Nate",
-            text: "I hate the indian education system.",
-            action: () => {
-                showObjective("TURN ON THE LAPTOP AND STUDY");
-                displayOptions([{ text: "Use Laptop", action: () => advanceScene("useLaptop") }]);
-            }
-        }
-    ],
-    useLaptop: [
-        { speaker: "Narrator", text: "Nate sits at the chair. The laptop turns on." },
-        { speaker: "Nate", text: "sigh. Here we go." },
-        {
-            action: () => {
-                dialogueBox.classList.add("fade-out");
-                textLineElement.innerHTML = "";
-                setTimeout(() => {
-                    textLineElement.innerHTML =
-                        '<span class="narrator-text" style="text-align:center; font-size: 20px;">TWO HOURS LATER</span>';
-                    dialogueBox.classList.remove("fade-out");
-                    dialogueBox.classList.add("fade-in");
-                    setTimeout(() => {
-                        dialogueBox.classList.remove("fade-in");
-                        textLineElement.innerHTML = "";
-                        advanceScene("afterStudy");
-                    }, 2500);
-                }, 1000);
-            }
-        }
-    ],
-    afterStudy: [
-        { speaker: "Nate", text: "Finally... Done." },
-        { speaker: "Nate", text: "I need some slee-" },
-        { speaker: "Narrator", text: "*Nate sleeps on the keyboard abruptly*" },
-        {
-            speaker: "Narrator",
-            text: "Suddenly. Everything becomes darker.",
-            effect: "fadeOut",
-            action: () => {
-                gameContainer.style.backgroundColor = "#000";
-                objectiveBox.style.display = "none";
-                setTimeout(() => advanceScene("dreamSequenceStart"), 1500);
-            }
-        }
-    ],
-    dreamSequenceStart: [
-        { speaker: "Narrator", text: "A blue light suddenly comes out of Nate's body.", effect: "fadeIn" },
-        { speaker: "Narrator", text: "It goes down the floor..." },
-        { speaker: "Narrator", text: "It goes down the earth's crust, and all layers..." },
-        {
-            speaker: "Narrator",
-            text: "After some time going down, he reaches a place, seems a lot more green-ish.",
-            action: () => {
-                gameContainer.style.backgroundColor = "#0f290f";
-                textLineElement.innerHTML = "";
-                setTimeout(() => advanceScene("dreamArrival"), 1000);
-            }
-        }
-    ],
-    dreamArrival: [
-        {
-            speaker: "Narrator",
-            text: "The blue light soul thing's light fills the entire screen. Suddenly we see Nate sleeping... in the grass."
-        },
-        { speaker: "Nate", text: "Woah Wha-" },
-        {
-            speaker: "Nate",
-            text: " Where the frick am I?!",
-            action: () => {
-                showObjective("Navigate");
-                displayOptions([{ text: "Look around", action: () => advanceScene("dreamNavigate") }]);
-            }
-        }
-    ],
-    dreamNavigate: [
-        { speaker: "Nate", text: "What the hell is that?" },
-        { speaker: "Narrator", text: "It seems Nate can sense the dialogue box. Which is not possible." },
-        { speaker: "Nate", text: "Who was that?" },
-        { speaker: "Narrator", text: "It also seems that Nate can hear me." },
-        { speaker: "Nate", text: "Huh?-" },
-        { speaker: "System", text: "[PLEASE WAIT CHANGES IN PROGRESS]", effect: "crt", action: () => advanceScene("NarratorFix") }
-    ],
-    NarratorFix: [
-        { speaker: "Narrator", text: "Here we go. Now I think it's fixed." },
-        { speaker: "Nate", text: "What the hell is that?" },
-        { speaker: "Narrator", text: "Interesting." },
-        {
-            speaker: "Nate",
-            text: "Navigate?. Might as well do that.",
-            action: () => {
-                displayOptions([{ text: "Walk East", action: () => advanceScene("walkEastToDiscordTown") }]);
-            }
-        }
-    ],
-    walkEastToDiscordTown: [
-        { speaker: "Narrator", text: 'After some time walking East, he finds a sign named "Discord Town".' },
-        { speaker: "Nate", text: "Discord?" },
-        {
-            speaker: "Narrator",
-            text: "Nate goes inside the town.",
-            action: () => {
-                displayOptions([{ text: "Explore Discord Town", action: () => advanceScene("enterWarzoneBuilding") }]);
-            }
-        }
-    ],
-    enterWarzoneBuilding: [
-        { speaker: "Narrator", text: "He walks for some time until he sees a building." },
-        { speaker: "Nate", text: "Warzone? It can't be." },
-        { speaker: "Narrator", text: "Nate enters the building." },
-        { speaker: "Narrator", text: "Inside the building, there seems to be couple of people." },
-        { speaker: "Narrator", text: "Vallrak, Redslime, boruto" },
-        { speaker: "Nate", text: "Wait, i remember thi-" },
-        { speaker: "Redslime", text: "So this is the server?" },
-        { speaker: "Boruto", text: "Yup! So now that you got unbanned lets play again!" },
-        { speaker: "Nate", text: "..." },
-        { speaker: "Narrator", text: "Boruto and red hop into a portal. " },
-        { speaker: "Nate", text: "Im soo confused" },
-        { speaker: "Narrator", text: "Vallrak has seemed to notice nate." },
-        {
-            speaker: "Vallrak",
-            text: "Hey, you new?",
-            options: [
-                { text: "YES", action: () => advanceScene("vallrakLie") },
-                { text: "NO", action: () => advanceScene("vallrakTruth") }
-            ]
-        }
-    ],
-    vallrakLie: [
-        {
-            speaker: "Vallrak",
-            text: "Really? You seem new and your account's new",
-            action: () => setTimeout(() => advanceScene("vallrakTruth"), 2000)
-        }
-    ],
-    vallrakTruth: [
-        { speaker: "Nate", text: "Im kind of new i guess" },
-        { speaker: "Vallrak", text: "you play minecraft?" },
-        { speaker: "Nate", text: "Well not that much, only with my friend." },
-        { speaker: "Vallrak", text: "Dope. so get the ip in [IP HYPERLINK]" },
-        { speaker: "Nate", text: "Cool! ill join later" },
-        { speaker: "Vallrak", text: "K." },
-        {
-            speaker: "System",
-            text: "Join server?",
-            options: [{ text: "YES", action: () => advanceScene("warzoneJoin") }]
-        }
-    ],
-    warzoneJoin: [
-        { speaker: "Narrator", text: "Nate, staring at the portal which Red and boruto went to" },
-        { speaker: "Narrator", text: "Decides to hop in." },
-        {
-            speaker: "System",
-            text: "",
-            action: () => {
-                advanceScene("joinedWarzone");
-            }
-        }
-    ],
-    joinedWarzone: [
-        { speaker: "System", text: "...", typingSpeed: 150 },
-        { speaker: "Nate", text: "The spawn is still as good as i remember it." },
-        { speaker: "Nate", text: "Old times, nostalgic", action: () => setTimeout(() => {},1000) },
-        { speaker: "Narrator", text: "Nate gets interrupted by Redslime and boruto"},
-        { speaker: "Redslime", text: "so this is it? i heard the end's open here"},
-        { speaker:"Boruto", text: "Yup! and there's an enderman farm there!"},
-        { speaker: "Redslime", text: "Cool. so basically free money?"},
-        {}
-    ]
-};
+  intro: [
+    {
+      speaker: 'Narrator',
+      text: 'Hello.',
+      action: () => {
+        document.body.style.backgroundColor = '#242424'
+      }
+    },
+    { speaker: 'Narrator', text: 'I am the narrator.' },
+    {
+      speaker: 'Narrator',
+      text: 'Before you do anything. Some decisions you make...'
+    },
+    { speaker: 'Narrator', text: 'It may heavily change the story.' },
+    { speaker: 'Narrator', text: 'And how you progress towards the game.' },
+    {
+      speaker: 'Narrator',
+      text: 'Would you like to play the game?',
+      options: [
+        { text: 'YES', action: () => advanceScene('startGame') },
+        { text: 'NO', action: () => advanceScene('test') }
+      ]
+    }
+  ],
+  test: [
+    {
+      speaker: 'Narrator',
+      text: 'Suddenly, enemies appear!',
+      action: () => startFight(['Vallrak'], ['Goblin', 'Slime'], 'startGame')
+    }
+  ],
+  startGame: [
+    {
+      speaker: 'Narrator',
+      text: 'Excellent!',
+      effect: 'fadeOutIn',
+      action: () => {
+        gameContainer.style.backgroundColor = '#000'
+        document.body.style.backgroundColor = '#000'
+        textLineElement.innerHTML = ''
+        setTimeout(() => advanceScene('homeScene_WakeUp'), 1000)
+      }
+    }
+  ],
+  quitGame: [
+    {
+      speaker: 'Narrator',
+      text: 'Understandable. The game will now close.',
+      action: () => {
+        showMessage('Game closed. Refresh to try again!')
+        optionsContainer.innerHTML = ''
+        localStorage.removeItem('scene')
+      }
+    }
+  ],
+  homeScene_WakeUp: [
+    { speaker: 'Mom', text: 'Hey, sleepy head.' },
+    { speaker: 'Nate', text: '...' },
+    { speaker: 'Mom', text: 'Hey! Nate!' },
+    { speaker: 'Narrator', text: 'Nate finally wakes up.' },
+    { speaker: 'Nate', text: '*wakes up* *yawns* Whaaaaattt mom?' },
+    { speaker: 'Mom', text: 'You got an exam tomorrow! Study!' },
+    { speaker: 'Nate', text: 'Uhhhhhhhhhhhhhhhhhhhhhhhhhhhhh.' },
+    { speaker: 'Mom', text: 'I need you to make me money after all!' },
+    {
+      speaker: 'Nate',
+      text: 'Fine.',
+      action: () => {
+        showObjective('Go to your room')
+        displayOptions([
+          { text: 'Go to room', action: () => advanceScene('goToRoom') }
+        ])
+      }
+    }
+  ],
+  goToRoom: [
+    { speaker: 'Narrator', text: 'Nate is in his room.' },
+    { speaker: 'Nate', text: 'Do I really have to study?' },
+    { speaker: 'Nate', text: 'I need to get good marks...' },
+    {
+      speaker: 'Nate',
+      text: 'I hate the indian education system.',
+      action: () => {
+        showObjective('TURN ON THE LAPTOP AND STUDY')
+        displayOptions([
+          { text: 'Use Laptop', action: () => advanceScene('useLaptop') }
+        ])
+      }
+    }
+  ],
+  useLaptop: [
+    {
+      speaker: 'Narrator',
+      text: 'Nate sits at the chair. The laptop turns on.'
+    },
+    { speaker: 'Nate', text: 'sigh. Here we go.' },
+    {
+      action: () => {
+        dialogueBox.classList.add('fade-out')
+        textLineElement.innerHTML = ''
+        setTimeout(() => {
+          textLineElement.innerHTML =
+            '<span class="narrator-text" style="text-align:center; font-size: 20px;">TWO HOURS LATER</span>'
+          dialogueBox.classList.remove('fade-out')
+          dialogueBox.classList.add('fade-in')
+          setTimeout(() => {
+            dialogueBox.classList.remove('fade-in')
+            textLineElement.innerHTML = ''
+            advanceScene('afterStudy')
+          }, 2500)
+        }, 1000)
+      }
+    }
+  ],
+  afterStudy: [
+    { speaker: 'Nate', text: 'Finally... Done.' },
+    { speaker: 'Nate', text: 'I need some slee-' },
+    { speaker: 'Narrator', text: '*Nate sleeps on the keyboard abruptly*' },
+    {
+      speaker: 'Narrator',
+      text: 'Suddenly. Everything becomes darker.',
+      effect: 'fadeOut',
+      action: () => {
+        gameContainer.style.backgroundColor = '#000'
+        objectiveBox.style.display = 'none'
+        setTimeout(() => advanceScene('dreamSequenceStart'), 1500)
+      }
+    }
+  ],
+  dreamSequenceStart: [
+    {
+      speaker: 'Narrator',
+      text: "A blue light suddenly comes out of Nate's body.",
+      effect: 'fadeIn'
+    },
+    { speaker: 'Narrator', text: 'It goes down the floor...' },
+    {
+      speaker: 'Narrator',
+      text: "It goes down the earth's crust, and all layers..."
+    },
+    {
+      speaker: 'Narrator',
+      text: 'After some time going down, he reaches a place, seems a lot more green-ish.',
+      action: () => {
+        gameContainer.style.backgroundColor = '#0f290f'
+        textLineElement.innerHTML = ''
+        setTimeout(() => advanceScene('dreamArrival'), 1000)
+      }
+    }
+  ],
+  dreamArrival: [
+    {
+      speaker: 'Narrator',
+      text: "The blue light soul thing's light fills the entire screen. Suddenly we see Nate sleeping... in the grass."
+    },
+    { speaker: 'Nate', text: 'Woah Wha-' },
+    {
+      speaker: 'Nate',
+      text: ' Where the frick am I?!',
+      action: () => {
+        showObjective('Navigate')
+        displayOptions([
+          { text: 'Look around', action: () => advanceScene('dreamNavigate') }
+        ])
+      }
+    }
+  ],
+  dreamNavigate: [
+    { speaker: 'Nate', text: 'What the hell is that?' },
+    {
+      speaker: 'Narrator',
+      text: 'It seems Nate can sense the dialogue box. Which is not possible.'
+    },
+    { speaker: 'Nate', text: 'Who was that?' },
+    { speaker: 'Narrator', text: 'It also seems that Nate can hear me.' },
+    { speaker: 'Nate', text: 'Huh?-' },
+    {
+      speaker: 'System',
+      text: '[PLEASE WAIT CHANGES IN PROGRESS]',
+      effect: 'crt',
+      action: () => advanceScene('NarratorFix')
+    }
+  ],
+  NarratorFix: [
+    { speaker: 'Narrator', text: "Here we go. Now I think it's fixed." },
+    { speaker: 'Nate', text: 'What the hell is that?' },
+    { speaker: 'Narrator', text: 'Interesting.' },
+    {
+      speaker: 'Nate',
+      text: 'Navigate?. Might as well do that.',
+      action: () => {
+        displayOptions([
+          {
+            text: 'Walk East',
+            action: () => advanceScene('walkEastToDiscordTown')
+          }
+        ])
+      }
+    }
+  ],
+  walkEastToDiscordTown: [
+    {
+      speaker: 'Narrator',
+      text: 'After some time walking East, he finds a sign named "Discord Town".'
+    },
+    { speaker: 'Nate', text: 'Discord?' },
+    {
+      speaker: 'Narrator',
+      text: 'Nate goes inside the town.',
+      action: () => {
+        displayOptions([
+          {
+            text: 'Explore Discord Town',
+            action: () => advanceScene('enterWarzoneBuilding')
+          }
+        ])
+      }
+    }
+  ],
+  enterWarzoneBuilding: [
+    {
+      speaker: 'Narrator',
+      text: 'He walks for some time until he sees a building.'
+    },
+    { speaker: 'Nate', text: "Warzone? It can't be." },
+    { speaker: 'Narrator', text: 'Nate enters the building.' },
+    {
+      speaker: 'Narrator',
+      text: 'Inside the building, there seems to be couple of people.'
+    },
+    { speaker: 'Narrator', text: 'Vallrak, Redslime, boruto' },
+    { speaker: 'Nate', text: 'Wait, i remember thi-' },
+    { speaker: 'Redslime', text: 'So this is the server?' },
+    {
+      speaker: 'Boruto',
+      text: 'Yup! So now that you got unbanned lets play again!'
+    },
+    { speaker: 'Nate', text: '...' },
+    { speaker: 'Narrator', text: 'Boruto and red hop into a portal. ' },
+    { speaker: 'Nate', text: 'Im soo confused' },
+    { speaker: 'Narrator', text: 'Vallrak has seemed to notice nate.' },
+    {
+      speaker: 'Vallrak',
+      text: 'Hey, you new?',
+      options: [
+        { text: 'YES', action: () => advanceScene('vallrakLie') },
+        { text: 'NO', action: () => advanceScene('vallrakTruth') }
+      ]
+    }
+  ],
+  vallrakLie: [
+    {
+      speaker: 'Vallrak',
+      text: "Really? You seem new and your account's new",
+      action: () => setTimeout(() => advanceScene('vallrakTruth'), 2000)
+    }
+  ],
+  vallrakTruth: [
+    { speaker: 'Nate', text: 'Im kind of new i guess' },
+    { speaker: 'Vallrak', text: 'you play minecraft?' },
+    { speaker: 'Nate', text: 'Well not that much, only with my friend.' },
+    { speaker: 'Vallrak', text: 'Dope. so get the ip in [IP HYPERLINK]' },
+    { speaker: 'Nate', text: 'Cool! ill join later' },
+    { speaker: 'Vallrak', text: 'K.' },
+    {
+      speaker: 'System',
+      text: 'Join server?',
+      options: [{ text: 'YES', action: () => advanceScene('warzoneJoin') }]
+    }
+  ],
+  warzoneJoin: [
+    {
+      speaker: 'Narrator',
+      text: 'Nate, staring at the portal which Red and boruto went to'
+    },
+    { speaker: 'Narrator', text: 'Decides to hop in.' },
+    {
+      speaker: 'System',
+      text: '',
+      action: () => {
+        advanceScene('joinedWarzone')
+      }
+    }
+  ],
+  joinedWarzone: [
+    { speaker: 'System', text: '...', typingSpeed: 150 },
+    { speaker: 'Nate', text: 'The spawn is still as good as i remember it.' },
+    {
+      speaker: 'Nate',
+      text: 'Old times, nostalgic',
+      action: () => setTimeout(() => {}, 1000)
+    },
+    {
+      speaker: 'Narrator',
+      text: 'Nate gets interrupted by Redslime and boruto'
+    },
+    { speaker: 'Redslime', text: "so this is it? i heard the end's open here" },
+    { speaker: 'Boruto', text: "Yup! and there's an enderman farm there!" },
+    { speaker: 'Redslime', text: 'Cool. so basically free money?' },
+    {}
+  ]
+}
 
 // --- Game Logic Functions ---
 
-function typeWriter(text, element, { typingSpeed = 35, jumble = false } = {}, onComplete) {
-    clearTimeout(typingTimeout);
-    let i = 0;
-    const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
-    element.innerHTML = "";
+function typeWriter (
+  text,
+  element,
+  { typingSpeed = 35, jumble = false } = {},
+  onComplete
+) {
+  clearTimeout(typingTimeout)
+  let i = 0
+  const chars =
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
+  element.innerHTML = ''
 
-    function type() {
-        if (i < text.length) {
-            let substr = text.substring(i);
-            if (substr.startsWith("<strong>")) {
-                element.innerHTML += "<strong>";
-                i += "<strong>".length;
-            } else if (substr.startsWith("</strong>")) {
-                element.innerHTML += "</strong>";
-                i += "</strong>".length;
-            } else if (substr.startsWith('<span class="speaker">')) {
-                const tag = '<span class="speaker">';
-                element.innerHTML += tag;
-                i += tag.length;
-            } else if (substr.startsWith("</span>")) {
-                element.innerHTML += "</span>";
-                i += "</span>".length;
-            } else {
-                if (jumble && i > 0 && Math.random() > 0.1) {
-                    const currentContent = element.innerHTML;
-                    const jumbledContent = currentContent
-                        .split("")
-                        .map((c) => (Math.random() > 0.1 ? chars[Math.floor(Math.random() * chars.length)] : c))
-                        .join("");
-                    element.innerHTML = jumbledContent + text.charAt(i);
-                } else {
-                    element.innerHTML += text.charAt(i);
-                }
-                i++;
-            }
-            typingTimeout = setTimeout(type, typingSpeed);
+  function type () {
+    if (i < text.length) {
+      const substr = text.substring(i)
+      if (substr.startsWith('<strong>')) {
+        element.innerHTML += '<strong>'
+        i += '<strong>'.length
+      } else if (substr.startsWith('</strong>')) {
+        element.innerHTML += '</strong>'
+        i += '</strong>'.length
+      } else if (substr.startsWith('<span class="speaker">')) {
+        const tag = '<span class="speaker">'
+        element.innerHTML += tag
+        i += tag.length
+      } else if (substr.startsWith('</span>')) {
+        element.innerHTML += '</span>'
+        i += '</span>'.length
+      } else {
+        if (jumble && i > 0 && Math.random() > 0.1) {
+          const currentContent = element.innerHTML
+          const jumbledContent = currentContent
+            .split('')
+            .map((c) =>
+              Math.random() > 0.1
+                ? chars[Math.floor(Math.random() * chars.length)]
+                : c
+            )
+            .join('')
+          element.innerHTML = jumbledContent + text.charAt(i)
         } else {
-            if (onComplete) onComplete();
+          element.innerHTML += text.charAt(i)
         }
-    }
-
-    type();
-}
-function displayDialogue(line) {
-    textLineElement.className = "";
-
-    let textForTypewriter = "";
-    if (line.speaker === "Narrator") {
-        textLineElement.classList.add("narrator-text");
-        textForTypewriter = line.text;
-    } else if (line.speaker === "Darkness") {
-        textLineElement.classList.add("darkness-text");
-        textForTypewriter = line.text;
-    } else if (line.speaker && line.speaker !== "System") {
-        textForTypewriter = `<span class="speaker">${line.speaker}:</span> ${line.text}`;
+        i++
+      }
+      typingTimeout = setTimeout(type, typingSpeed)
     } else {
-        textForTypewriter = line.text;
+      if (onComplete) onComplete()
     }
+  }
 
-    const typingOptions = {
-        typingSpeed: line.typingSpeed || 35,
-        jumble: line.jumble || false
-    };
+  type()
+}
+function displayDialogue (line) {
+  textLineElement.className = ''
 
-    if (line.effect === "crt") {
-        textLineElement.classList.add("crt-flicker", "crt-scanlines");
+  let textForTypewriter = ''
+  if (line.speaker === 'Narrator') {
+    textLineElement.classList.add('narrator-text')
+    textForTypewriter = line.text
+  } else if (line.speaker === 'Darkness') {
+    textLineElement.classList.add('darkness-text')
+    textForTypewriter = line.text
+  } else if (line.speaker && line.speaker !== 'System') {
+    textForTypewriter = `<span class="speaker">${line.speaker}:</span> ${line.text}`
+  } else {
+    textForTypewriter = line.text
+  }
 
-        setTimeout(() => {
-            textLineElement.classList.remove("crt-flicker", "crt-scanlines");
-        }, 2000);
-    }
+  const typingOptions = {
+    typingSpeed: line.typingSpeed || 35,
+    jumble: line.jumble || false
+  }
 
-    typeWriter(textForTypewriter, textLineElement, typingOptions, () => {
-        if (
-            !line.options &&
-            optionsContainer.innerHTML.trim() === "" &&
-            dialogueIndex < script[currentScene].length - 1
-        ) {
-            displayOptions([
-                {
-                    text: "Next >",
-                    action: () => {
-                        dialogueIndex++;
-                        loadDialogue();
-                    }
-                }
-            ]);
+  if (line.effect === 'crt') {
+    textLineElement.classList.add('crt-flicker', 'crt-scanlines')
+
+    setTimeout(() => {
+      textLineElement.classList.remove('crt-flicker', 'crt-scanlines')
+    }, 2000)
+  }
+
+  typeWriter(textForTypewriter, textLineElement, typingOptions, () => {
+    if (
+      !line.options &&
+      optionsContainer.innerHTML.trim() === '' &&
+      dialogueIndex < script[currentScene].length - 1
+    ) {
+      displayOptions([
+        {
+          text: 'Next >',
+          action: () => {
+            dialogueIndex++
+            loadDialogue()
+          }
         }
-    });
-
-    if (line.options) {
-        displayOptions(line.options);
+      ])
     }
-}
-function displayOptions(options) {
-    optionsContainer.innerHTML = "";
-    options.forEach((option) => {
-        const button = document.createElement("button");
-        button.textContent = option.text;
-        button.onclick = () => {
-            if (typeof option.action === "function") {
-                option.action();
-            }
-        };
-        optionsContainer.appendChild(button);
-    });
-}
+  })
 
-function advanceScene(nextScene) {
-    console.log(`Advancing from ${currentScene}[${dialogueIndex}] to ${nextScene}`);
-    currentScene = nextScene;
-    dialogueIndex = 0;
-    objectiveBox.style.display = "none";
-    optionsContainer.innerHTML = "";
-    localStorage.setItem("scene", nextScene);
-
-    const firstLineOfNewScene = script[currentScene] && script[currentScene][0];
-    if (firstLineOfNewScene && firstLineOfNewScene.effect) {
-        handleEffect(firstLineOfNewScene.effect, () => loadDialogue());
-    } else {
-        loadDialogue();
+  if (line.options) {
+    displayOptions(line.options)
+  }
+}
+function displayOptions (options) {
+  optionsContainer.innerHTML = ''
+  options.forEach((option) => {
+    const button = document.createElement('button')
+    button.textContent = option.text
+    button.onclick = () => {
+      if (typeof option.action === 'function') {
+        option.action()
+      }
     }
+    optionsContainer.appendChild(button)
+  })
 }
 
-function handleEffect(effectName, callback) {
-    textLineElement.classList.remove("glitch", "fade-in", "fade-out");
-    gameContainer.classList.remove("fade-in", "fade-out");
+function advanceScene (nextScene) {
+  console.log(
+    `Advancing from ${currentScene}[${dialogueIndex}] to ${nextScene}`
+  )
+  currentScene = nextScene
+  dialogueIndex = 0
+  objectiveBox.style.display = 'none'
+  optionsContainer.innerHTML = ''
+  localStorage.setItem('scene', nextScene)
 
-    switch (effectName) {
-        case "fadeOutIn":
-            dialogueBox.classList.add("fade-out");
-            gameContainer.classList.add("fade-out");
-            setTimeout(() => {
-                textLineElement.innerHTML = "";
-                dialogueBox.classList.remove("fade-out");
-                dialogueBox.classList.add("fade-in");
-                gameContainer.classList.remove("fade-out");
-                gameContainer.classList.add("fade-in");
-                if (callback) setTimeout(callback, 500);
-            }, 1000);
-            break;
-
-        case "fadeOut":
-            dialogueBox.classList.add("fade-out");
-            setTimeout(() => {
-                textLineElement.innerHTML = "";
-                if (callback) callback();
-            }, 1000);
-            break;
-
-        case "fadeIn":
-            dialogueBox.style.opacity = "0";
-            gameContainer.style.opacity = "0";
-            dialogueBox.classList.add("fade-in");
-            gameContainer.classList.add("fade-in");
-            setTimeout(() => {
-                dialogueBox.style.opacity = "";
-                gameContainer.style.opacity = "";
-                if (callback) callback();
-            }, 10);
-            break;
-
-        default:
-            if (callback) callback();
-            break;
-    }
+  const firstLineOfNewScene = script[currentScene] && script[currentScene][0]
+  if (firstLineOfNewScene && firstLineOfNewScene.effect) {
+    handleEffect(firstLineOfNewScene.effect, () => loadDialogue())
+  } else {
+    loadDialogue()
+  }
 }
 
-function showObjective(text) {
-    objectiveBox.textContent = `OBJECTIVE: ${text}`;
-    objectiveBox.style.display = "block";
+function handleEffect (effectName, callback) {
+  textLineElement.classList.remove('glitch', 'fade-in', 'fade-out')
+  gameContainer.classList.remove('fade-in', 'fade-out')
+
+  switch (effectName) {
+    case 'fadeOutIn':
+      dialogueBox.classList.add('fade-out')
+      gameContainer.classList.add('fade-out')
+      setTimeout(() => {
+        textLineElement.innerHTML = ''
+        dialogueBox.classList.remove('fade-out')
+        dialogueBox.classList.add('fade-in')
+        gameContainer.classList.remove('fade-out')
+        gameContainer.classList.add('fade-in')
+        if (callback) setTimeout(callback, 500)
+      }, 1000)
+      break
+
+    case 'fadeOut':
+      dialogueBox.classList.add('fade-out')
+      setTimeout(() => {
+        textLineElement.innerHTML = ''
+        if (callback) callback()
+      }, 1000)
+      break
+
+    case 'fadeIn':
+      dialogueBox.style.opacity = '0'
+      gameContainer.style.opacity = '0'
+      dialogueBox.classList.add('fade-in')
+      gameContainer.classList.add('fade-in')
+      setTimeout(() => {
+        dialogueBox.style.opacity = ''
+        gameContainer.style.opacity = ''
+        if (callback) callback()
+      }, 10)
+      break
+
+    default:
+      if (callback) callback()
+      break
+  }
 }
 
-function loadDialogue() {
-    clearTimeout(typingTimeout);
-    optionsContainer.innerHTML = "";
+function showObjective (text) {
+  objectiveBox.textContent = `OBJECTIVE: ${text}`
+  objectiveBox.style.display = 'block'
+}
 
-    if (!script[currentScene] || !script[currentScene][dialogueIndex]) {
-        console.error(`Scene or dialogue index out of bounds: ${currentScene}[${dialogueIndex}]`);
-        textLineElement.innerHTML = "<p>[End of current script path or error]</p>";
-        displayOptions([
-            {
-                text: "Restart Intro",
-                action: () => {
-                    currentScene = "intro";
-                    dialogueIndex = 0;
-                    objectiveBox.style.display = "none";
-                    loadDialogue();
-                }
-            }
-        ]);
-        return;
-    }
+function loadDialogue () {
+  clearTimeout(typingTimeout)
+  optionsContainer.innerHTML = ''
 
-    const line = script[currentScene][dialogueIndex];
-
-    if (line.action && !line.text && !line.options) {
-        const sceneBeforeAction = currentScene;
-        const indexBeforeAction = dialogueIndex;
-        if (typeof line.action === "function") {
-            line.action();
+  if (!script[currentScene] || !script[currentScene][dialogueIndex]) {
+    console.error(
+      `Scene or dialogue index out of bounds: ${currentScene}[${dialogueIndex}]`
+    )
+    textLineElement.innerHTML = '<p>[End of current script path or error]</p>'
+    displayOptions([
+      {
+        text: 'Restart Intro',
+        action: () => {
+          currentScene = 'intro'
+          dialogueIndex = 0
+          objectiveBox.style.display = 'none'
+          loadDialogue()
         }
-        if (currentScene === sceneBeforeAction && dialogueIndex === indexBeforeAction) {
-            if (dialogueIndex < script[currentScene].length - 1) {
-                dialogueIndex++;
-                loadDialogue();
-            }
-        }
-        return;
-    }
+      }
+    ])
+    return
+  }
 
-    if (line.action && (line.text || line.options)) {
-        if (typeof line.action === "function") {
-            line.action();
-        }
+  const line = script[currentScene][dialogueIndex]
+
+  if (line.action && !line.text && !line.options) {
+    const sceneBeforeAction = currentScene
+    const indexBeforeAction = dialogueIndex
+    if (typeof line.action === 'function') {
+      line.action()
     }
-    displayDialogue(line);
+    if (
+      currentScene === sceneBeforeAction &&
+      dialogueIndex === indexBeforeAction
+    ) {
+      if (dialogueIndex < script[currentScene].length - 1) {
+        dialogueIndex++
+        loadDialogue()
+      }
+    }
+    return
+  }
+
+  if (line.action && (line.text || line.options)) {
+    if (typeof line.action === 'function') {
+      line.action()
+    }
+  }
+  displayDialogue(line)
 }
 
 // --- Fight System Functions ---
 
-function startFight(alliesNames, enemyNames, victoryScene) {
-    inFight = true;
-    currentFightEnemies = enemyNames.map((name) => ({ ...characters[name], name }));
-    currentFightAllies = alliesNames.map((name) => ({ ...characters[name], name }));
-    currentFightVictoryScene = victoryScene || null;
+function startFight (alliesNames, enemyNames, victoryScene) {
+  inFight = true
+  currentFightEnemies = enemyNames.map((name) => ({
+    ...characters[name],
+    name
+  }))
+  currentFightAllies = alliesNames.map((name) => ({
+    ...characters[name],
+    name
+  }))
+  currentFightVictoryScene = victoryScene || null
 
-    localStorage.setItem("scene", currentScene);
+  localStorage.setItem('scene', currentScene)
 
-    document.getElementById("fightOverlay").style.display = "block";
-    renderFightScene();
+  document.getElementById('fightOverlay').style.display = 'block'
+  renderFightScene()
 
-    dialogueBox.style.display = "none";
-    optionsContainer.style.display = "none";
-    objectiveBox.style.display = "none";
+  dialogueBox.style.display = 'none'
+  optionsContainer.style.display = 'none'
+  objectiveBox.style.display = 'none'
 }
 
-function endFight(victory) {
-    inFight = false;
-    document.getElementById("fightOverlay").style.display = "none";
+function endFight (victory) {
+  inFight = false
+  document.getElementById('fightOverlay').style.display = 'none'
 
-    dialogueBox.style.display = "block";
-    optionsContainer.style.display = "flex";
+  dialogueBox.style.display = 'block'
+  optionsContainer.style.display = 'flex'
 
-    if (victory) {
-        if (currentFightVictoryScene) {
-            advanceScene(currentFightVictoryScene);
-        } else {
-            advanceScene(localStorage.getItem("scene") || "intro");
-        }
+  if (victory) {
+    if (currentFightVictoryScene) {
+      advanceScene(currentFightVictoryScene)
     } else {
-        advanceScene(localStorage.getItem("scene") || "intro");
+      advanceScene(localStorage.getItem('scene') || 'intro')
     }
+  } else {
+    advanceScene(localStorage.getItem('scene') || 'intro')
+  }
 }
 
-function renderFightScene() {
-    const arena = document.getElementById("fightArena");
-    arena.innerHTML = "";
+function renderFightScene () {
+  const arena = document.getElementById('fightArena')
+  arena.innerHTML = ''
 
-    currentFightAllies.forEach((ally) => {
-        const cube = document.createElement("div");
-        cube.className = "character-cube";
-        cube.style.backgroundColor = characters[ally.name].color;
-        cube.dataset.name = ally.name;
-        cube.dataset.type = "ally";
+  currentFightAllies.forEach((ally) => {
+    const cube = document.createElement('div')
+    cube.className = 'character-cube'
+    cube.style.backgroundColor = characters[ally.name].color
+    cube.dataset.name = ally.name
+    cube.dataset.type = 'ally'
 
-        const health = document.createElement("div");
-        health.className = "character-health";
-        health.textContent = `${ally.name}: ${ally.health} HP`;
-        health.id = `health-${ally.name}`;
+    const health = document.createElement('div')
+    health.className = 'character-health'
+    health.textContent = `${ally.name}: ${ally.health} HP`
+    health.id = `health-${ally.name}`
 
-        cube.appendChild(health);
-        arena.appendChild(cube);
-    });
+    cube.appendChild(health)
+    arena.appendChild(cube)
+  })
 
-    currentFightEnemies.forEach((enemy) => {
-        const cube = document.createElement("div");
-        cube.className = "character-cube";
-        cube.style.backgroundColor = characters[enemy.name].color;
-        cube.dataset.name = enemy.name;
-        cube.dataset.type = "enemy";
+  currentFightEnemies.forEach((enemy) => {
+    const cube = document.createElement('div')
+    cube.className = 'character-cube'
+    cube.style.backgroundColor = characters[enemy.name].color
+    cube.dataset.name = enemy.name
+    cube.dataset.type = 'enemy'
 
-        const health = document.createElement("div");
-        health.className = "character-health";
-        health.textContent = `${enemy.name}: ${enemy.health} HP`;
-        health.id = `health-${enemy.name}`;
+    const health = document.createElement('div')
+    health.className = 'character-health'
+    health.textContent = `${enemy.name}: ${enemy.health} HP`
+    health.id = `health-${enemy.name}`
 
-        cube.appendChild(health);
-        arena.appendChild(cube);
-    });
+    cube.appendChild(health)
+    arena.appendChild(cube)
+  })
 
-    setupFightOptions();
+  setupFightOptions()
 }
 
-function setupFightOptions() {
-    const fightOptions = document.getElementById("fightOptions");
-    const subOptions = document.getElementById("fightSuboptions");
-    subOptions.style.display = "none";
-    subOptions.innerHTML = "";
+function setupFightOptions () {
+  const fightOptions = document.getElementById('fightOptions')
+  const subOptions = document.getElementById('fightSuboptions')
+  subOptions.style.display = 'none'
+  subOptions.innerHTML = ''
 
-    Array.from(fightOptions.children).forEach((button) => {
-        button.onclick = () => handleFightAction(button.dataset.action);
-    });
+  Array.from(fightOptions.children).forEach((button) => {
+    button.onclick = () => handleFightAction(button.dataset.action)
+  })
 }
 
-function handleFightAction(action) {
-    const subOptions = document.getElementById("fightSuboptions");
+function handleFightAction (action) {
+  const subOptions = document.getElementById('fightSuboptions')
 
-    switch (action) {
-        case "fight":
-            selectedAction = "fight";
-            subOptions.innerHTML = currentFightAllies
-                .map(
-                    (ally) =>
-                        `<button class="item-option" data-ally="${ally.name}">${ally.name} (${ally.damage} DMG)</button>`
-                )
-                .join("");
-            subOptions.style.display = "flex";
-            break;
+  switch (action) {
+    case 'fight':
+      selectedAction = 'fight'
+      subOptions.innerHTML = currentFightAllies
+        .map(
+          (ally) =>
+            `<button class="item-option" data-ally="${ally.name}">${ally.name} (${ally.damage} DMG)</button>`
+        )
+        .join('')
+      subOptions.style.display = 'flex'
+      break
 
-        case "use":
-            selectedAction = "use";
-            subOptions.innerHTML = items
-                .map(
-                    (item, index) =>
-                        `<button class="item-option" data-item="${index}">${item.name} (${item.value} ${item.type.toUpperCase()})</button>`
-                )
-                .join("");
-            subOptions.style.display = "flex";
-            break;
+    case 'use':
+      selectedAction = 'use'
+      subOptions.innerHTML = items
+        .map(
+          (item, index) =>
+            `<button class="item-option" data-item="${index}">${item.name} (${item.value} ${item.type.toUpperCase()})</button>`
+        )
+        .join('')
+      subOptions.style.display = 'flex'
+      break
 
-        case "defend":
-            showMessage("You defend against the next attack!");
-            setTimeout(() => enemyTurn(), 1500);
-            break;
+    case 'defend':
+      showMessage('You defend against the next attack!')
+      setTimeout(() => enemyTurn(), 1500)
+      break
 
-        case "flee":
-            if (Math.random() > 0.5) {
-                endFight(false);
-                showMessage("You fled successfully!");
-            } else {
-                showMessage("Failed to flee!");
-                setTimeout(() => enemyTurn(), 1500);
-            }
-            break;
+    case 'flee':
+      if (Math.random() > 0.5) {
+        endFight(false)
+        showMessage('You fled successfully!')
+      } else {
+        showMessage('Failed to flee!')
+        setTimeout(() => enemyTurn(), 1500)
+      }
+      break
+  }
+
+  Array.from(subOptions.children).forEach((button) => {
+    button.onclick = () => {
+      if (selectedAction === 'fight') {
+        selectedTarget = button.dataset.ally
+        showMessage(`Select a target for ${selectedTarget}'s attack!`)
+        setupTargetSelection()
+      } else if (selectedAction === 'use') {
+        selectedItem = items[button.dataset.item]
+        if (selectedItem.type === 'health') {
+          showMessage(`Select who to heal with ${selectedItem.name}!`)
+          setupTargetSelection(true)
+        } else if (selectedItem.type === 'damage') {
+          showMessage(`Select who to attack with ${selectedItem.name}!`)
+          setupTargetSelection()
+        }
+      }
     }
-
-    Array.from(subOptions.children).forEach((button) => {
-        button.onclick = () => {
-            if (selectedAction === "fight") {
-                selectedTarget = button.dataset.ally;
-                showMessage(`Select a target for ${selectedTarget}'s attack!`);
-                setupTargetSelection();
-            } else if (selectedAction === "use") {
-                selectedItem = items[button.dataset.item];
-                if (selectedItem.type === "health") {
-                    showMessage(`Select who to heal with ${selectedItem.name}!`);
-                    setupTargetSelection(true);
-                } else if (selectedItem.type === "damage") {
-                    showMessage(`Select who to attack with ${selectedItem.name}!`);
-                    setupTargetSelection();
-                }
-            }
-        };
-    });
+  })
 }
 
-function setupTargetSelection(isHeal = false) {
-    const cubes = document.querySelectorAll(".character-cube");
-    cubes.forEach((cube) => {
-        if ((isHeal && cube.dataset.type === "ally") || (!isHeal && cube.dataset.type === "enemy")) {
-            cube.style.border = "2px solid yellow";
-            cube.style.cursor = "pointer";
-            cube.onclick = () => {
-                if (selectedAction === "fight") {
-                    startTimingMiniGame(cube.dataset.name);
-                } else if (selectedAction === "use") {
-                    useItemOnTarget(cube.dataset.name);
-                }
-            };
-        } else {
-            cube.style.border = "none";
-            cube.style.cursor = "default";
-            cube.onclick = null;
+function setupTargetSelection (isHeal = false) {
+  const cubes = document.querySelectorAll('.character-cube')
+  cubes.forEach((cube) => {
+    if (
+      (isHeal && cube.dataset.type === 'ally') ||
+      (!isHeal && cube.dataset.type === 'enemy')
+    ) {
+      cube.style.border = '2px solid yellow'
+      cube.style.cursor = 'pointer'
+      cube.onclick = () => {
+        if (selectedAction === 'fight') {
+          startTimingMiniGame(cube.dataset.name)
+        } else if (selectedAction === 'use') {
+          useItemOnTarget(cube.dataset.name)
         }
-    });
+      }
+    } else {
+      cube.style.border = 'none'
+      cube.style.cursor = 'default'
+      cube.onclick = null
+    }
+  })
 }
 
-function startTimingMiniGame(target) {
-    const timingBar = document.getElementById("timingBar");
-    timingBar.style.display = "block";
+function startTimingMiniGame (target) {
+  const timingBar = document.getElementById('timingBar')
+  timingBar.style.display = 'block'
 
-    const indicator = timingBar.querySelector(".timing-indicator");
-    indicator.style.animation = "timingSwing 2s infinite linear";
+  const indicator = timingBar.querySelector('.timing-indicator')
+  indicator.style.animation = 'timingSwing 2s infinite linear'
 
-    timingBar.onclick = () => {
-        const indicator = timingBar.querySelector(".timing-indicator");
-        const perfectZone = timingBar.querySelector(".perfect-zone");
+  timingBar.onclick = () => {
+    const indicator = timingBar.querySelector('.timing-indicator')
+    const perfectZone = timingBar.querySelector('.perfect-zone')
 
-        const indicatorRect = indicator.getBoundingClientRect();
-        const perfectZoneRect = perfectZone.getBoundingClientRect();
+    const indicatorRect = indicator.getBoundingClientRect()
+    const perfectZoneRect = perfectZone.getBoundingClientRect()
 
-        const perfectCenter = perfectZoneRect.left + perfectZoneRect.width / 2;
-        const indicatorCenter = indicatorRect.left + indicatorRect.width / 2;
-        const distanceFromPerfect = Math.abs(perfectCenter - indicatorCenter);
-        const maxDistance = timingBar.offsetWidth - perfectZoneRect.width;
+    const perfectCenter = perfectZoneRect.left + perfectZoneRect.width / 2
+    const indicatorCenter = indicatorRect.left + indicatorRect.width / 2
+    const distanceFromPerfect = Math.abs(perfectCenter - indicatorCenter)
+    const maxDistance = timingBar.offsetWidth - perfectZoneRect.width
 
-        let damageMultiplier = 1;
-        let message = "Hit!";
+    let damageMultiplier = 1
+    let message = 'Hit!'
 
-        if (distanceFromPerfect < perfectZoneRect.width / 2) {
-            damageMultiplier = 1;
-            message = "PERFECT HIT! Massive damage!";
-        } else {
-            const accuracy = 1 - distanceFromPerfect / maxDistance;
-            damageMultiplier = Math.max(0.2, accuracy);
-            message = accuracy > 0.7 ? "Good hit!" : accuracy > 0.4 ? "Weak hit!" : "Poor hit!";
-        }
-
-        const baseDamage = characters[selectedTarget].damage;
-        const finalDamage = Math.round(baseDamage * damageMultiplier);
-
-        dealDamage(target, finalDamage);
-        showMessage(`${message} (${finalDamage} damage)`);
-
-        timingBar.style.display = "none";
-        timingBar.onclick = null;
-        resetFightUI();
-        setTimeout(() => enemyTurn(), 1000);
-    };
-}
-
-function useItemOnTarget(target) {
-    if (selectedItem.type === "health") {
-        const targetChar =
-            currentFightAllies.find((a) => a.name === target) || currentFightEnemies.find((e) => e.name === target);
-
-        if (targetChar) {
-            targetChar.health = Math.min(targetChar.health + selectedItem.value, characters[target].health);
-            showMessage(`${target} healed for ${selectedItem.value} HP!`);
-            showDamageEffect(target);
-        }
-    } else if (selectedItem.type === "damage") {
-        dealDamage(target, selectedItem.value);
+    if (distanceFromPerfect < perfectZoneRect.width / 2) {
+      damageMultiplier = 1
+      message = 'PERFECT HIT! Massive damage!'
+    } else {
+      const accuracy = 1 - distanceFromPerfect / maxDistance
+      damageMultiplier = Math.max(0.2, accuracy)
+      message =
+        accuracy > 0.7
+          ? 'Good hit!'
+          : accuracy > 0.4
+            ? 'Weak hit!'
+            : 'Poor hit!'
     }
 
-    items = items.filter((item) => item !== selectedItem);
-    resetFightUI();
-    setTimeout(() => enemyTurn(), 1000);
+    const baseDamage = characters[selectedTarget].damage
+    const finalDamage = Math.round(baseDamage * damageMultiplier)
+
+    dealDamage(target, finalDamage)
+    showMessage(`${message} (${finalDamage} damage)`)
+
+    timingBar.style.display = 'none'
+    timingBar.onclick = null
+    resetFightUI()
+    setTimeout(() => enemyTurn(), 1000)
+  }
 }
 
-function showDamageEffect(characterName) {
-    const healthElement = document.getElementById(`health-${characterName}`);
-    if (!healthElement) return;
+function useItemOnTarget (target) {
+  if (selectedItem.type === 'health') {
+    const targetChar =
+      currentFightAllies.find((a) => a.name === target) ||
+      currentFightEnemies.find((e) => e.name === target)
 
-    healthElement.style.color = "#ff0000";
-    setTimeout(() => {
-        healthElement.style.color = "#ffffff";
-        renderFightScene();
-    }, 300);
+    if (targetChar) {
+      targetChar.health = Math.min(
+        targetChar.health + selectedItem.value,
+        characters[target].health
+      )
+      showMessage(`${target} healed for ${selectedItem.value} HP!`)
+      showDamageEffect(target)
+    }
+  } else if (selectedItem.type === 'damage') {
+    dealDamage(target, selectedItem.value)
+  }
+
+  items = items.filter((item) => item !== selectedItem)
+  resetFightUI()
+  setTimeout(() => enemyTurn(), 1000)
 }
 
-function dealDamage(target, amount) {
-    showDamageEffect(target);
+function showDamageEffect (characterName) {
+  const healthElement = document.getElementById(`health-${characterName}`)
+  if (!healthElement) return
 
-    setTimeout(() => {
-        if (currentFightEnemies.some((e) => e.name === target)) {
-            const enemy = currentFightEnemies.find((e) => e.name === target);
-            enemy.health -= amount;
+  healthElement.style.color = '#ff0000'
+  setTimeout(() => {
+    healthElement.style.color = '#ffffff'
+    renderFightScene()
+  }, 300)
+}
 
-            if (enemy.health <= 0) {
-                showMessage(`${target} was defeated!`);
-                currentFightEnemies = currentFightEnemies.filter((e) => e.name !== target);
-            }
-        } else {
-            const ally = currentFightAllies.find((a) => a.name === target);
-            if (ally) {
-                ally.health -= amount;
+function dealDamage (target, amount) {
+  showDamageEffect(target)
 
-                if (ally.health <= 0) {
-                    showMessage(`${target} was knocked out!`);
-                    currentFightAllies = currentFightAllies.filter((a) => a.name !== target);
-                }
-            }
+  setTimeout(() => {
+    if (currentFightEnemies.some((e) => e.name === target)) {
+      const enemy = currentFightEnemies.find((e) => e.name === target)
+      enemy.health -= amount
+
+      if (enemy.health <= 0) {
+        showMessage(`${target} was defeated!`)
+        currentFightEnemies = currentFightEnemies.filter(
+          (e) => e.name !== target
+        )
+      }
+    } else {
+      const ally = currentFightAllies.find((a) => a.name === target)
+      if (ally) {
+        ally.health -= amount
+
+        if (ally.health <= 0) {
+          showMessage(`${target} was knocked out!`)
+          currentFightAllies = currentFightAllies.filter(
+            (a) => a.name !== target
+          )
         }
+      }
+    }
 
-        renderFightScene();
+    renderFightScene()
 
-        if (currentFightEnemies.length === 0) {
-            setTimeout(() => endFight(true), 1000);
-        } else if (currentFightAllies.length === 0) {
-            setTimeout(() => endFight(false), 1000);
-        }
-    }, 300);
+    if (currentFightEnemies.length === 0) {
+      setTimeout(() => endFight(true), 1000)
+    } else if (currentFightAllies.length === 0) {
+      setTimeout(() => endFight(false), 1000)
+    }
+  }, 300)
 }
 
-function enemyTurn() {
-    if (!inFight || currentFightEnemies.length === 0) return;
+function enemyTurn () {
+  if (!inFight || currentFightEnemies.length === 0) return
 
-    currentFightEnemies.forEach((enemy, index) => {
-        if (currentFightAllies.length > 0) {
-            setTimeout(() => {
-                const randomAlly = currentFightAllies[Math.floor(Math.random() * currentFightAllies.length)];
-                const damage = Math.max(1, enemy.damage - Math.floor(Math.random() * 5));
+  currentFightEnemies.forEach((enemy, index) => {
+    if (currentFightAllies.length > 0) {
+      setTimeout(() => {
+        const randomAlly =
+          currentFightAllies[
+            Math.floor(Math.random() * currentFightAllies.length)
+          ]
+        const damage = Math.max(
+          1,
+          enemy.damage - Math.floor(Math.random() * 5)
+        )
 
-                dealDamage(randomAlly.name, damage);
-                showMessage(`${enemy.name} attacks ${randomAlly.name} for ${damage} damage!`);
-            }, index * 1500);
-        }
-    });
+        dealDamage(randomAlly.name, damage)
+        showMessage(
+          `${enemy.name} attacks ${randomAlly.name} for ${damage} damage!`
+        )
+      }, index * 1500)
+    }
+  })
 }
 
-function resetFightUI() {
-    const subOptions = document.getElementById("fightSuboptions");
-    subOptions.style.display = "none";
-    subOptions.innerHTML = "";
+function resetFightUI () {
+  const subOptions = document.getElementById('fightSuboptions')
+  subOptions.style.display = 'none'
+  subOptions.innerHTML = ''
 
-    const cubes = document.querySelectorAll(".character-cube");
-    cubes.forEach((cube) => {
-        cube.style.border = "none";
-        cube.style.cursor = "default";
-        cube.onclick = null;
-    });
+  const cubes = document.querySelectorAll('.character-cube')
+  cubes.forEach((cube) => {
+    cube.style.border = 'none'
+    cube.style.cursor = 'default'
+    cube.onclick = null
+  })
 
-    selectedAction = null;
-    selectedItem = null;
-    selectedTarget = null;
+  selectedAction = null
+  selectedItem = null
+  selectedTarget = null
 }
 
 window.onload = () => {
-    document.getElementById("fightOptions").addEventListener("click", (e) => {
-        if (e.target.classList.contains("fight-option")) {
-            handleFightAction(e.target.dataset.action);
-        }
-    });
-
-    const savedScene = localStorage.getItem("scene");
-    if (savedScene && script[savedScene]) {
-        currentScene = savedScene;
-        dialogueIndex = 0;
-    } else {
-        currentScene = "intro";
-        dialogueIndex = 0;
-        localStorage.setItem("scene", "intro");
+  document.getElementById('fightOptions').addEventListener('click', (e) => {
+    if (e.target.classList.contains('fight-option')) {
+      handleFightAction(e.target.dataset.action)
     }
+  })
 
-    if (script[currentScene] && script[currentScene][dialogueIndex]) {
-        const firstLine = script[currentScene][dialogueIndex];
-        if (firstLine.effect) {
-            handleEffect(firstLine.effect, () => loadDialogue());
-        } else {
-            loadDialogue();
-        }
+  const savedScene = localStorage.getItem('scene')
+  if (savedScene && script[savedScene]) {
+    currentScene = savedScene
+    dialogueIndex = 0
+  } else {
+    currentScene = 'intro'
+    dialogueIndex = 0
+    localStorage.setItem('scene', 'intro')
+  }
+
+  if (script[currentScene] && script[currentScene][dialogueIndex]) {
+    const firstLine = script[currentScene][dialogueIndex]
+    if (firstLine.effect) {
+      handleEffect(firstLine.effect, () => loadDialogue())
     } else {
-        currentScene = "intro";
-        dialogueIndex = 0;
-        textLineElement.innerHTML = "<p>Welcome to the game!</p>";
-        displayOptions([
-            {
-                text: "Start Game",
-                action: () => advanceScene("intro")
-            }
-        ]);
+      loadDialogue()
     }
-};
+  } else {
+    currentScene = 'intro'
+    dialogueIndex = 0
+    textLineElement.innerHTML = '<p>Welcome to the game!</p>'
+    displayOptions([
+      {
+        text: 'Start Game',
+        action: () => advanceScene('intro')
+      }
+    ])
+  }
+}

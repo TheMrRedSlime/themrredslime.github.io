@@ -1,55 +1,68 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Sleepy Hallucination</title>
-        <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
-        <script src="https://cdn.tailwindcss.com"></script>
-        <meta content="Sleepy Hallucination" property="og:title" />
-        <meta content="A̷͎͝ ̸̼̈́W̸͎͌O̵̒ͅR̸̖̚L̷̩͗D̷̟́ ̶̹̔B̴͔͌Ě̶͇Ỳ̴̳O̷͕̔N̸̻̿D̴̢͆ ̶̦̕R̷͌ͅẺ̸̯Ä̷̜́L̵̝̐I̸̜͝Ț̸͗Y̸͍̒,̵̬͗ ̴̠̐I̴̠̅M̶̖̅Ả̴̺G̷̭̿Į̵͐N̴̛͙A̷̖̅Ț̵͊I̶͈̅Ò̴̖N̶̯̕" property="og:description" />
-        <meta content="https://themrredslime.github.io/sleepy" property="og:url" />
-        <meta content="https://themrredslime.github.io/sleepy.png" property="og:image" />
-        <meta content="#646464" data-react-helmet="true" name="theme-color" />
-        <!-- <style></style> -->
-        <link rel="stylesheet" type="text/css" href="color.css">
-    </head>
-    <body>
-        <div class="game-container">
-            <div class="dialogue-box" id="dialogueBox">
-                <p id="textLine"></p>
-            </div>
-            <div class="options-container" id="optionsContainer"></div>
-            <div class="objective-box" id="objectiveBox" style="display: none"></div>
-        </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sleepy Hallucination</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <meta content="Sleepy Hallucination" property="og:title" />
+    <meta
+      content="A̷͎͝ ̸̼̈́W̸͎͌O̵̒ͅR̸̖̚L̷̩͗D̷̟́ ̶̹̔B̴͔͌Ě̶͇Ỳ̴̳O̷͕̔N̸̻̿D̴̢͆ ̶̦̕R̷͌ͅẺ̸̯Ä̷̜́L̵̝̐I̸̜͝Ț̸͗Y̸͍̒,̵̬͗ ̴̠̐I̴̠̅M̶̖̅Ả̴̺G̷̭̿Į̵͐N̴̛͙A̷̖̅Ț̵͊I̶͈̅Ò̴̖N̶̯̕"
+      property="og:description"
+    />
+    <meta content="https://themrredslime.github.io/sleepy" property="og:url" />
+    <meta
+      content="https://themrredslime.github.io/sleepy.png"
+      property="og:image"
+    />
+    <meta content="#646464" data-react-helmet="true" name="theme-color" />
+    <!-- <style></style> -->
+    <link rel="stylesheet" type="text/css" href="color.css" />
+  </head>
+  <body>
+    <div class="game-container">
+      <div class="dialogue-box" id="dialogueBox">
+        <p id="textLine"></p>
+      </div>
+      <div class="options-container" id="optionsContainer"></div>
+      <div class="objective-box" id="objectiveBox" style="display: none"></div>
+    </div>
 
-        <div class="message-box-overlay" id="messageBoxOverlay">
-            <div class="message-box-content">
-                <p id="messageBoxText"></p>
-                <button id="messageBoxButton">OK</button>
-            </div>
+    <div class="message-box-overlay" id="messageBoxOverlay">
+      <div class="message-box-content">
+        <p id="messageBoxText"></p>
+        <button id="messageBoxButton">OK</button>
+      </div>
+    </div>
+    <div class="fight-overlay" id="fightOverlay" style="display: none">
+      <div class="fight-container">
+        <div class="fight-arena" id="fightArena">
+          <!-- Characters will be displayed here as colored cubes -->
         </div>
-        <div class="fight-overlay" id="fightOverlay" style="display: none">
-            <div class="fight-container">
-                <div class="fight-arena" id="fightArena">
-                    <!-- Characters will be displayed here as colored cubes -->
-                </div>
-                <div class="fight-options" id="fightOptions">
-                    <button class="fight-option" data-action="fight">FIGHT</button>
-                    <button class="fight-option" data-action="defend">DEFEND</button>
-                    <button class="fight-option" data-action="use">USE</button>
-                    <button class="fight-option" data-action="flee">FLEE</button>
-                </div>
-                <div class="fight-suboptions" id="fightSuboptions" style="display: none">
-                    <!-- Sub-options will appear here when selecting USE or FIGHT -->
-                </div>
-                <div class="timing-bar" id="timingBar" style="display: none">
-                    <div class="timing-indicator"></div>
-                    <div class="perfect-zone"></div>
-                </div>
-            </div>
+        <div class="fight-options" id="fightOptions">
+          <button class="fight-option" data-action="fight">FIGHT</button>
+          <button class="fight-option" data-action="defend">DEFEND</button>
+          <button class="fight-option" data-action="use">USE</button>
+          <button class="fight-option" data-action="flee">FLEE</button>
         </div>
+        <div
+          class="fight-suboptions"
+          id="fightSuboptions"
+          style="display: none"
+        >
+          <!-- Sub-options will appear here when selecting USE or FIGHT -->
+        </div>
+        <div class="timing-bar" id="timingBar" style="display: none">
+          <div class="timing-indicator"></div>
+          <div class="perfect-zone"></div>
+        </div>
+      </div>
+    </div>
 
-        <script src="hollow.js"></script>
-    </body>
+    <script src="hollow.js"></script>
+  </body>
 </html>
