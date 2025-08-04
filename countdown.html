@@ -1,133 +1,152 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-    <head>
-        <title>Countdown to Return</title>
-        <style>
-            @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+  <head>
+    <title>Countdown to Return</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
 
-            body {
-                margin: 0;
-                padding: 0;
-                background-color: #000;
-                color: #fff;
-                font-family: Arial, sans-serif;
-                overflow: hidden;
-                height: 100vh;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-            }
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #000;
+        color: #fff;
+        font-family: Arial, sans-serif;
+        overflow: hidden;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
 
-            .stars {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                z-index: -1;
-            }
+      .stars {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+      }
 
-            .star {
-                position: absolute;
-                background-color: #fff;
-                border-radius: 50%;
-                animation: twinkle 1s infinite alternate;
-            }
+      .star {
+        position: absolute;
+        background-color: #fff;
+        border-radius: 50%;
+        animation: twinkle 1s infinite alternate;
+      }
 
-            @keyframes twinkle {
-                0% { opacity: 0.3; }
-                100% { opacity: 1; }
-            }
+      @keyframes twinkle {
+        0% {
+          opacity: 0.3;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
 
-            h1 {
-                font-family: 'Press Start 2P', cursive;
-                font-size: 2.5rem;
-                text-align: center;
-                margin-bottom: 2rem;
-                text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
-                color: #fff;
-            }
+      h1 {
+        font-family: "Press Start 2P", cursive;
+        font-size: 2.5rem;
+        text-align: center;
+        margin-bottom: 2rem;
+        text-shadow:
+          0 0 10px #ff0000,
+          0 0 20px #ff0000;
+        color: #fff;
+      }
 
-            .countdown-timer {
-                font-family: 'Press Start 2P', cursive;
-                font-size: 2rem;
-                color: #00ffffff;
-                text-shadow: 0 0 5px #00ffff;
-                letter-spacing: 5px;
-            }
+      .countdown-timer {
+        font-family: "Press Start 2P", cursive;
+        font-size: 2rem;
+        color: #00ffffff;
+        text-shadow: 0 0 5px #00ffff;
+        letter-spacing: 5px;
+      }
 
-            .countdown-labels {
-                font-family: 'Press Start 2P', cursive;
-                font-size: 0.8rem;
-                color: #fff;
-                letter-spacing: 5px;
-                margin-top: 1rem;
-                text-align: center;
-            }
-        </style>
-        <meta content="AMK Return Countdown" property="og:title" />
-        <meta content="The Countdown till the return of the legend" property="og:description" />
-        <meta content="https://themrredslime.github.io/countdown" property="og:url" />
-    </head>
-    <body>
-        <div class="stars" id="stars"></div>
+      .countdown-labels {
+        font-family: "Press Start 2P", cursive;
+        font-size: 0.8rem;
+        color: #fff;
+        letter-spacing: 5px;
+        margin-top: 1rem;
+        text-align: center;
+      }
+    </style>
+    <meta content="AMK Return Countdown" property="og:title" />
+    <meta
+      content="The Countdown till the return of the legend"
+      property="og:description"
+    />
+    <meta
+      content="https://themrredslime.github.io/countdown"
+      property="og:url"
+    />
+  </head>
+  <body>
+    <div class="stars" id="stars"></div>
 
-        <h1>The Return of AMK</h1>
+    <h1>The Return of AMK</h1>
 
-        <div class="countdown-timer" id="countdown">00:00:00:00:00:00</div>
-        <div class="countdown-labels">Amk, Where  are ya?</div>
+    <div class="countdown-timer" id="countdown">00:00:00:00:00:00</div>
+    <div class="countdown-labels">Amk, Where are ya?</div>
 
-        <script>
-            // Create stars
-            const starsContainer = document.getElementById('stars');
-            for (let i = 0; i < 200; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.width = `${Math.random() * 3}px`;
-                star.style.height = star.style.width;
-                star.style.left = `${Math.random() * 100}%`;
-                star.style.top = `${Math.random() * 100}%`;
-                star.style.animationDelay = `${Math.random() * 2}s`;
-                starsContainer.appendChild(star);
-            }
+    <script>
+      // Create stars
+      const starsContainer = document.getElementById("stars");
+      for (let i = 0; i < 200; i++) {
+        const star = document.createElement("div");
+        star.className = "star";
+        star.style.width = `${Math.random() * 3}px`;
+        star.style.height = star.style.width;
+        star.style.left = `${Math.random() * 100}%`;
+        star.style.top = `${Math.random() * 100}%`;
+        star.style.animationDelay = `${Math.random() * 2}s`;
+        starsContainer.appendChild(star);
+      }
 
-            // Countdown function
-            function updateCountdown() {
-                const targetDate = new Date('January 1, 2030 00:00:00').getTime();
-                const now = new Date().getTime();
-                const distance = targetDate - now;
+      // Countdown function
+      function updateCountdown() {
+        const targetDate = new Date("January 1, 2030 00:00:00").getTime();
+        const now = new Date().getTime();
+        const distance = targetDate - now;
 
-                if (distance < 0) {
-                    document.getElementById('countdown').textContent = '00:00:00:00:00:00';
-                    return;
-                }
+        if (distance < 0) {
+          document.getElementById("countdown").textContent =
+            "00:00:00:00:00:00";
+          return;
+        }
 
-                // Calculate time units
-                const years = Math.floor(distance / (1000 * 60 * 60 * 24 * 365));
-                const months = Math.floor((distance % (1000 * 60 * 60 * 24 * 365)) / (1000 * 60 * 60 * 24 * 30));
-                const days = Math.floor((distance % (1000 * 60 * 60 * 24 * 30)) / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        // Calculate time units
+        const years = Math.floor(distance / (1000 * 60 * 60 * 24 * 365));
+        const months = Math.floor(
+          (distance % (1000 * 60 * 60 * 24 * 365)) / (1000 * 60 * 60 * 24 * 30),
+        );
+        const days = Math.floor(
+          (distance % (1000 * 60 * 60 * 24 * 30)) / (1000 * 60 * 60 * 24),
+        );
+        const hours = Math.floor(
+          (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+        );
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-                // Format as YY:MM:DD:HH:MM:SS
-                const formattedTime = [
-                    years.toString().padStart(2, '0'),
-                    months.toString().padStart(2, '0'),
-                    days.toString().padStart(2, '0'),
-                    hours.toString().padStart(2, '0'),
-                    minutes.toString().padStart(2, '0'),
-                    seconds.toString().padStart(2, '0')
-                ].join(':');
+        // Format as YY:MM:DD:HH:MM:SS
+        const formattedTime = [
+          years.toString().padStart(2, "0"),
+          months.toString().padStart(2, "0"),
+          days.toString().padStart(2, "0"),
+          hours.toString().padStart(2, "0"),
+          minutes.toString().padStart(2, "0"),
+          seconds.toString().padStart(2, "0"),
+        ].join(":");
 
-                // Update display
-                document.getElementById('countdown').textContent = formattedTime;
-            }
+        // Update display
+        document.getElementById("countdown").textContent = formattedTime;
+      }
 
-            // Update countdown every second
-            updateCountdown();
-            setInterval(updateCountdown, 1000);
-        </script>
-    </body>
+      // Update countdown every second
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+    </script>
+  </body>
 </html>
