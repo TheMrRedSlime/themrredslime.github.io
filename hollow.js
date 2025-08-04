@@ -414,8 +414,8 @@ function advanceScene(nextScene) {
     optionsContainer.innerHTML = "";
     localStorage.setItem("scene", nextScene);
 
-    const firstLineOfNewScene = script[currentScene] && script[currentScene][0];
-    if (firstLineOfNewScene && firstLineOfNewScene.effect) {
+    const firstLineOfNewScene = script[currentScene]?.[0];
+    if (firstLineOfNewScene?.effect) {
         handleEffect(firstLineOfNewScene.effect, () => loadDialogue());
     } else {
         loadDialogue();
@@ -844,7 +844,7 @@ window.onload = () => {
         localStorage.setItem("scene", "intro");
     }
 
-    if (script[currentScene] && script[currentScene][dialogueIndex]) {
+    if (script[currentScene]?.[dialogueIndex]) {
         const firstLine = script[currentScene][dialogueIndex];
         if (firstLine.effect) {
             handleEffect(firstLine.effect, () => loadDialogue());
