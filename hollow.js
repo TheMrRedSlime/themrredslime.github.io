@@ -481,7 +481,6 @@ function displayOptions (options) {
 }
 
 function advanceScene (nextScene) {
-  
   currentScene = nextScene
   dialogueIndex = 0
   objectiveBox.style.display = 'none'
