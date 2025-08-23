@@ -77,7 +77,7 @@ const script = {
       text: 'Would you like to play the game?',
       options: [
         { text: 'YES', action: () => advanceScene('startGame') },
-        { text: 'NO', action: () => advanceScene('test') }
+        { text: 'NO', action: () => advanceScene('quitGame') }
       ]
     }
   ],
@@ -102,13 +102,21 @@ const script = {
     }
   ],
   quitGame: [
+    {speaker: "Mom", text:"How could you leave us?", typingSpeed: 1, skip: true},
+    {speaker: "Mom", text:"How could you leave him?", typingSpeed: 1, skip: true},
+    {speaker: "Mom", text:"You left us alone, Took everything.", typingSpeed: 1, skip: true},
+    {speaker: "Mom", text:"With nothing to sapre", typingSpeed: 1, skip: true},
     {
       speaker: 'Narrator',
       text: 'Understandable. The game will now close.',
       action: () => {
-        showMessage('Game closed. Refresh to try again!')
+        if(localStorage.getItem("closed") == 1){
+          showMessage('hi shadow');
+        }
+        setTimeout(() => {showMessage('Game closed. Refresh to try again!')}, 1250);
         optionsContainer.innerHTML = ''
         localStorage.removeItem('scene')
+        localStorage.setItem("closed", 1);
       }
     }
   ],
@@ -356,7 +364,11 @@ const script = {
     { speaker: 'Redslime', text: "so this is it? i heard the end's open here" },
     { speaker: 'Boruto', text: "Yup! and there's an enderman farm there!" },
     { speaker: 'Redslime', text: 'Cool. so basically free money?' },
-    {}
+    { speaker: "Boruto", text: "Yeah, So uh ill show you around"},
+    { speaker: "Nate", text: "This is not how i expected my day to be."},
+    { speaker: "Redslime", text: "Hey, you. You seem new."},
+    { speaker: "Nate", text:"Dang it."},
+    { speaker: ""}
   ]
 }
 
@@ -446,7 +458,7 @@ function displayDialogue (line) {
 
   typeWriter(textForTypewriter, textLineElement, typingOptions, () => {
     if (
-      !line.options &&
+      !line.options && !line.skip &&
       optionsContainer.innerHTML.trim() === '' &&
       dialogueIndex < script[currentScene].length - 1
     ) {
@@ -459,6 +471,11 @@ function displayDialogue (line) {
           }
         }
       ])
+    }
+
+    if (line.skip){
+      dialogueIndex++
+      loadDialogue()
     }
   })
 
