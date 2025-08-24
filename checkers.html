@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width,initial-scale=1"/>
+        <title>Checkers — AI</title>
+        <style>
+            :root {
+                --bg: #0f1220;
+                --panel: #161922;
+                --accent: #ff477e;
+                --accent2: #3b7cff
+            }
+
+            * {
+                box-sizing: border-box
+            }
+
+            html,body {
+                height: 100%;
+                margin: 0;
+                background: linear-gradient(180deg,#0b0c10 0%,#17171c 100%);
+                color: #e8eef8;
+                font-family: Inter,system-ui,Arial,sans-serif
+            }
+
+            .container {
+                max-width: 1100px;
+                margin: 20px auto;
+                padding: 16px;
+                display: grid;
+                grid-template-columns: 320px 1fr;
+                gap: 18px
+            }
+
+            .card {
+                background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+                border-radius: 14px;
+                padding: 16px;
+                border: 1px solid rgba(255,255,255,0.04)
+            }
+
+            .header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center
+            }
+
+            .board-wrap {
+                display: flex;
+                align-items: center;
+                justify-content: center
+            }
+
+            .board {
+                width: 512px;
+                height: 512px;
+                display: grid;
+                grid-template-columns: repeat(8,1fr);
+                grid-template-rows: repeat(8,1fr);
+                position: relative;
+                border-radius: 12px;
+                overflow: hidden
+            }
+
+            .sq {
+                position: relative;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center
+            }
+
+            .sq.dark {
+                background: linear-gradient(180deg,#2b3348,#23273a)
+            }
+
+            .sq.light {
+                background: linear-gradient(180deg,#dadfe9,#c6d0df)
+            }
+
+            .piece {
+                width: 58px;
+                height: 58px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 700;
+                color: #fff;
+                position: relative;
+                z-index: 2;
+                cursor: pointer;
+                user-select: none
+            }
+
+            .p-red {
+                background: linear-gradient(180deg,#ff7aa6,#ff477e);
+                box-shadow: 0 6px 18px rgba(255,71,126,.12)
+            }
+
+            .p-blue {
+                background: linear-gradient(180deg,#7fbfff,#3b7cff);
+                box-shadow: 0 6px 18px rgba(59,124,255,.12)
+            }
+
+            .king-badge {
+                position: absolute;
+                inset: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 26px;
+                color: #fff;
+                pointer-events: none
+            }
+
+            .move-target {
+                position: absolute;
+                inset: 0;
+                pointer-events: none
+            }
+
+            .target-dot {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                border: 4px solid rgba(255,80,80,0.95);
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%,-50%)
+            }
+
+            .capture-target-dark {
+                position: absolute;
+                inset: 0;
+                background: rgba(90,0,0,0.7);
+                pointer-events: none
+            }
+
+            .capture-target-light {
+                position: absolute;
+                inset: 0;
+                background: rgba(255,90,90,0.6);
+                pointer-events: none
+            }
+
+            .controls {
+                display: flex;
+                gap: 8px;
+                margin-top: 10px
+            }
+
+            .btn {
+                padding: 8px 12px;
+                border-radius: 10px;
+                border: 1px solid rgba(255,255,255,0.06);
+                background: #141826;
+                color: #fff;
+                cursor: pointer
+            }
+
+            .stats-fab {
+                position: fixed;
+                right: 24px;
+                bottom: 24px;
+                width: 56px;
+                height: 56px;
+                border-radius: 50%;
+                background: linear-gradient(180deg,#7c5cff,#a48bff);
+                display: grid;
+                place-items: center;
+                color: #fff;
+                border: none;
+                font-size: 20px
+            }
+
+            .modal {
+                position: fixed;
+                inset: 0;
+                display: none;
+                align-items: center;
+                justify-content: center;
+                background: rgba(2,6,12,0.6)
+            }
+
+            .modal.open {
+                display: flex
+            }
+
+            .modal-card {
+                width: min(920px,92vw);
+                max-height: 86vh;
+                overflow: auto
+            }
+
+            .toast {
+                position: fixed;
+                left: 50%;
+                top: 18px;
+                transform: translateX(-50%);
+                padding: 10px 14px;
+                background: #111525;
+                border-radius: 10px;
+                display: none
+            }
+
+            .ghost {
+                position: absolute;
+                border-radius: 50%;
+                z-index: 1000;
+                pointer-events: none;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #fff
+            }
+
+            @media(max-width: 900px) {
+                .container {
+                    grid-template-columns:1fr
+                }
+
+                .board {
+                    width: 384px;
+                    height: 384px
+                }
+
+                .piece {
+                    width: 44px;
+                    height: 44px
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="card">
+                <div class="header">
+                    <h2>
+                        Checkers vs <span style="color:var(--accent2)">AI</span>
+                    </h2>
+                    <div class="muted">
+                        You: <b style="color:var(--accent)">Red</b>
+                    </div>
+                </div>
+                <div style="margin-top:10px;color:#9aa4b8">Forced captures. Multi-jumps enabled. Capture landing squares are auto-highlighted.</div>
+                <div class="controls">
+                    <button class="btn" id="newGame">New Game</button>
+                    <button class="btn" id="undo">Undo</button>
+                    <select id="difficulty" class="btn">
+                        <option value="0">Easy</option>
+                        <option value="1" selected>Medium</option>
+                        <option value="2">Hard</option>
+                    </select>
+                </div>
+                <hr style="margin:12px 0;border:none;border-top:1px solid rgba(255,255,255,0.03)"/>
+                <div>
+                    Game time: <b id="gameTime">00:00:00</b>
+                </div>
+                <div>
+                    Total time: <b id="totalTime">00:00:00</b>
+                </div>
+                <div style="margin-top:8px">
+                    Normal captures: <b id="capMen">0</b>
+                </div>
+                <div>
+                    King captures: <b id="capKings">0</b>
+                </div>
+                <div>
+                    Total: <b id="capTotal">0</b>
+                </div>
+                <div style="margin-top:8px">
+                    Wins: <b id="wins">0</b>
+                    Losses: <b id="losses">0</b>
+                </div>
+            </div>
+            <div class="card board-wrap">
+                <div id="board" class="board" role="grid" aria-label="Checkers board"></div>
+            </div>
+        </div>
+        <button class="stats-fab" id="openStats">★</button>
+        <div class="modal" id="statsModal" aria-hidden="true">
+            <div class="card modal-card" style="width:800px">
+                <div style="display:flex;justify-content:space-between">
+                    <h3>Stats & History</h3>
+                    <div>
+                        <button class="btn" id="export">Export</button>
+                        <button class="btn" id="reset">Reset</button>
+                        <button class="btn" id="closeStats">Close</button>
+                    </div>
+                </div>
+                <div id="history"></div>
+            </div>
+        </div>
+        <div id="toast" class="toast"></div>
+        <script>
+            // Single-file checkers with AI, animations, automatic capture landing highlights, and multi-jump chains
+            const SIZE = 8;
+            const DARK = 1;
+            const RED = 1;
+            const BLUE = 2;
+            const DIFF_DEPTH = [4, 6, 8];
+            const STORAGE = 'checkers_v_final_v2';
+            let state = {
+                board: [],
+                turn: RED,
+                selected: null,
+                history: [],
+                gameStart: null,
+                timerId: null,
+                elapsed: 0,
+                difficulty: 1,
+                capsMen: 0,
+                capsKings: 0,
+                finished: false,
+                anim: false
+            };
+            let persist = loadPersist();
+
+            const boardEl = document.getElementById('board');
+
+            function buildBoard() {
+                boardEl.innerHTML = '';
+                for (let r = 0; r < SIZE; r++) {
+                    for (let c = 0; c < SIZE; c++) {
+                        const sq = document.createElement('div');
+                        sq.className = 'sq ' + (((r + c) % 2) ? 'dark' : 'light');
+                        sq.id = `sq-${r}-${c}`;
+                        sq.dataset.r = r;
+                        sq.dataset.c = c;
+                        if (((r + c) % 2) === 1)
+                            sq.addEventListener('click', onSquareClick);
+                        const mt = document.createElement('div');
+                        mt.className = 'move-target';
+                        mt.style.pointerEvents = 'none';
+                        sq.appendChild(mt);
+                        boardEl.appendChild(sq);
+                    }
+                }
+            }
+
+            function startingBoard() {
+                const b = [];
+                for (let r = 0; r < SIZE; r++) {
+                    b.push(new Array(SIZE).fill(null));
+                    for (let c = 0; c < SIZE; c++) {
+                        if (((r + c) % 2) === 1) {
+                            if (r < 3)
+                                b[r][c] = {
+                                    player: BLUE,
+                                    king: false
+                                };
+                            else if (r > 4)
+                                b[r][c] = {
+                                    player: RED,
+                                    king: false
+                                };
+                        }
+                    }
+                }
+                return b;
+            }
+
+            function newGame() {
+                state.board = startingBoard();
+                state.turn = RED;
+                state.selected = null;
+                state.history = [];
+                state.finished = false;
+                state.anim = false;
+                state.capsMen = 0;
+                state.capsKings = 0;
+                stopTimer();
+                state.elapsed = 0;
+                startTimer();
+                render();
+                toast('New game — you are Red');
+            }
+
+            function startTimer() {
+                state.gameStart = Date.now();
+                state.timerId = setInterval(updateClocks, 1000);
+                updateClocks();
+            }
+            function stopTimer() {
+                if (state.timerId) {
+                    clearInterval(state.timerId);
+                    state.timerId = null;
+                    persist.totalSeconds += Math.max(0, Math.round((Date.now() - state.gameStart) / 1000));
+                    savePersist();
+                    syncUI();
+                }
+            }
+            function updateClocks() {
+                const s = Math.round((Date.now() - state.gameStart) / 1000) + state.elapsed;
+                document.getElementById('gameTime').textContent = fmt(s);
+                document.getElementById('totalTime').textContent = fmt(persist.totalSeconds + s);
+            }
+            function fmt(secs) {
+                const h = Math.floor(secs / 3600)
+                  , m = Math.floor(secs % 3600 / 60)
+                  , s = secs % 60;
+                return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+            }
+
+            function loadPersist() {
+                const def = {
+                    totalSeconds: 0,
+                    wins: 0,
+                    losses: 0,
+                    men: 0,
+                    kings: 0,
+                    history: []
+                };
+                try {
+                    const raw = localStorage.getItem(STORAGE);
+                    if (!raw)
+                        return def;
+                    return Object.assign(def, JSON.parse(raw));
+                } catch {
+                    return def
+                }
+            }
+            function savePersist() {
+                localStorage.setItem(STORAGE, JSON.stringify(persist));
+            }
+
+            function syncUI() {
+                document.getElementById('capMen').textContent = state.capsMen;
+                document.getElementById('capKings').textContent = state.capsKings;
+                document.getElementById('capTotal').textContent = state.capsMen + state.capsKings;
+                document.getElementById('wins').textContent = persist.wins;
+                document.getElementById('losses').textContent = persist.losses;
+                renderHistory();
+            }
+
+            function render() {
+                // clear pieces & targets
+                for (let r = 0; r < SIZE; r++)
+                    for (let c = 0; c < SIZE; c++) {
+                        const sq = document.getElementById(`sq-${r}-${c}`);
+                        sq.querySelectorAll('.piece').forEach(n => n.remove());
+                        const mt = sq.querySelector('.move-target');
+                        mt.innerHTML = '';
+                        sq.querySelectorAll('.capture-target-dark, .capture-target-light').forEach(n => n.remove());
+                    }
+
+                // place pieces
+                for (let r = 0; r < SIZE; r++)
+                    for (let c = 0; c < SIZE; c++) {
+                        const p = state.board[r][c];
+                        if (p) {
+                            const el = document.createElement('div');
+                            el.className = 'piece ' + (p.player === RED ? 'p-red' : 'p-blue');
+                            el.dataset.r = r;
+                            el.dataset.c = c;
+                            if (p.king) {
+                                const k = document.createElement('div');
+                                k.className = 'king-badge';
+                                k.textContent = '♛';
+                                el.appendChild(k);
+                            }
+                            const sq = document.getElementById(`sq-${r}-${c}`);
+                            sq.appendChild(el);
+                            if (p.player === RED && !state.finished && !state.anim)
+                                el.addEventListener('click', () => selectSquare(r, c));
+                        }
+                    }
+
+                // ---- Automatic capture highlighting for player (even without selection) ----
+                const playerMoves = getAllMoves(state.board, RED);
+                const anyCapture = playerMoves.some(m => m.captures.length > 0);
+                if (anyCapture) {
+                    // highlight all capture landing squares available to the player
+                    for (const m of playerMoves) {
+                        if (m.captures.length > 0) {
+                            const sq = document.getElementById(`sq-${m.to.r}-${m.to.c}`);
+                            const div = document.createElement('div');
+                            div.className = ((m.to.r + m.to.c) % 2 === 1) ? 'capture-target-dark' : 'capture-target-light';
+                            sq.appendChild(div);
+                        }
+                    }
+                }
+
+                // draw move dots only for selected piece (still keep selection behavior)
+                if (state.selected) {
+                    const legal = getAllMoves(state.board, RED);
+                    const filtered = legal.filter(m => m.from.r === state.selected.r && m.from.c === state.selected.c);
+                    for (const m of filtered) {
+                        const sq = document.getElementById(`sq-${m.to.r}-${m.to.c}`);
+                        const mt = sq.querySelector('.move-target');
+                        if (m.captures.length > 0) {
+                            const div = document.createElement('div');
+                            div.className = ((m.to.r + m.to.c) % 2 === 1) ? 'capture-target-dark' : 'capture-target-light';
+                            mt.appendChild(div);
+                        } else {
+                            const dot = document.createElement('div');
+                            dot.className = 'target-dot';
+                            mt.appendChild(dot);
+                        }
+                    }
+                }
+            }
+
+            function selectSquare(r, c) {
+                if (state.anim)
+                    return;
+                const p = state.board[r][c];
+                if (!p || p.player !== RED)
+                    return;
+                state.selected = {
+                    r,
+                    c
+                };
+                render();
+            }
+
+            function onSquareClick(e) {
+                if (state.anim || state.finished)
+                    return;
+                const r = Number(e.currentTarget.dataset.r)
+                  , c = Number(e.currentTarget.dataset.c);
+                if (state.turn !== RED)
+                    return;
+                if (!state.selected) {
+                    const p = state.board[r][c];
+                    if (p && p.player === RED)
+                        selectSquare(r, c);
+                    return;
+                }
+                const legal = getAllMoves(state.board, RED).filter(m => m.from.r === state.selected.r && m.from.c === state.selected.c);
+                const move = legal.find(m => m.to.r === r && m.to.c === c);
+                if (!move)
+                    return;
+                (async () => {
+                    state.anim = true;
+                    await animateMoveUI(move);
+                    applyMove(state.board, move, true);
+                    state.history.push(move);
+                    state.selected = null;
+                    state.anim = false;
+                    render();
+                    // If capture and there are further jumps from landing, lock selection to landing for multi-jump
+                    if (move.captures.length > 0) {
+                        const land = move.to;
+                        const p = state.board[land.r][land.c];
+                        const cont = getJumps(state.board, land.r, land.c, p);
+                        if (cont.length > 0) {
+                            state.selected = {
+                                r: land.r,
+                                c: land.c
+                            };
+                            render();
+                            return;
+                        }
+                    }
+                    state.turn = BLUE;
+                    render();
+                    setTimeout( () => aiTurn(), 220);
+                }
+                )();
+            }
+
+            function applyMove(board, move, track) {
+                const {from, to, captures} = move;
+                const p = board[from.r][from.c];
+                board[from.r][from.c] = null;
+                board[to.r][to.c] = {
+                    player: p.player,
+                    king: p.king
+                };
+                // crown
+                if (!board[to.r][to.c].king) {
+                    if ((p.player === RED && to.r === 0) || (p.player === BLUE && to.r === SIZE - 1))
+                        board[to.r][to.c].king = true;
+                }
+                for (const cap of captures) {
+                    if (track) {
+                        if (cap.isKing)
+                            state.capsKings++;
+                        else
+                            state.capsMen++;
+                    }
+                    board[cap.r][cap.c] = null;
+                }
+            }
+
+            function undo() {
+                if (state.turn !== RED || state.anim)
+                    return toast('Undo allowed only before AI moves');
+                const last = state.history.pop();
+                if (!last)
+                    return toast('Nothing to undo');
+                const snapshot = structuredClone(state.history);
+                state.board = startingBoard();
+                state.capsMen = 0;
+                state.capsKings = 0;
+                for (const m of snapshot)
+                    applyMove(state.board, m, true);
+                render();
+            }
+
+            function getAllMoves(board, player) {
+                const jumps = []
+                  , steps = [];
+                for (let r = 0; r < SIZE; r++)
+                    for (let c = 0; c < SIZE; c++) {
+                        const p = board[r][c];
+                        if (!p || p.player !== player)
+                            continue;
+                        const jk = movesFrom(board, r, c, true);
+                        if (jk.length)
+                            jumps.push(...jk);
+                        else {
+                            const st = movesFrom(board, r, c, false);
+                            if (st.length)
+                                steps.push(...st);
+                        }
+                    }
+                return jumps.length ? jumps : steps;
+            }
+
+            function movesFrom(board, r, c, mustJump) {
+                const p = board[r][c];
+                if (!p)
+                    return [];
+                const dirs = [];
+                const fwd = (p.player === RED) ? -1 : 1;
+                if (p.king)
+                    dirs.push([-1, -1], [-1, 1], [1, -1], [1, 1]);
+                else
+                    dirs.push([fwd, -1], [fwd, 1]);
+                const res = [];
+                if (mustJump) {
+                    return getJumps(board, r, c, p);
+                } else {
+                    for (const [dr,dc] of dirs) {
+                        const r1 = r + dr
+                          , c1 = c + dc;
+                        if (!inBounds(r1, c1))
+                            continue;
+                        if (board[r1][c1] == null)
+                            res.push({
+                                from: {
+                                    r,
+                                    c
+                                },
+                                to: {
+                                    r: r1,
+                                    c: c1
+                                },
+                                captures: [],
+                                chain: []
+                            });
+                    }
+                    return res;
+                }
+            }
+
+            function getJumps(board, r, c, p) {
+                const res = [];
+                const dirs = p.king ? [[-1, -1], [-1, 1], [1, -1], [1, 1]] : (p.player === RED ? [[-1, -1], [-1, 1]] : [[1, -1], [1, 1]]);
+                for (const [dr,dc] of dirs) {
+                    const r1 = r + dr
+                      , c1 = c + dc
+                      , r2 = r + 2 * dr
+                      , c2 = c + 2 * dc;
+                    if (!inBounds(r2, c2))
+                        continue;
+                    const mid = board[r1][c1];
+                    if (mid && mid.player !== p.player && board[r2][c2] == null) {
+                        const clone = deepClone(board);
+                        const captured = {
+                            r: r1,
+                            c: c1,
+                            isKing: !!mid.king,
+                            player: mid.player
+                        };
+                        clone[r][c] = null;
+                        clone[r1][c1] = null;
+                        clone[r2][c2] = {
+                            player: p.player,
+                            king: p.king
+                        };
+                        if (!clone[r2][c2].king) {
+                            if ((p.player === RED && r2 === 0) || (p.player === BLUE && r2 === SIZE - 1))
+                                clone[r2][c2].king = true;
+                        }
+                        const cont = getJumps(clone, r2, c2, clone[r2][c2]);
+                        if (cont.length === 0)
+                            res.push({
+                                from: {
+                                    r,
+                                    c
+                                },
+                                to: {
+                                    r: r2,
+                                    c: c2
+                                },
+                                captures: [captured],
+                                chain: []
+                            });
+                        else
+                            for (const m of cont)
+                                res.push({
+                                    from: {
+                                        r,
+                                        c
+                                    },
+                                    to: m.to,
+                                    captures: [captured, ...m.captures],
+                                    chain: [{
+                                        r: r2,
+                                        c: c2
+                                    }, ...m.chain]
+                                });
+                    }
+                }
+                return res;
+            }
+
+            function deepClone(b) {
+                return b.map(row => row.map(cell => cell ? {
+                    player: cell.player,
+                    king: cell.king
+                } : null));
+            }
+            function inBounds(r, c) {
+                return r >= 0 && r < SIZE && c >= 0 && c < SIZE
+            }
+
+            // Animation helpers
+            function sqRect(r, c) {
+                const sq = document.getElementById(`sq-${r}-${c}`);
+                const br = boardEl.getBoundingClientRect();
+                const sr = sq.getBoundingClientRect();
+                const size = Math.min(sr.width, sr.height) * 0.9;
+                const x = sr.left - br.left + (sr.width - size) / 2;
+                const y = sr.top - br.top + (sr.height - size) / 2;
+                return {
+                    x,
+                    y,
+                    size
+                };
+            }
+            function makeGhost(player, king, startRect) {
+                const g = document.createElement('div');
+                g.className = 'ghost';
+                g.style.width = startRect.size + 'px';
+                g.style.height = startRect.size + 'px';
+                g.style.left = startRect.x + 'px';
+                g.style.top = startRect.y + 'px';
+                g.style.background = (player === RED) ? 'linear-gradient(180deg,#ff7aa6,#ff477e)' : 'linear-gradient(180deg,#7fbfff,#3b7cff)';
+                g.style.borderRadius = '50%';
+                if (king) {
+                    const k = document.createElement('div');
+                    k.style.fontSize = '26px';
+                    k.style.color = '#fff';
+                    k.textContent = '♛';
+                    g.appendChild(k);
+                }
+                boardEl.appendChild(g);
+                return g;
+            }
+            function animateMoveUI(move) {
+                return new Promise(res => {
+                    const {from, to, captures} = move;
+                    const p = state.board[from.r][from.c];
+                    const a = sqRect(from.r, from.c);
+                    const b = sqRect(to.r, to.c);
+                    const ghost = makeGhost(p.player, p.king, a);
+                    const dx = b.x - a.x
+                      , dy = b.y - a.y;
+                    ghost.style.transition = captures.length ? 'transform 420ms cubic-bezier(.2,.9,.25,1.35)' : 'transform 260ms ease';
+                    requestAnimationFrame( () => ghost.style.transform = `translate(${dx}px,${dy}px)`);
+                    const done = () => {
+                        ghost.remove();
+                        res();
+                    }
+                    ;
+                    ghost.addEventListener('transitionend', done, {
+                        once: true
+                    });
+                    setTimeout(done, captures.length ? 500 : 320);
+                }
+                );
+            }
+
+            // AI: minimax with alpha-beta
+            async function aiTurn() {
+                if (checkEnd())
+                    return;
+                state.anim = true;
+                const depth = DIFF_DEPTH[state.difficulty];
+                const [score,best] = minimax(state.board, depth, -Infinity, Infinity, true);
+                if (!best) {
+                    endGame(true, 'AI has no moves');
+                    state.anim = false;
+                    return;
+                }
+                let moved = best;
+                await animateMoveUI(moved);
+                applyMove(state.board, moved, false);
+                render();
+                while (moved.captures.length > 0) {
+                    const land = moved.to;
+                    const p = state.board[land.r][land.c];
+                    const cont = getJumps(state.board, land.r, land.c, p);
+                    if (cont.length === 0)
+                        break;
+                    moved = cont.sort( (a, b) => b.captures.length - a.captures.length)[0];
+                    await animateMoveUI(moved);
+                    applyMove(state.board, moved, false);
+                    render();
+                }
+                state.turn = RED;
+                state.anim = false;
+                render();
+                checkEnd();
+            }
+
+            function minimax(board, depth, alpha, beta, maximizing) {
+                if (depth === 0)
+                    return [evaluate(board), null];
+                const moves = getAllMoves(board, maximizing ? BLUE : RED);
+                if (moves.length === 0)
+                    return [maximizing ? -99999 : 99999, null];
+                let best = null;
+                if (maximizing) {
+                    let bestScore = -Infinity;
+                    for (const m of moves) {
+                        const b = deepClone(board);
+                        applyMove(b, m, false);
+                        let chain = m;
+                        while (chain.captures.length > 0) {
+                            const pNew = b[chain.to.r][chain.to.c];
+                            const cont = getJumps(b, chain.to.r, chain.to.c, pNew);
+                            if (cont.length === 0)
+                                break;
+                            chain = cont[0];
+                            applyMove(b, chain, false);
+                        }
+                        const [s] = minimax(b, depth - 1, alpha, beta, false);
+                        if (s > bestScore) {
+                            bestScore = s;
+                            best = m;
+                        }
+                        alpha = Math.max(alpha, bestScore);
+                        if (beta <= alpha)
+                            break;
+                    }
+                    return [bestScore, best];
+                } else {
+                    let bestScore = Infinity;
+                    for (const m of moves) {
+                        const b = deepClone(board);
+                        applyMove(b, m, false);
+                        let chain = m;
+                        while (chain.captures.length > 0) {
+                            const pNew = b[chain.to.r][chain.to.c];
+                            const cont = getJumps(b, chain.to.r, chain.to.c, pNew);
+                            if (cont.length === 0)
+                                break;
+                            chain = cont[0];
+                            applyMove(b, chain, false);
+                        }
+                        const [s] = minimax(b, depth - 1, alpha, beta, true);
+                        if (s < bestScore) {
+                            bestScore = s;
+                            best = m;
+                        }
+                        beta = Math.min(beta, bestScore);
+                        if (beta <= alpha)
+                            break;
+                    }
+                    return [bestScore, best];
+                }
+            }
+
+            function evaluate(board) {
+                let menB = 0
+                  , menR = 0
+                  , kingsB = 0
+                  , kingsR = 0
+                  , centerB = 0
+                  , centerR = 0;
+                for (let r = 0; r < SIZE; r++)
+                    for (let c = 0; c < SIZE; c++) {
+                        const p = board[r][c];
+                        if (!p)
+                            continue;
+                        const center = (r >= 2 && r <= 5 && c >= 2 && c <= 5) ? 1 : 0;
+                        if (p.player === BLUE) {
+                            p.king ? kingsB++ : menB++;
+                            centerB += center;
+                        } else {
+                            p.king ? kingsR++ : menR++;
+                            centerR += center;
+                        }
+                    }
+                const mobilityB = getAllMoves(board, BLUE).length
+                  , mobilityR = getAllMoves(board, RED).length;
+                const material = (menB * 100 + kingsB * 180) - (menR * 100 + kingsR * 180);
+                const mob = (mobilityB - mobilityR) * 4;
+                const cent = (centerB - centerR) * 8;
+                return material + mob + cent;
+            }
+
+            // Endgame
+            function checkEnd() {
+                const redMoves = getAllMoves(state.board, RED);
+                const blueMoves = getAllMoves(state.board, BLUE);
+                const redExist = anyPieces(state.board, RED);
+                const blueExist = anyPieces(state.board, BLUE);
+                if (!blueExist || blueMoves.length === 0) {
+                    endGame(true, 'AI out of moves');
+                    return true;
+                }
+                if (!redExist || redMoves.length === 0) {
+                    endGame(false, 'You have no moves');
+                    return true;
+                }
+                return false;
+            }
+            function anyPieces(b, player) {
+                for (let r = 0; r < SIZE; r++)
+                    for (let c = 0; c < SIZE; c++) {
+                        const p = b[r][c];
+                        if (p && p.player === player)
+                            return true;
+                    }
+                return false;
+            }
+            function endGame(playerWon, reason) {
+                if (state.finished)
+                    return;
+                state.finished = true;
+                stopTimer();
+                const secs = Math.round((Date.now() - state.gameStart) / 1000) + state.elapsed;
+                const rec = {
+                    when: new Date().toISOString(),
+                    duration: secs,
+                    result: playerWon ? 'Win' : 'Loss',
+                    difficulty: ['Easy', 'Medium', 'Hard'][state.difficulty],
+                    reason,
+                    capsMen: state.capsMen,
+                    capsKings: state.capsKings,
+                    capsTotal: state.capsMen + state.capsKings
+                };
+                persist.history.unshift(rec);
+                persist.history = persist.history.slice(0, 15);
+                if (playerWon)
+                    persist.wins++;
+                else
+                    persist.losses++;
+                persist.men += state.capsMen;
+                persist.kings += state.capsKings;
+                savePersist();
+                syncUI();
+                toast(playerWon ? 'You win!' : 'You lost');
+            }
+
+            // history render
+            function renderHistory() {
+                const h = document.getElementById('history');
+                if (!h)
+                    return;
+                h.innerHTML = '';
+                if (persist.history.length === 0) {
+                    h.innerHTML = '<div style="color:#9aa4b8">No games yet</div>';
+                    return;
+                }
+                for (const item of persist.history) {
+                    const el = document.createElement('div');
+                    el.style.display = 'flex';
+                    el.style.justifyContent = 'space-between';
+                    el.style.padding = '8px';
+                    el.style.borderBottom = '1px solid rgba(255,255,255,0.03)';
+                    el.innerHTML = `<div><b>${item.result}</b> <span style="color:#9aa4b8">${item.difficulty}</span><div style="font-size:12px;color:#9aa4b8">${new Date(item.when).toLocaleString()} • ${fmt(item.duration)} • ${item.reason || ''}</div></div><div style="text-align:right"><div>⛀ ${item.capsMen}</div><div>♛ ${item.capsKings}</div></div>`;
+                    h.appendChild(el);
+                }
+            }
+
+            // UI helpers
+            function toast(msg) {
+                const t = document.getElementById('toast');
+                t.textContent = msg;
+                t.style.display = 'block';
+                clearTimeout(t._t);
+                t._t = setTimeout( () => t.style.display = 'none', 1600);
+            }
+
+            // DOM binds
+            document.getElementById('newGame').addEventListener('click', newGame);
+            document.getElementById('undo').addEventListener('click', undo);
+            document.getElementById('difficulty').addEventListener('change', e => {
+                state.difficulty = Number(e.target.value);
+                localStorage.setItem('checkers_diff', state.difficulty);
+                toast('Difficulty set');
+            }
+            );
+            document.getElementById('openStats').addEventListener('click', () => {
+                document.getElementById('statsModal').classList.add('open');
+                syncUI();
+            }
+            );
+            document.getElementById('closeStats').addEventListener('click', () => document.getElementById('statsModal').classList.remove('open'));
+            document.getElementById('export').addEventListener('click', () => {
+                const b = new Blob([JSON.stringify(persist, null, 2)],{
+                    type: 'application/json'
+                });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(b);
+                a.download = 'checkers_history.json';
+                a.click();
+            }
+            );
+            document.getElementById('reset').addEventListener('click', () => {
+                if (confirm('Reset all stats?')) {
+                    localStorage.removeItem(STORAGE);
+                    persist = loadPersist();
+                    syncUI();
+                    toast('Reset');
+                }
+            }
+            );
+
+            // init
+            buildBoard();
+            state.difficulty = Number(localStorage.getItem('checkers_diff') || 1);
+            document.getElementById('difficulty').value = String(state.difficulty);
+            newGame();
+            syncUI();
+        </script>
+    </body>
+</html>
