@@ -1,41 +1,41 @@
 /* This is the code of reality. what shapes the universe as a whole */
 
 // DOM Elements
-const dialogueBox = document.getElementById('dialogueBox');
-const textLineElement = document.getElementById('textLine');
-const optionsContainer = document.getElementById('optionsContainer');
-const objectiveBox = document.getElementById('objectiveBox');
-const gameContainer = document.querySelector('.game-container');
+const dialogueBox = document.getElementById('dialogueBox')
+const textLineElement = document.getElementById('textLine')
+const optionsContainer = document.getElementById('optionsContainer')
+const objectiveBox = document.getElementById('objectiveBox')
+const gameContainer = document.querySelector('.game-container')
 
 // Message Box Elements
-const messageBoxOverlay = document.getElementById('messageBoxOverlay');
-const messageBoxText = document.getElementById('messageBoxText');
-const messageBoxButton = document.getElementById('messageBoxButton');
+const messageBoxOverlay = document.getElementById('messageBoxOverlay')
+const messageBoxText = document.getElementById('messageBoxText')
+const messageBoxButton = document.getElementById('messageBoxButton')
 
 messageBoxButton.addEventListener('click', () => {
-  messageBoxOverlay.classList.remove('active');
+  messageBoxOverlay.classList.remove('active')
 })
 
 function showMessage (message) {
-  messageBoxText.textContent = message;
-  messageBoxOverlay.classList.add('active');
+  messageBoxText.textContent = message
+  messageBoxOverlay.classList.add('active')
 }
 
 // Game State
-let currentScene = 'intro';
-let dialogueIndex = 0;
-let typingTimeout;
-let mana = 0;
+let currentScene = 'intro'
+let dialogueIndex = 0
+let typingTimeout
+let mana = 0
 
 // Fight System State
-let inFight = false;
-let currentFightEnemies = [];
-let currentFightAllies = [];
-let items = [];
-let selectedAction = null;
-let selectedItem = null;
-let selectedTarget = null;
-let currentFightVictoryScene = null;
+let inFight = false
+let currentFightEnemies = []
+let currentFightAllies = []
+let items = []
+let selectedAction = null
+let selectedItem = null
+let selectedTarget = null
+let currentFightVictoryScene = null
 
 // Character Definitions
 const characters = {
@@ -43,8 +43,20 @@ const characters = {
   Mom: { color: '#ff00fe', health: 120, damage: 10, isPlayer: false },
   Vallrak: { color: '#1500ff', health: 1000, damage: 20, isPlayer: true },
   AmK: { color: '#640000', health: 1000, damage: 20, isPlayer: true },
-  Redslime: { color: '#ff0000', health: 90, damage: 18, isPlayer: true, act: { damage: { amount: "25-75", mana: 34 } } },
-  Boruto: { color: '#ffff00', health: 70, damage: 25, isPlayer: true, act: { heal: { amount: "25-75", mana: 25 } } },
+  Redslime: {
+    color: '#ff0000',
+    health: 90,
+    damage: 18,
+    isPlayer: true,
+    act: { damage: { amount: '25-75', mana: 34 } }
+  },
+  Boruto: {
+    color: '#ffff00',
+    health: 70,
+    damage: 25,
+    isPlayer: true,
+    act: { heal: { amount: '25-75', mana: 25 } }
+  },
   Goblin: { color: '#00ff00', health: 75, damage: 5, isPlayer: false },
   Slime: { color: '#1abc9c', health: 50, damage: 5, isPlayer: false },
   Dummy: { color: '#a74e00', health: 100, damage: 0, isPlayer: false },
@@ -67,7 +79,7 @@ const script = {
         document.body.style.backgroundColor = '#242424'
       }
     },
-    { speaker: 'Narrator', text: 'I am the narrator.'},
+    { speaker: 'Narrator', text: 'I am the narrator.' },
     {
       speaker: 'Narrator',
       text: 'Before you do anything. Some decisions you make...'
@@ -104,10 +116,30 @@ const script = {
     }
   ],
   quitGame: [
-    {speaker: "Mom", text:"How could you leave us?", typingSpeed: 1, skip: true},
-    {speaker: "Mom", text:"How could you leave him?", typingSpeed: 1, skip: true},
-    {speaker: "Mom", text:"You left us alone, Took everything.", typingSpeed: 1, skip: true},
-    {speaker: "Mom", text:"With nothing to spare.", typingSpeed: 1, skip: true},
+    {
+      speaker: 'Mom',
+      text: 'How could you leave us?',
+      typingSpeed: 1,
+      skip: true
+    },
+    {
+      speaker: 'Mom',
+      text: 'How could you leave him?',
+      typingSpeed: 1,
+      skip: true
+    },
+    {
+      speaker: 'Mom',
+      text: 'You left us alone, Took everything.',
+      typingSpeed: 1,
+      skip: true
+    },
+    {
+      speaker: 'Mom',
+      text: 'With nothing to spare.',
+      typingSpeed: 1,
+      skip: true
+    },
     {
       speaker: 'Narrator',
       text: 'Understandable. The game will now close.',
@@ -254,7 +286,7 @@ const script = {
       speaker: 'Nate',
       text: 'Navigate?. Might as well do that.',
       action: () => {
-        showObjective("NAVIGATE");
+        showObjective('NAVIGATE')
         displayOptions([
           {
             text: 'Walk East',
@@ -317,7 +349,7 @@ const script = {
   vallrakLie: [
     {
       speaker: 'Vallrak',
-      text: "Really? You seem new.",
+      text: 'Really? You seem new.',
       action: () => setTimeout(() => advanceScene('vallrakTruth'), 2000)
     }
   ],
@@ -363,62 +395,112 @@ const script = {
     { speaker: 'Redslime', text: "so this is it? i heard the end's open here" },
     { speaker: 'Boruto', text: "Yup! and there's an enderman farm there!" },
     { speaker: 'Redslime', text: 'Cool. so basically free money?' },
-    { speaker: "Boruto", text: "Yeah, So uh ill show you around"},
-    { speaker: "Nate", text: "This is not how i expected my day to be."},
-    { speaker: "Redslime", text: "Hey, you. You seem new."},
-    { speaker: "Nate", text:"Dang it."},
-    { speaker: "Narrator", text: "Nate decides to face RedSlime, thinking about what he should say next."},
-    { speaker: "Redslime", text: "What's your name?"},
-    { speaker: "Nate", text: "Nate."},
-    { speaker: "Redslime", text: "Hey cool! You got the same name as me!"},
-    { speaker: "Nate", text: "..."},
-    { speaker: "RedSlime", text: "Well then ya new i suppose?"},
-    { speaker: "Nate", text:"Yeah, im new."},
-    { speaker: "Redslime", text: "Well then come around, here ill teach ya how to fight!"},
-    { speaker: "Narrator", text: "RedSlime summons a goblin."},
-    { speaker: "Redslime", text: "Heres a basic goblin, ill fight with you."},
-    {speaker: "Redslime", text: "Fight it.", options: [{ text: "FIGHT", action: () => startFight(['Nate', 'Redslime'], ['Goblin'], 'killedGoblin')}]}
+    { speaker: 'Boruto', text: 'Yeah, So uh ill show you around' },
+    { speaker: 'Nate', text: 'This is not how i expected my day to be.' },
+    { speaker: 'Redslime', text: 'Hey, you. You seem new.' },
+    { speaker: 'Nate', text: 'Dang it.' },
+    {
+      speaker: 'Narrator',
+      text: 'Nate decides to face RedSlime, thinking about what he should say next.'
+    },
+    { speaker: 'Redslime', text: "What's your name?" },
+    { speaker: 'Nate', text: 'Nate.' },
+    { speaker: 'Redslime', text: 'Hey cool! You got the same name as me!' },
+    { speaker: 'Nate', text: '...' },
+    { speaker: 'RedSlime', text: 'Well then ya new i suppose?' },
+    { speaker: 'Nate', text: 'Yeah, im new.' },
+    {
+      speaker: 'Redslime',
+      text: 'Well then come around, here ill teach ya how to fight!'
+    },
+    { speaker: 'Narrator', text: 'RedSlime summons a goblin.' },
+    { speaker: 'Redslime', text: 'Heres a basic goblin, ill fight with you.' },
+    {
+      speaker: 'Redslime',
+      text: 'Fight it.',
+      options: [
+        {
+          text: 'FIGHT',
+          action: () =>
+            startFight(['Nate', 'Redslime'], ['Goblin'], 'killedGoblin')
+        }
+      ]
+    }
   ],
   killedGoblin: [
-    { speaker: "Narrator", text: "Nate successfully kills the goblin."},
-    { speaker: "Redslime", text: "Eyyy, thats good!"},
-    { speaker: "Nate", text: "Thanks"},
-    { speaker: "Redslime", text: "K then i'll be heading my way"},
-    { speaker: "Narrator", text: "While redslime teleports to the end farm, Boruto stays behind."},
-    { speaker: "Boruto", text: "Got a lot of questions, dont ya. Nate?"},
-    { speaker: "Nate", text: "Yes??. But you wo-"},
-    { speaker: "Boruto", text: "Your in the mindscape. A place where all of imagination exists."},
-    { speaker: "Boruto", text: "It contains dreams, stories, ideas and whatnot."},
-    { speaker: "Nate", text: "What?"},
-    { speaker: "Boruto", text: "In simple terms, you slept into another dimension."},
-    { speaker: "Narrator", text: "Boruto takes a lollipop from his pocket and hands it to nate"},
-    { speaker: "Boruto", text: "Here, have it. You'll be hungry when you wake up"},
-    { speaker: "Nate", text: "????????????????", skip: true},
-    { speaker: "Narrator", text: "Nate wakes up, his keyboard backlight still lit up"},
-    { speaker: "Narrator", text: "Someone knocks at his room door"},
-    { speaker: "Mom", text: "Hey Nate, if you woke up."},
-    { speaker: "Mom", text: "I made pizza, your favorite!"},
-    { speaker: "Narrator", text: "Nate stands up from his keyboard"},
-    { speaker: "Nate", text: "Huh?"},
-    { speaker: "Narrator", text: "Nate notices something in his pocket."},
-    { speaker: "Narrator", text: "He takes it out. revealing to be the lollipop" },
-    { speaker: "Narrator", text: "He puts it in his mouth."},
-    { speaker: "Nate", text: "I have no idea what the hell is going on."},
-    { speaker: "Mom", text: "Oh yeah your cousins Sue and Ben are coming"},
-    { speaker: "Nate", text: "WHAT?!"},
-    { speaker: "Nate", text: "I dont like em, Especially ben!"},
-    { speaker: "Nate", text: "He's annoying!"},
-    { speaker: "Mom", text: "Well they're coming, Nothing we can do bout that."},
-    { speaker: "Nate", text: "For god's sake.", action: () => {
-      showObjective("GO TO LIVING ROOM");
-      displayOptions([
-          { text: 'Go to room', action: () => advanceScene('livingRoomCousinsMeetup') }
+    { speaker: 'Narrator', text: 'Nate successfully kills the goblin.' },
+    { speaker: 'Redslime', text: 'Eyyy, thats good!' },
+    { speaker: 'Nate', text: 'Thanks' },
+    { speaker: 'Redslime', text: "K then i'll be heading my way" },
+    {
+      speaker: 'Narrator',
+      text: 'While redslime teleports to the end farm, Boruto stays behind.'
+    },
+    { speaker: 'Boruto', text: 'Got a lot of questions, dont ya. Nate?' },
+    { speaker: 'Nate', text: 'Yes??. But you wo-' },
+    {
+      speaker: 'Boruto',
+      text: 'Your in the mindscape. A place where all of imagination exists.'
+    },
+    {
+      speaker: 'Boruto',
+      text: 'It contains dreams, stories, ideas and whatnot.'
+    },
+    { speaker: 'Nate', text: 'What?' },
+    {
+      speaker: 'Boruto',
+      text: 'In simple terms, you slept into another dimension.'
+    },
+    {
+      speaker: 'Narrator',
+      text: 'Boruto takes a lollipop from his pocket and hands it to nate'
+    },
+    {
+      speaker: 'Boruto',
+      text: "Here, have it. You'll be hungry when you wake up"
+    },
+    { speaker: 'Nate', text: '????????????????', skip: true },
+    {
+      speaker: 'Narrator',
+      text: 'Nate wakes up, his keyboard backlight still lit up'
+    },
+    { speaker: 'Narrator', text: 'Someone knocks at his room door' },
+    { speaker: 'Mom', text: 'Hey Nate, if you woke up.' },
+    { speaker: 'Mom', text: 'I made pizza, your favorite!' },
+    { speaker: 'Narrator', text: 'Nate stands up from his keyboard' },
+    { speaker: 'Nate', text: 'Huh?' },
+    { speaker: 'Narrator', text: 'Nate notices something in his pocket.' },
+    {
+      speaker: 'Narrator',
+      text: 'He takes it out. revealing to be the lollipop'
+    },
+    { speaker: 'Narrator', text: 'He puts it in his mouth.' },
+    { speaker: 'Nate', text: 'I have no idea what the hell is going on.' },
+    { speaker: 'Mom', text: 'Oh yeah your cousins Sue and Ben are coming' },
+    { speaker: 'Nate', text: 'WHAT?!' },
+    { speaker: 'Nate', text: 'I dont like em, Especially ben!' },
+    { speaker: 'Nate', text: "He's annoying!" },
+    {
+      speaker: 'Mom',
+      text: "Well they're coming, Nothing we can do bout that."
+    },
+    {
+      speaker: 'Nate',
+      text: "For god's sake.",
+      action: () => {
+        showObjective('GO TO LIVING ROOM')
+        displayOptions([
+          {
+            text: 'Go to room',
+            action: () => advanceScene('livingRoomCousinsMeetup')
+          }
         ])
-    }}
+      }
+    }
   ],
   livingRoomCousinsMeetup: [
-    { speaker: "Nate", text: "For heavens sake i need a break-"},
-    { speaker: "Narrator", text: "W.I.P"}
+    { speaker: 'Nate', text: 'For heavens sake i need a break-' },
+    { speaker: 'Narrator', text: 'W.I.P' }
   ]
 }
 
@@ -508,7 +590,8 @@ function displayDialogue (line) {
 
   typeWriter(textForTypewriter, textLineElement, typingOptions, () => {
     if (
-      !line.options && !line.skip &&
+      !line.options &&
+      !line.skip &&
       optionsContainer.innerHTML.trim() === '' &&
       dialogueIndex < script[currentScene].length - 1
     ) {
@@ -526,7 +609,7 @@ function displayDialogue (line) {
       ])
     }
 
-    if (line.skip){
+    if (line.skip) {
       dialogueIndex++
       localStorage.setItem('scene', currentScene)
       localStorage.setItem('dialogueIndex', dialogueIndex)
@@ -683,8 +766,8 @@ function startFight (alliesNames, enemyNames, victoryScene, defeatScene = null) 
     ...characters[name],
     name
   }))
-  currentFightVictoryScene = victoryScene || null;
-  currentDefeatScene = defeatScene || null;
+  currentFightVictoryScene = victoryScene || null
+  currentDefeatScene = defeatScene || null
 
   localStorage.setItem('scene', currentScene)
 
@@ -707,26 +790,25 @@ function endFight (victory) {
     if (currentFightVictoryScene) {
       advanceScene(currentFightVictoryScene)
     } else {
-      if(currentDefeatScene == null){
+      if (currentDefeatScene == null) {
         advanceScene(localStorage.getItem('scene') || 'intro')
       } else {
         advanceScene(currentDefeatScene)
       }
     }
   } else {
-    if(currentDefeatScene == null){
+    if (currentDefeatScene == null) {
       advanceScene(localStorage.getItem('scene') || 'intro')
     } else {
       advanceScene(currentDefeatScene)
     }
   }
-  
-  mana = 0;
+
+  mana = 0
   updateMana(0)
 }
 
-
-function updateMana(change = 0) {
+function updateMana (change = 0) {
   mana = Math.min(100, Math.max(0, mana + change))
   const manaBar = document.getElementById('manaBar')
   if (manaBar) {
@@ -734,7 +816,6 @@ function updateMana(change = 0) {
     manaBar.textContent = Math.floor(mana) + '%'
   }
 }
-
 
 function renderFightScene () {
   const arena = document.getElementById('fightArena')
@@ -809,12 +890,14 @@ function handleFightAction (action) {
 
       selectedAction = 'act'
       subOptions.innerHTML = currentFightAllies
-        .filter(a => a.isPlayer && a.act)
-        .map(a => `<button class="item-option" data-ally="${a.name}">${a.name}</button>`)
+        .filter((a) => a.isPlayer && a.act)
+        .map(
+          (a) =>
+            `<button class="item-option" data-ally="${a.name}">${a.name}</button>`
+        )
         .join('')
       subOptions.style.display = 'flex'
       break
-
 
     case 'defend':
       showMessage('You defend against the next attack!')
@@ -840,7 +923,7 @@ function handleFightAction (action) {
         setupTargetSelection()
       } else if (selectedAction === 'act') {
         const actorName = button.dataset.ally
-        const actor = currentFightAllies.find(a => a.name === actorName)
+        const actor = currentFightAllies.find((a) => a.name === actorName)
         if (!actor || !actor.act) return
 
         const { damage, heal } = actor.act
@@ -860,7 +943,7 @@ function handleFightAction (action) {
           `
         }
 
-        Array.from(subOptions.children).forEach(btn => {
+        Array.from(subOptions.children).forEach((btn) => {
           btn.onclick = () => performAct(actorName, btn.dataset.act)
         })
       }
@@ -902,17 +985,23 @@ function actOnTarget (targetName) {
 
   if (type === 'damage') {
     dealDamage(targetName, value)
-    showMessage(`${actorName} used ACT to deal ${value} damage to ${targetName}!`)
+    showMessage(
+      `${actorName} used ACT to deal ${value} damage to ${targetName}!`
+    )
   } else {
-    const targetChar = currentFightAllies.find(a => a.name === targetName)
+    const targetChar = currentFightAllies.find((a) => a.name === targetName)
     if (targetChar) {
-      targetChar.health = Math.min(targetChar.health + value, characters[targetName].health)
-      showMessage(`${actorName} used ACT to heal ${targetName} for ${value} HP!`)
+      targetChar.health = Math.min(
+        targetChar.health + value,
+        characters[targetName].health
+      )
+      showMessage(
+        `${actorName} used ACT to heal ${targetName} for ${value} HP!`
+      )
     }
   }
   setTimeout(() => enemyTurn(), 1000)
 }
-
 
 function startTimingMiniGame (target) {
   const timingBar = document.getElementById('timingBar')
@@ -986,8 +1075,8 @@ function useItemOnTarget (target) {
   setTimeout(() => enemyTurn(), 1000)
 }
 
-function performAct(actorName, type) {
-  const actor = currentFightAllies.find(a => a.name === actorName)
+function performAct (actorName, type) {
+  const actor = currentFightAllies.find((a) => a.name === actorName)
   if (!actor || !actor.act || !actor.act[type]) return
 
   const actData = actor.act[type]
@@ -1010,7 +1099,9 @@ function performAct(actorName, type) {
   updateMana(-manaCost)
 
   if (type === 'damage') {
-    showMessage(`Select an enemy to deal ${value} damage! (-${manaCost}% mana)`)
+    showMessage(
+      `Select an enemy to deal ${value} damage! (-${manaCost}% mana)`
+    )
     selectedAction = 'act_damage'
     selectedTarget = { actorName, value }
     setupTargetSelection(false)
@@ -1021,8 +1112,6 @@ function performAct(actorName, type) {
     setupTargetSelection(true)
   }
 }
-
-
 
 function showDamageEffect (characterName) {
   const healthElement = document.getElementById(`health-${characterName}`)
@@ -1073,13 +1162,12 @@ function dealDamage (target, amount) {
         }
       }
     }
-    
-    if (currentFightAllies.some(a => a.name === target)) {
+
+    if (currentFightAllies.some((a) => a.name === target)) {
       updateMana(5)
     } else {
       updateMana(5)
     }
-
 
     renderFightScene()
 
@@ -1107,10 +1195,10 @@ function enemyTurn () {
         )
 
         dealDamage(randomAlly.name, damage)
-        
-        enemy.health += Math.floor(Math.random() * 7) + 1;
-        showHealEffect(enemy.name);
-        
+
+        enemy.health += Math.floor(Math.random() * 7) + 1
+        showHealEffect(enemy.name)
+
         showMessage(
           `${enemy.name} attacks ${randomAlly.name} for ${damage} damage!`
         )
@@ -1137,8 +1225,8 @@ function resetFightUI () {
 }
 
 window.onload = () => {
-  //localStorage.setItem('scene', 'intro')
-  //localStorage.setItem('dialogueIndex', '0')
+  // localStorage.setItem('scene', 'intro')
+  // localStorage.setItem('dialogueIndex', '0')
   document.getElementById('fightOptions').addEventListener('click', (e) => {
     if (e.target.classList.contains('fight-option')) {
       handleFightAction(e.target.dataset.action)
