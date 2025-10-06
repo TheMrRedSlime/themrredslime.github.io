@@ -60,6 +60,12 @@ body {
   color: #920000;
   font-style: italic;
 }
+
+.the-voices-in-my-head-text {
+  font-style: italic;
+  color: #888888;
+}
+
 .options-container button {
   background-color: #222;
   color: #fff;

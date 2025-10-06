@@ -107,18 +107,14 @@ const script = {
     {speaker: "Mom", text:"How could you leave us?", typingSpeed: 1, skip: true},
     {speaker: "Mom", text:"How could you leave him?", typingSpeed: 1, skip: true},
     {speaker: "Mom", text:"You left us alone, Took everything.", typingSpeed: 1, skip: true},
-    {speaker: "Mom", text:"With nothing to sapre", typingSpeed: 1, skip: true},
+    {speaker: "Mom", text:"With nothing to spare.", typingSpeed: 1, skip: true},
     {
       speaker: 'Narrator',
       text: 'Understandable. The game will now close.',
       action: () => {
-        if(localStorage.getItem("closed") == 1){
-          showMessage('hi shadow');
-        }
-        setTimeout(() => {showMessage('Game closed. Refresh to try again!')}, 1250);
+        showMessage('Game closed. Refresh to try again!')
         optionsContainer.innerHTML = ''
         localStorage.removeItem('scene')
-        localStorage.setItem("closed", 1);
       }
     }
   ],
@@ -321,7 +317,7 @@ const script = {
   vallrakLie: [
     {
       speaker: 'Vallrak',
-      text: "Really? You seem new and your account's new",
+      text: "Really? You seem new.",
       action: () => setTimeout(() => advanceScene('vallrakTruth'), 2000)
     }
   ],
@@ -329,7 +325,7 @@ const script = {
     { speaker: 'Nate', text: 'Im kind of new i guess' },
     { speaker: 'Vallrak', text: 'you play minecraft?' },
     { speaker: 'Nate', text: 'Well not that much, only with my friend.' },
-    { speaker: 'Vallrak', text: 'Dope. so get the ip in [IP HYPERLINK]' },
+    { speaker: 'Vallrak', text: 'Dope. so get the ip in [IP LINK]' },
     { speaker: 'Nate', text: 'Cool! ill join later' },
     { speaker: 'Vallrak', text: 'K.' },
     {
@@ -385,7 +381,44 @@ const script = {
   ],
   killedGoblin: [
     { speaker: "Narrator", text: "Nate successfully kills the goblin."},
-    { speaker: "Redslime", text: "Eyyy, thats good!"}
+    { speaker: "Redslime", text: "Eyyy, thats good!"},
+    { speaker: "Nate", text: "Thanks"},
+    { speaker: "Redslime", text: "K then i'll be heading my way"},
+    { speaker: "Narrator", text: "While redslime teleports to the end farm, Boruto stays behind."},
+    { speaker: "Boruto", text: "Got a lot of questions, dont ya. Nate?"},
+    { speaker: "Nate", text: "Yes??. But you wo-"},
+    { speaker: "Boruto", text: "Your in the mindscape. A place where all of imagination exists."},
+    { speaker: "Boruto", text: "It contains dreams, stories, ideas and whatnot."},
+    { speaker: "Nate", text: "What?"},
+    { speaker: "Boruto", text: "In simple terms, you slept into another dimension."},
+    { speaker: "Narrator", text: "Boruto takes a lollipop from his pocket and hands it to nate"},
+    { speaker: "Boruto", text: "Here, have it. You'll be hungry when you wake up"},
+    { speaker: "Nate", text: "????????????????", skip: true},
+    { speaker: "Narrator", text: "Nate wakes up, his keyboard backlight still lit up"},
+    { speaker: "Narrator", text: "Someone knocks at his room door"},
+    { speaker: "Mom", text: "Hey Nate, if you woke up."},
+    { speaker: "Mom", text: "I made pizza, your favorite!"},
+    { speaker: "Narrator", text: "Nate stands up from his keyboard"},
+    { speaker: "Nate", text: "Huh?"},
+    { speaker: "Narrator", text: "Nate notices something in his pocket."},
+    { speaker: "Narrator", text: "He takes it out. revealing to be the lollipop" },
+    { speaker: "Narrator", text: "He puts it in his mouth."},
+    { speaker: "Nate", text: "I have no idea what the hell is going on."},
+    { speaker: "Mom", text: "Oh yeah your cousins Sue and Ben are coming"},
+    { speaker: "Nate", text: "WHAT?!"},
+    { speaker: "Nate", text: "I dont like em, Especially ben!"},
+    { speaker: "Nate", text: "He's annoying!"},
+    { speaker: "Mom", text: "Well they're coming, Nothing we can do bout that."},
+    { speaker: "Nate", text: "For god's sake.", action: () => {
+      showObjective("GO TO LIVING ROOM");
+      displayOptions([
+          { text: 'Go to room', action: () => advanceScene('livingRoomCousinsMeetup') }
+        ])
+    }}
+  ],
+  livingRoomCousinsMeetup: [
+    { speaker: "Nate", text: "For heavens sake i need a break-"},
+    { speaker: "Narrator", text: "W.I.P"}
   ]
 }
 
@@ -640,7 +673,7 @@ function loadDialogue () {
 
 // --- Fight System Functions ---
 
-function startFight (alliesNames, enemyNames, victoryScene) {
+function startFight (alliesNames, enemyNames, victoryScene, defeatScene = null) {
   inFight = true
   currentFightEnemies = enemyNames.map((name) => ({
     ...characters[name],
@@ -650,7 +683,8 @@ function startFight (alliesNames, enemyNames, victoryScene) {
     ...characters[name],
     name
   }))
-  currentFightVictoryScene = victoryScene || null
+  currentFightVictoryScene = victoryScene || null;
+  currentDefeatScene = defeatScene || null;
 
   localStorage.setItem('scene', currentScene)
 
@@ -673,10 +707,18 @@ function endFight (victory) {
     if (currentFightVictoryScene) {
       advanceScene(currentFightVictoryScene)
     } else {
-      advanceScene(localStorage.getItem('scene') || 'intro')
+      if(currentDefeatScene == null){
+        advanceScene(localStorage.getItem('scene') || 'intro')
+      } else {
+        advanceScene(currentDefeatScene)
+      }
     }
   } else {
-    advanceScene(localStorage.getItem('scene') || 'intro')
+    if(currentDefeatScene == null){
+      advanceScene(localStorage.getItem('scene') || 'intro')
+    } else {
+      advanceScene(currentDefeatScene)
+    }
   }
   
   mana = 0;
