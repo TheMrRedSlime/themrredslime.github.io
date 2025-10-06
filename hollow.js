@@ -1,41 +1,41 @@
 /* This is the code of reality. what shapes the universe as a whole */
 
 // DOM Elements
-const dialogueBox = document.getElementById('dialogueBox');
-const textLineElement = document.getElementById('textLine');
-const optionsContainer = document.getElementById('optionsContainer');
-const objectiveBox = document.getElementById('objectiveBox');
-const gameContainer = document.querySelector('.game-container');
+const dialogueBox = document.getElementById('dialogueBox')
+const textLineElement = document.getElementById('textLine')
+const optionsContainer = document.getElementById('optionsContainer')
+const objectiveBox = document.getElementById('objectiveBox')
+const gameContainer = document.querySelector('.game-container')
 
 // Message Box Elements
-const messageBoxOverlay = document.getElementById('messageBoxOverlay');
-const messageBoxText = document.getElementById('messageBoxText');
-const messageBoxButton = document.getElementById('messageBoxButton');
+const messageBoxOverlay = document.getElementById('messageBoxOverlay')
+const messageBoxText = document.getElementById('messageBoxText')
+const messageBoxButton = document.getElementById('messageBoxButton')
 
 messageBoxButton.addEventListener('click', () => {
-  messageBoxOverlay.classList.remove('active');
+  messageBoxOverlay.classList.remove('active')
 })
 
 function showMessage (message) {
-  messageBoxText.textContent = message;
-  messageBoxOverlay.classList.add('active');
+  messageBoxText.textContent = message
+  messageBoxOverlay.classList.add('active')
 }
 
 // Game State
-let currentScene = 'intro';
-let dialogueIndex = 0;
-let typingTimeout;
-let mana = 0;
+let currentScene = 'intro'
+let dialogueIndex = 0
+let typingTimeout
+let mana = 0
 
 // Fight System State
-let inFight = false;
-let currentFightEnemies = [];
-let currentFightAllies = [];
-let items = [];
-let selectedAction = null;
-let selectedItem = null;
-let selectedTarget = null;
-let currentFightVictoryScene = null;
+let inFight = false
+let currentFightEnemies = []
+let currentFightAllies = []
+let items = []
+let selectedAction = null
+let selectedItem = null
+let selectedTarget = null
+let currentFightVictoryScene = null
 
 // Character Definitions
 const characters = {
@@ -43,8 +43,20 @@ const characters = {
   Mom: { color: '#ff00fe', health: 120, damage: 10, isPlayer: false },
   Vallrak: { color: '#1500ff', health: 1000, damage: 20, isPlayer: true },
   AmK: { color: '#640000', health: 1000, damage: 20, isPlayer: true },
-  Redslime: { color: '#ff0000', health: 90, damage: 18, isPlayer: true, act: { damage: { amount: "25-75", mana: 34 } } },
-  Boruto: { color: '#ffff00', health: 70, damage: 25, isPlayer: true, act: { heal: { amount: "25-75", mana: 25 } } },
+  Redslime: {
+    color: '#ff0000',
+    health: 90,
+    damage: 18,
+    isPlayer: true,
+    act: { damage: { amount: '25-75', mana: 34 } }
+  },
+  Boruto: {
+    color: '#ffff00',
+    health: 70,
+    damage: 25,
+    isPlayer: true,
+    act: { heal: { amount: '25-75', mana: 25 } }
+  },
   Goblin: { color: '#00ff00', health: 75, damage: 5, isPlayer: false },
   Slime: { color: '#1abc9c', health: 50, damage: 5, isPlayer: false },
   Dummy: { color: '#a74e00', health: 100, damage: 0, isPlayer: false },
@@ -67,7 +79,7 @@ const script = {
         document.body.style.backgroundColor = '#242424'
       }
     },
-    { speaker: 'Narrator', text: 'I am the narrator.'},
+    { speaker: 'Narrator', text: 'I am the narrator.' },
     {
       speaker: 'Narrator',
       text: 'Before you do anything. Some decisions you make...'
@@ -104,21 +116,43 @@ const script = {
     }
   ],
   quitGame: [
-    {speaker: "Mom", text:"How could you leave us?", typingSpeed: 1, skip: true},
-    {speaker: "Mom", text:"How could you leave him?", typingSpeed: 1, skip: true},
-    {speaker: "Mom", text:"You left us alone, Took everything.", typingSpeed: 1, skip: true},
-    {speaker: "Mom", text:"With nothing to sapre", typingSpeed: 1, skip: true},
+    {
+      speaker: 'Mom',
+      text: 'How could you leave us?',
+      typingSpeed: 1,
+      skip: true
+    },
+    {
+      speaker: 'Mom',
+      text: 'How could you leave him?',
+      typingSpeed: 1,
+      skip: true
+    },
+    {
+      speaker: 'Mom',
+      text: 'You left us alone, Took everything.',
+      typingSpeed: 1,
+      skip: true
+    },
+    {
+      speaker: 'Mom',
+      text: 'With nothing to sapre',
+      typingSpeed: 1,
+      skip: true
+    },
     {
       speaker: 'Narrator',
       text: 'Understandable. The game will now close.',
       action: () => {
-        if(localStorage.getItem("closed") == 1){
-          showMessage('hi shadow');
+        if (localStorage.getItem('closed') == 1) {
+          showMessage('hi shadow')
         }
-        setTimeout(() => {showMessage('Game closed. Refresh to try again!')}, 1250);
+        setTimeout(() => {
+          showMessage('Game closed. Refresh to try again!')
+        }, 1250)
         optionsContainer.innerHTML = ''
         localStorage.removeItem('scene')
-        localStorage.setItem("closed", 1);
+        localStorage.setItem('closed', 1)
       }
     }
   ],
@@ -258,7 +292,7 @@ const script = {
       speaker: 'Nate',
       text: 'Navigate?. Might as well do that.',
       action: () => {
-        showObjective("NAVIGATE");
+        showObjective('NAVIGATE')
         displayOptions([
           {
             text: 'Walk East',
@@ -367,25 +401,41 @@ const script = {
     { speaker: 'Redslime', text: "so this is it? i heard the end's open here" },
     { speaker: 'Boruto', text: "Yup! and there's an enderman farm there!" },
     { speaker: 'Redslime', text: 'Cool. so basically free money?' },
-    { speaker: "Boruto", text: "Yeah, So uh ill show you around"},
-    { speaker: "Nate", text: "This is not how i expected my day to be."},
-    { speaker: "Redslime", text: "Hey, you. You seem new."},
-    { speaker: "Nate", text:"Dang it."},
-    { speaker: "Narrator", text: "Nate decides to face RedSlime, thinking about what he should say next."},
-    { speaker: "Redslime", text: "What's your name?"},
-    { speaker: "Nate", text: "Nate."},
-    { speaker: "Redslime", text: "Hey cool! You got the same name as me!"},
-    { speaker: "Nate", text: "..."},
-    { speaker: "RedSlime", text: "Well then ya new i suppose?"},
-    { speaker: "Nate", text:"Yeah, im new."},
-    { speaker: "Redslime", text: "Well then come around, here ill teach ya how to fight!"},
-    { speaker: "Narrator", text: "RedSlime summons a goblin."},
-    { speaker: "Redslime", text: "Heres a basic goblin, ill fight with you."},
-    {speaker: "Redslime", text: "Fight it.", options: [{ text: "FIGHT", action: () => startFight(['Nate', 'Redslime'], ['Goblin'], 'killedGoblin')}]}
+    { speaker: 'Boruto', text: 'Yeah, So uh ill show you around' },
+    { speaker: 'Nate', text: 'This is not how i expected my day to be.' },
+    { speaker: 'Redslime', text: 'Hey, you. You seem new.' },
+    { speaker: 'Nate', text: 'Dang it.' },
+    {
+      speaker: 'Narrator',
+      text: 'Nate decides to face RedSlime, thinking about what he should say next.'
+    },
+    { speaker: 'Redslime', text: "What's your name?" },
+    { speaker: 'Nate', text: 'Nate.' },
+    { speaker: 'Redslime', text: 'Hey cool! You got the same name as me!' },
+    { speaker: 'Nate', text: '...' },
+    { speaker: 'RedSlime', text: 'Well then ya new i suppose?' },
+    { speaker: 'Nate', text: 'Yeah, im new.' },
+    {
+      speaker: 'Redslime',
+      text: 'Well then come around, here ill teach ya how to fight!'
+    },
+    { speaker: 'Narrator', text: 'RedSlime summons a goblin.' },
+    { speaker: 'Redslime', text: 'Heres a basic goblin, ill fight with you.' },
+    {
+      speaker: 'Redslime',
+      text: 'Fight it.',
+      options: [
+        {
+          text: 'FIGHT',
+          action: () =>
+            startFight(['Nate', 'Redslime'], ['Goblin'], 'killedGoblin')
+        }
+      ]
+    }
   ],
   killedGoblin: [
-    { speaker: "Narrator", text: "Nate successfully kills the goblin."},
-    { speaker: "Redslime", text: "Eyyy, thats good!"}
+    { speaker: 'Narrator', text: 'Nate successfully kills the goblin.' },
+    { speaker: 'Redslime', text: 'Eyyy, thats good!' }
   ]
 }
 
@@ -475,7 +525,8 @@ function displayDialogue (line) {
 
   typeWriter(textForTypewriter, textLineElement, typingOptions, () => {
     if (
-      !line.options && !line.skip &&
+      !line.options &&
+      !line.skip &&
       optionsContainer.innerHTML.trim() === '' &&
       dialogueIndex < script[currentScene].length - 1
     ) {
@@ -493,7 +544,7 @@ function displayDialogue (line) {
       ])
     }
 
-    if (line.skip){
+    if (line.skip) {
       dialogueIndex++
       localStorage.setItem('scene', currentScene)
       localStorage.setItem('dialogueIndex', dialogueIndex)
@@ -678,13 +729,12 @@ function endFight (victory) {
   } else {
     advanceScene(localStorage.getItem('scene') || 'intro')
   }
-  
-  mana = 0;
+
+  mana = 0
   updateMana(0)
 }
 
-
-function updateMana(change = 0) {
+function updateMana (change = 0) {
   mana = Math.min(100, Math.max(0, mana + change))
   const manaBar = document.getElementById('manaBar')
   if (manaBar) {
@@ -692,7 +742,6 @@ function updateMana(change = 0) {
     manaBar.textContent = Math.floor(mana) + '%'
   }
 }
-
 
 function renderFightScene () {
   const arena = document.getElementById('fightArena')
@@ -767,12 +816,14 @@ function handleFightAction (action) {
 
       selectedAction = 'act'
       subOptions.innerHTML = currentFightAllies
-        .filter(a => a.isPlayer && a.act)
-        .map(a => `<button class="item-option" data-ally="${a.name}">${a.name}</button>`)
+        .filter((a) => a.isPlayer && a.act)
+        .map(
+          (a) =>
+            `<button class="item-option" data-ally="${a.name}">${a.name}</button>`
+        )
         .join('')
       subOptions.style.display = 'flex'
       break
-
 
     case 'defend':
       showMessage('You defend against the next attack!')
@@ -798,7 +849,7 @@ function handleFightAction (action) {
         setupTargetSelection()
       } else if (selectedAction === 'act') {
         const actorName = button.dataset.ally
-        const actor = currentFightAllies.find(a => a.name === actorName)
+        const actor = currentFightAllies.find((a) => a.name === actorName)
         if (!actor || !actor.act) return
 
         const { damage, heal } = actor.act
@@ -818,7 +869,7 @@ function handleFightAction (action) {
           `
         }
 
-        Array.from(subOptions.children).forEach(btn => {
+        Array.from(subOptions.children).forEach((btn) => {
           btn.onclick = () => performAct(actorName, btn.dataset.act)
         })
       }
@@ -860,17 +911,23 @@ function actOnTarget (targetName) {
 
   if (type === 'damage') {
     dealDamage(targetName, value)
-    showMessage(`${actorName} used ACT to deal ${value} damage to ${targetName}!`)
+    showMessage(
+      `${actorName} used ACT to deal ${value} damage to ${targetName}!`
+    )
   } else {
-    const targetChar = currentFightAllies.find(a => a.name === targetName)
+    const targetChar = currentFightAllies.find((a) => a.name === targetName)
     if (targetChar) {
-      targetChar.health = Math.min(targetChar.health + value, characters[targetName].health)
-      showMessage(`${actorName} used ACT to heal ${targetName} for ${value} HP!`)
+      targetChar.health = Math.min(
+        targetChar.health + value,
+        characters[targetName].health
+      )
+      showMessage(
+        `${actorName} used ACT to heal ${targetName} for ${value} HP!`
+      )
     }
   }
   setTimeout(() => enemyTurn(), 1000)
 }
-
 
 function startTimingMiniGame (target) {
   const timingBar = document.getElementById('timingBar')
@@ -944,8 +1001,8 @@ function useItemOnTarget (target) {
   setTimeout(() => enemyTurn(), 1000)
 }
 
-function performAct(actorName, type) {
-  const actor = currentFightAllies.find(a => a.name === actorName)
+function performAct (actorName, type) {
+  const actor = currentFightAllies.find((a) => a.name === actorName)
   if (!actor || !actor.act || !actor.act[type]) return
 
   const actData = actor.act[type]
@@ -968,7 +1025,9 @@ function performAct(actorName, type) {
   updateMana(-manaCost)
 
   if (type === 'damage') {
-    showMessage(`Select an enemy to deal ${value} damage! (-${manaCost}% mana)`)
+    showMessage(
+      `Select an enemy to deal ${value} damage! (-${manaCost}% mana)`
+    )
     selectedAction = 'act_damage'
     selectedTarget = { actorName, value }
     setupTargetSelection(false)
@@ -979,8 +1038,6 @@ function performAct(actorName, type) {
     setupTargetSelection(true)
   }
 }
-
-
 
 function showDamageEffect (characterName) {
   const healthElement = document.getElementById(`health-${characterName}`)
@@ -1031,13 +1088,12 @@ function dealDamage (target, amount) {
         }
       }
     }
-    
-    if (currentFightAllies.some(a => a.name === target)) {
+
+    if (currentFightAllies.some((a) => a.name === target)) {
       updateMana(5)
     } else {
       updateMana(5)
     }
-
 
     renderFightScene()
 
@@ -1065,10 +1121,10 @@ function enemyTurn () {
         )
 
         dealDamage(randomAlly.name, damage)
-        
-        enemy.health += Math.floor(Math.random() * 7) + 1;
-        showHealEffect(enemy.name);
-        
+
+        enemy.health += Math.floor(Math.random() * 7) + 1
+        showHealEffect(enemy.name)
+
         showMessage(
           `${enemy.name} attacks ${randomAlly.name} for ${damage} damage!`
         )
@@ -1095,8 +1151,8 @@ function resetFightUI () {
 }
 
 window.onload = () => {
-  //localStorage.setItem('scene', 'intro')
-  //localStorage.setItem('dialogueIndex', '0')
+  // localStorage.setItem('scene', 'intro')
+  // localStorage.setItem('dialogueIndex', '0')
   document.getElementById('fightOptions').addEventListener('click', (e) => {
     if (e.target.classList.contains('fight-option')) {
       handleFightAction(e.target.dataset.action)

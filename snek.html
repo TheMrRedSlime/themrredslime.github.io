@@ -1,224 +1,263 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>AI Snake - BFS + Flood Fill</title>
-<style>
-  body {
-    background: #000;
-    color: #fff;
-    font-family: monospace;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 0;
-    padding: 20px;
-  }
-  canvas {
-    background: #111;
-    margin-top: 20px;
-  }
-  #scoreboard {
-    font-size: 20px;
-    text-align: center;
-  }
-</style>
-</head>
-<body>
-<div id="scoreboard">
-  <div id="score">Score: 0</div>
-  <div id="topScore">Top Score: 0</div>
-</div>
-<canvas id="game"></canvas>
-
-<script>
-const GRID_SIZE = 32; // Change to 32, 64 etc
-const CELL_SIZE = 30;
-const FPS = 6000;
-
-const canvas = document.getElementById('game');
-canvas.width = GRID_SIZE * CELL_SIZE;
-canvas.height = GRID_SIZE * CELL_SIZE;
-const ctx = canvas.getContext('2d');
-
-const scoreDiv = document.getElementById('score');
-const topScoreDiv = document.getElementById('topScore');
-
-const DIRS = [
-  {x:0, y:-1},
-  {x:0, y:1},
-  {x:-1, y:0},
-  {x:1, y:0}
-];
-
-let snake, food, score, topScore = 0;
-
-function resetGame() {
-  if(score > topScore) topScore = score;
-  snake = [{x: Math.floor(GRID_SIZE/2), y: Math.floor(GRID_SIZE/2)}];
-  spawnFood();
-  score = 0;
-  updateScoreboard();
-}
-
-function spawnFood() {
-  while(true){
-    const pos = {x: Math.floor(Math.random()*GRID_SIZE), y: Math.floor(Math.random()*GRID_SIZE)};
-    if(!snake.some(s => s.x===pos.x && s.y===pos.y)){
-      food = pos;
-      break;
-    }
-  }
-}
-
-function updateScoreboard() {
-  scoreDiv.textContent = `Score: ${score}`;
-  topScoreDiv.textContent = `Top Score: ${topScore}`;
-}
-
-function draw() {
-  ctx.fillStyle = '#111';
-  ctx.fillRect(0,0,canvas.width,canvas.height);
-
-  // draw food
-  ctx.fillStyle = 'red';
-  ctx.fillRect(food.x*CELL_SIZE, food.y*CELL_SIZE, CELL_SIZE, CELL_SIZE);
-
-  // draw snake
-  ctx.fillStyle = 'green';
-  snake.forEach(s => ctx.fillRect(s.x*CELL_SIZE, s.y*CELL_SIZE, CELL_SIZE, CELL_SIZE));
-}
-
-// BFS shortest path
-function bfsPath(start, goal, tempSnake) {
-  const queue = [start];
-  const parent = {};
-  parent[`${start.x},${start.y}`] = null;
-
-  while(queue.length){
-    const node = queue.shift();
-    if(node.x === goal.x && node.y === goal.y){
-      const path = [];
-      let current = node;
-      while(current){
-        path.push(current);
-        current = parent[`${current.x},${current.y}`];
+  <head>
+    <meta charset="UTF-8" />
+    <title>AI Snake - BFS + Flood Fill</title>
+    <style>
+      body {
+        background: #000;
+        color: #fff;
+        font-family: monospace;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0;
+        padding: 20px;
       }
-      path.reverse();
-      path.shift();
-      return path;
-    }
-
-    for(const d of DIRS){
-      const nx = node.x + d.x;
-      const ny = node.y + d.y;
-      const key = `${nx},${ny}`;
-      if(nx>=0 && nx<GRID_SIZE && ny>=0 && ny<GRID_SIZE &&
-         !tempSnake.some(s=>s.x===nx && s.y===ny) &&
-         !parent[key]){
-        parent[key] = node;
-        queue.push({x:nx, y:ny});
+      canvas {
+        background: #111;
+        margin-top: 20px;
       }
-    }
-  }
-  return null;
-}
-
-// Flood fill to count reachable empty cells
-function floodFillCount(pos, tempSnake){
-  const visited = {};
-  const stack = [pos];
-  let count = 0;
-
-  while(stack.length){
-    const {x,y} = stack.pop();
-    const key = `${x},${y}`;
-    if(visited[key]) continue;
-    visited[key] = true;
-    count++;
-
-    for(const d of DIRS){
-      const nx = x + d.x;
-      const ny = y + d.y;
-      if(nx>=0 && nx<GRID_SIZE && ny>=0 && ny<GRID_SIZE &&
-         !tempSnake.some(s=>s.x===nx && s.y===ny) &&
-         !visited[`${nx},${ny}`]){
-        stack.push({x:nx, y:ny});
+      #scoreboard {
+        font-size: 20px;
+        text-align: center;
       }
-    }
-  }
-  return count;
-}
+    </style>
+  </head>
+  <body>
+    <div id="scoreboard">
+      <div id="score">Score: 0</div>
+      <div id="topScore">Top Score: 0</div>
+    </div>
+    <canvas id="game"></canvas>
 
-function getAIMove(){
-  const head = snake[0];
+    <script>
+      const GRID_SIZE = 32; // Change to 32, 64 etc
+      const CELL_SIZE = 30;
+      const FPS = 6000;
 
-  let path = bfsPath(head, food, snake);
-  if(path && path.length>0){
-    const newHead = path[0];
-    const newSnake = [newHead, ...snake.slice(0, -1)];
+      const canvas = document.getElementById("game");
+      canvas.width = GRID_SIZE * CELL_SIZE;
+      canvas.height = GRID_SIZE * CELL_SIZE;
+      const ctx = canvas.getContext("2d");
 
-    const tail = snake[snake.length - 1];
-    const tempSnake = newSnake.filter(s => s.x !== tail.x || s.y !== tail.y);
+      const scoreDiv = document.getElementById("score");
+      const topScoreDiv = document.getElementById("topScore");
 
-    if(floodFillCount(newHead, tempSnake) >= snake.length){
-      return {x:newHead.x-head.x, y:newHead.y-head.y};
-    }
-  }
+      const DIRS = [
+        { x: 0, y: -1 },
+        { x: 0, y: 1 },
+        { x: -1, y: 0 },
+        { x: 1, y: 0 },
+      ];
 
-  let bestMove = null;
-  let maxSpace = -1;
-  const tail = snake[snake.length-1];
-  for(const d of DIRS){
-    const nx = head.x + d.x;
-    const ny = head.y + d.y;
-    if(nx>=0 && nx<GRID_SIZE && ny>=0 && ny<GRID_SIZE && !snake.some(s=>s.x===nx && s.y===ny)){
-      const tempSnake = [{x:nx,y:ny}, ...snake.slice(0,-1)].filter(s => s.x !== tail.x || s.y !== tail.y);
-      const space = floodFillCount({x:nx,y:ny}, tempSnake);
-      if(space > maxSpace){
-        maxSpace = space;
-        bestMove = d;
+      let snake,
+        food,
+        score,
+        topScore = 0;
+
+      function resetGame() {
+        if (score > topScore) topScore = score;
+        snake = [
+          { x: Math.floor(GRID_SIZE / 2), y: Math.floor(GRID_SIZE / 2) },
+        ];
+        spawnFood();
+        score = 0;
+        updateScoreboard();
       }
-    }
-  }
-  return bestMove;
-}
 
+      function spawnFood() {
+        while (true) {
+          const pos = {
+            x: Math.floor(Math.random() * GRID_SIZE),
+            y: Math.floor(Math.random() * GRID_SIZE),
+          };
+          if (!snake.some((s) => s.x === pos.x && s.y === pos.y)) {
+            food = pos;
+            break;
+          }
+        }
+      }
 
-function step() {
-  const head = snake[0];
-  const move = getAIMove();
-  if(!move){
-    resetGame();
-    return;
-  }
+      function updateScoreboard() {
+        scoreDiv.textContent = `Score: ${score}`;
+        topScoreDiv.textContent = `Top Score: ${topScore}`;
+      }
 
-  const newHead = {x: head.x + move.x, y: head.y + move.y};
+      function draw() {
+        ctx.fillStyle = "#111";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  if(newHead.x<0 || newHead.x>=GRID_SIZE || newHead.y<0 || newHead.y>=GRID_SIZE ||
-     snake.some(s=>s.x===newHead.x && s.y===newHead.y)){
-    resetGame();
-    return;
-  }
+        // draw food
+        ctx.fillStyle = "red";
+        ctx.fillRect(
+          food.x * CELL_SIZE,
+          food.y * CELL_SIZE,
+          CELL_SIZE,
+          CELL_SIZE,
+        );
 
-  snake.unshift(newHead);
+        // draw snake
+        ctx.fillStyle = "green";
+        snake.forEach((s) =>
+          ctx.fillRect(s.x * CELL_SIZE, s.y * CELL_SIZE, CELL_SIZE, CELL_SIZE),
+        );
+      }
 
-  if(newHead.x === food.x && newHead.y === food.y){
-    score++;
-    updateScoreboard();
-    spawnFood();
-  } else {
-    snake.pop();
-  }
-}
+      // BFS shortest path
+      function bfsPath(start, goal, tempSnake) {
+        const queue = [start];
+        const parent = {};
+        parent[`${start.x},${start.y}`] = null;
 
-function loop() {
-  step();
-  draw();
-}
+        while (queue.length) {
+          const node = queue.shift();
+          if (node.x === goal.x && node.y === goal.y) {
+            const path = [];
+            let current = node;
+            while (current) {
+              path.push(current);
+              current = parent[`${current.x},${current.y}`];
+            }
+            path.reverse();
+            path.shift();
+            return path;
+          }
 
-resetGame();
-setInterval(loop, 100/FPS);
-</script>
-</body>
+          for (const d of DIRS) {
+            const nx = node.x + d.x;
+            const ny = node.y + d.y;
+            const key = `${nx},${ny}`;
+            if (
+              nx >= 0 &&
+              nx < GRID_SIZE &&
+              ny >= 0 &&
+              ny < GRID_SIZE &&
+              !tempSnake.some((s) => s.x === nx && s.y === ny) &&
+              !parent[key]
+            ) {
+              parent[key] = node;
+              queue.push({ x: nx, y: ny });
+            }
+          }
+        }
+        return null;
+      }
+
+      // Flood fill to count reachable empty cells
+      function floodFillCount(pos, tempSnake) {
+        const visited = {};
+        const stack = [pos];
+        let count = 0;
+
+        while (stack.length) {
+          const { x, y } = stack.pop();
+          const key = `${x},${y}`;
+          if (visited[key]) continue;
+          visited[key] = true;
+          count++;
+
+          for (const d of DIRS) {
+            const nx = x + d.x;
+            const ny = y + d.y;
+            if (
+              nx >= 0 &&
+              nx < GRID_SIZE &&
+              ny >= 0 &&
+              ny < GRID_SIZE &&
+              !tempSnake.some((s) => s.x === nx && s.y === ny) &&
+              !visited[`${nx},${ny}`]
+            ) {
+              stack.push({ x: nx, y: ny });
+            }
+          }
+        }
+        return count;
+      }
+
+      function getAIMove() {
+        const head = snake[0];
+
+        let path = bfsPath(head, food, snake);
+        if (path && path.length > 0) {
+          const newHead = path[0];
+          const newSnake = [newHead, ...snake.slice(0, -1)];
+
+          const tail = snake[snake.length - 1];
+          const tempSnake = newSnake.filter(
+            (s) => s.x !== tail.x || s.y !== tail.y,
+          );
+
+          if (floodFillCount(newHead, tempSnake) >= snake.length) {
+            return { x: newHead.x - head.x, y: newHead.y - head.y };
+          }
+        }
+
+        let bestMove = null;
+        let maxSpace = -1;
+        const tail = snake[snake.length - 1];
+        for (const d of DIRS) {
+          const nx = head.x + d.x;
+          const ny = head.y + d.y;
+          if (
+            nx >= 0 &&
+            nx < GRID_SIZE &&
+            ny >= 0 &&
+            ny < GRID_SIZE &&
+            !snake.some((s) => s.x === nx && s.y === ny)
+          ) {
+            const tempSnake = [{ x: nx, y: ny }, ...snake.slice(0, -1)].filter(
+              (s) => s.x !== tail.x || s.y !== tail.y,
+            );
+            const space = floodFillCount({ x: nx, y: ny }, tempSnake);
+            if (space > maxSpace) {
+              maxSpace = space;
+              bestMove = d;
+            }
+          }
+        }
+        return bestMove;
+      }
+
+      function step() {
+        const head = snake[0];
+        const move = getAIMove();
+        if (!move) {
+          resetGame();
+          return;
+        }
+
+        const newHead = { x: head.x + move.x, y: head.y + move.y };
+
+        if (
+          newHead.x < 0 ||
+          newHead.x >= GRID_SIZE ||
+          newHead.y < 0 ||
+          newHead.y >= GRID_SIZE ||
+          snake.some((s) => s.x === newHead.x && s.y === newHead.y)
+        ) {
+          resetGame();
+          return;
+        }
+
+        snake.unshift(newHead);
+
+        if (newHead.x === food.x && newHead.y === food.y) {
+          score++;
+          updateScoreboard();
+          spawnFood();
+        } else {
+          snake.pop();
+        }
+      }
+
+      function loop() {
+        step();
+        draw();
+      }
+
+      resetGame();
+      setInterval(loop, 100 / FPS);
+    </script>
+  </body>
 </html>
