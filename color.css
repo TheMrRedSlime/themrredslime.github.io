@@ -74,6 +74,20 @@ body {
     background-color 0.3s,
     color 0.3s;
 }
+.mana-bar-container {
+  width: 100%;
+  height: 20px;
+  border: 2px solid #444;
+  background-color: #111;
+  margin-top: 10px;
+}
+.mana-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #0044ff, #00aaff);
+  transition: width 0.3s ease-in-out;
+}
+
 .options-container button:hover {
   background-color: #fff;
   color: #000;
@@ -229,6 +243,8 @@ body {
   padding: 20px;
   background-color: #000;
   border-radius: 8px;
+  justify-content: center;
+  align-items: center;
 }
 .fight-arena {
   display: flex;

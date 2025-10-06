@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3501299474359876" crossorigin="anonymous"></script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sleepy Hallucination</title>
@@ -46,7 +47,7 @@
         <div class="fight-options" id="fightOptions">
           <button class="fight-option" data-action="fight">FIGHT</button>
           <button class="fight-option" data-action="defend">DEFEND</button>
-          <button class="fight-option" data-action="use">USE</button>
+          <button class="fight-option" data-action="act">ACT</button>
           <button class="fight-option" data-action="flee">FLEE</button>
         </div>
         <div
@@ -54,14 +55,26 @@
           id="fightSuboptions"
           style="display: none"
         >
-          <!-- Sub-options will appear here when selecting USE or FIGHT -->
+          <!-- Sub-options will appear here when selecting ACT or FIGHT -->
         </div>
+        <div id="manaContainer">
+          <div id="manaBar" style="width:0%;background:blue;color:white;text-align:center;">0%</div>
+        </div>
+
         <div class="timing-bar" id="timingBar" style="display: none">
           <div class="timing-indicator"></div>
           <div class="perfect-zone"></div>
         </div>
       </div>
     </div>
+
+    <script>
+      /** if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(reg => console.log('✅ Service Worker registered:', reg.scope))
+          .catch(err => console.error('❌ Service Worker registration failed:', err));
+      } **/
+    </script>
 
     <script src="hollow.js"></script>
   </body>
