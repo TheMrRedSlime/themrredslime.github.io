@@ -60,6 +60,13 @@ const characters = {
 // --- Story Script ---
 const script = {
   intro: [
+    { speaker: "WARNING", text: "This game may include YOUR personal memories, nightmares, or traumatic events from your past. Proceed?", typingSpeed: 50, options: [{text: "YES", action: () => {
+      dialogueIndex++
+      localStorage.setItem('scene', currentScene)
+      localStorage.setItem('dialogueIndex', dialogueIndex)
+
+      loadDialogue()
+    }}]},
     {
       speaker: 'Narrator',
       text: 'Hello.',
@@ -417,8 +424,17 @@ const script = {
     }}
   ],
   livingRoomCousinsMeetup: [
-    { speaker: "Nate", text: "For heavens sake i need a break-"},
-    { speaker: "Narrator", text: "W.I.P"}
+    { speaker: "Nate", text: "i need a break-"},
+    { speaker: "Narrator", text: "Suddenly the front door bursts open"},
+    { speaker: "Ben", text: "YEAHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH", typingSpeed: 1, skip: true},
+    { speaker: "Sue", text: "Ben chillax."},
+    { speaker: "Nate", text: "hi ben..."},
+    { speaker: "Ben", text: "SUP!!!!"},
+    { speaker: "Nate", text: "Is he always filled with sugar or something."},
+    { speaker: "Sue", text: "Sup."},
+    { speaker: "Nate", text: "Sup."},
+    { speaker: "Mom", text: "Come in, come in!"},
+    { speaker: "Nate", text: "Oh well."}
   ]
 }
 
