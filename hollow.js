@@ -434,7 +434,8 @@ const script = {
     { speaker: "Sue", text: "Sup."},
     { speaker: "Nate", text: "Sup."},
     { speaker: "Mom", text: "Come in, come in!"},
-    { speaker: "Nate", text: "Oh well."}
+    { speaker: "Nate", text: "Oh well."},
+    { speaker: "Narrator", text: "Nate goes to drink water, While Sue and Ben talk to his mother."}
   ]
 }
 
