@@ -12,6 +12,14 @@ const messageBoxOverlay = document.getElementById('messageBoxOverlay');
 const messageBoxText = document.getElementById('messageBoxText');
 const messageBoxButton = document.getElementById('messageBoxButton');
 
+// Sounds
+const beepSound = new Audio('beep.mp3');
+beepSound.volume = 0.45;
+const checkmate = new Audio('chess.mp3');
+checkmate.volume = 0.03;
+checkmate.loop = true;
+checkmate.play();
+
 messageBoxButton.addEventListener('click', () => {
   messageBoxOverlay.classList.remove('active');
 })
@@ -20,6 +28,22 @@ function showMessage (message) {
   messageBoxText.textContent = message;
   messageBoxOverlay.classList.add('active');
 }
+
+function showActionMessage(message) {
+  const actionBox = document.getElementById('actionMessageBox');
+  if (actionBox) {
+    actionBox.textContent = message;
+    actionBox.style.borderColor = '#00ff00';
+    actionBox.style.color = '#00ff00';
+
+    // Brief flash effect
+    actionBox.style.transform = 'scale(1.05)';
+    setTimeout(() => {
+      actionBox.style.transform = 'scale(1)';
+    }, 200);
+  }
+}
+
 
 // Game State
 let currentScene = 'intro';
@@ -36,6 +60,7 @@ let selectedAction = null;
 let selectedItem = null;
 let selectedTarget = null;
 let currentFightVictoryScene = null;
+let currentDefeatScene = null;
 
 // Character Definitions
 const characters = {
@@ -60,7 +85,7 @@ const characters = {
 // --- Story Script ---
 const script = {
   intro: [
-    { speaker: "WARNING", text: "This game may include YOUR personal memories, nightmares, or traumatic events from your past. Proceed?", typingSpeed: 50, options: [{text: "YES", action: () => {
+    { speaker: "WARNING", text: "This game may include YOUR personal memories, nightmares, or traumatic events from your past. Proceed?", typingSpeed: 75, options: [{text: "YES", action: () => {
       dialogueIndex++
       localStorage.setItem('scene', currentScene)
       localStorage.setItem('dialogueIndex', dialogueIndex)
@@ -208,22 +233,18 @@ const script = {
     { speaker: 'Narrator', text: 'It goes down the floor...' },
     {
       speaker: 'Narrator',
-      text: "It goes down the earth's crust, and all layers..."
-    },
-    {
-      speaker: 'Narrator',
       text: 'After some time going down, he reaches a place, seems a lot more green-ish.',
       action: () => {
         gameContainer.style.backgroundColor = '#0f290f'
         textLineElement.innerHTML = ''
-        setTimeout(() => advanceScene('dreamArrival'), 1000)
+        setTimeout(() => advanceScene('dreamArrival'), 5000)
       }
     }
   ],
   dreamArrival: [
     {
       speaker: 'Narrator',
-      text: "The blue light soul thing's light fills the entire screen. Suddenly we see Nate sleeping... in the grass."
+      text: "The blue lighted soul's light fills the entire screen. Suddenly we see Nate sleeping... in the grass."
     },
     { speaker: 'Nate', text: 'Woah Wha-' },
     {
@@ -373,13 +394,13 @@ const script = {
     { speaker: "Boruto", text: "Yeah, So uh ill show you around"},
     { speaker: "Nate", text: "This is not how i expected my day to be."},
     { speaker: "Redslime", text: "Hey, you. You seem new."},
-    { speaker: "Nate", text:"Dang it."},
+    { speaker: "Nate", text:"Crap."},
     { speaker: "Narrator", text: "Nate decides to face RedSlime, thinking about what he should say next."},
     { speaker: "Redslime", text: "What's your name?"},
     { speaker: "Nate", text: "Nate."},
     { speaker: "Redslime", text: "Hey cool! You got the same name as me!"},
     { speaker: "Nate", text: "..."},
-    { speaker: "RedSlime", text: "Well then ya new i suppose?"},
+    { speaker: "RedSlime", text: "Well then ya new to the game i suppose?"},
     { speaker: "Nate", text:"Yeah, im new."},
     { speaker: "Redslime", text: "Well then come around, here ill teach ya how to fight!"},
     { speaker: "Narrator", text: "RedSlime summons a goblin."},
@@ -389,7 +410,7 @@ const script = {
   killedGoblin: [
     { speaker: "Narrator", text: "Nate successfully kills the goblin."},
     { speaker: "Redslime", text: "Eyyy, thats good!"},
-    { speaker: "Nate", text: "Thanks"},
+    { speaker: "Nate", text: "Thanks."},
     { speaker: "Redslime", text: "K then i'll be heading my way"},
     { speaker: "Narrator", text: "While redslime teleports to the end farm, Boruto stays behind."},
     { speaker: "Boruto", text: "Got a lot of questions, dont ya. Nate?"},
@@ -411,8 +432,8 @@ const script = {
     { speaker: "Narrator", text: "He takes it out. revealing to be the lollipop" },
     { speaker: "Narrator", text: "He puts it in his mouth."},
     { speaker: "Nate", text: "I have no idea what the hell is going on."},
-    { speaker: "Mom", text: "Oh yeah your cousins Sue and Ben are coming"},
-    { speaker: "Nate", text: "WHAT?!"},
+    { speaker: "Mom", text: "Oh yeah your classmates Sue and Ben are coming for a sleepover"},
+    { speaker: "Nate", text: "WHAT?!", typingSpeed: 15},
     { speaker: "Nate", text: "I dont like em, Especially ben!"},
     { speaker: "Nate", text: "He's annoying!"},
     { speaker: "Mom", text: "Well they're coming, Nothing we can do bout that."},
@@ -435,7 +456,18 @@ const script = {
     { speaker: "Nate", text: "Sup."},
     { speaker: "Mom", text: "Come in, come in!"},
     { speaker: "Nate", text: "Oh well."},
-    { speaker: "Narrator", text: "Nate goes to drink water, While Sue and Ben talk to his mother."}
+    { speaker: "Narrator", text: "Nate goes to drink water, and Sue talks to his mother."},
+    { speaker: "Narrator", text: "While ben's just looting food from the fridge."},
+    { speaker: "Sue", text: "He dosent really like school that much"},
+    { speaker: "Sue", text: "He just looks in the distance."},
+    { speaker: "Sue", text: "Yet i hear he gets good marks."},
+    { speaker: "Mom", text: "Only when he wants to get marks."},
+    { speaker: "Mom", text: "He sometimes fails and i know he could learn it if he wanted to."},
+    { speaker: "Mom", text: "He just dosent seem..."},
+    { speaker: "Sue", text: "Interested. He dosent seem interested."},
+    { speaker: "Mom", text: "Exactly! Oh wait i prepared some snacks for you"},
+    { speaker: "Narrator", text: "Mom goes back to the kitchen to get a tray of snacks"},
+    { speaker: "Mom", text: "Dig in!"}
   ]
 }
 
@@ -486,6 +518,7 @@ function typeWriter (
         }
         i++
       }
+      beepSound.play()
       typingTimeout = setTimeout(type, typingSpeed)
     } else {
       if (onComplete) onComplete()
@@ -562,6 +595,7 @@ function displayOptions (options) {
     const button = document.createElement('button')
     button.textContent = option.text
     button.onclick = () => {
+      checkmate.play();
       if (typeof option.action === 'function') {
         option.action()
       }
@@ -820,7 +854,7 @@ function handleFightAction (action) {
 
     case 'act':
       if (mana <= 0) {
-        showMessage('You need some mana to perform an ACT!')
+        showActionMessage('You need some mana to perform an ACT!')
         return
       }
 
@@ -834,16 +868,16 @@ function handleFightAction (action) {
 
 
     case 'defend':
-      showMessage('You defend against the next attack!')
+      showActionMessage('You defend against the next attack!')
       setTimeout(() => enemyTurn(), 1500)
       break
 
     case 'flee':
       if (Math.random() > 0.5) {
         endFight(false)
-        showMessage('You fled successfully!')
+        showActionMessage('You fled successfully!')
       } else {
-        showMessage('Failed to flee!')
+        showActionMessage('Failed to flee!')
         setTimeout(() => enemyTurn(), 1500)
       }
       break
@@ -853,7 +887,7 @@ function handleFightAction (action) {
     button.onclick = () => {
       if (selectedAction === 'fight') {
         selectedTarget = button.dataset.ally
-        showMessage(`Select a target for ${selectedTarget}'s attack!`)
+        showActionMessage(`Select a target for ${selectedTarget}'s attack!`)
         setupTargetSelection()
       } else if (selectedAction === 'act') {
         const actorName = button.dataset.ally
@@ -919,12 +953,12 @@ function actOnTarget (targetName) {
 
   if (type === 'damage') {
     dealDamage(targetName, value)
-    showMessage(`${actorName} used ACT to deal ${value} damage to ${targetName}!`)
+    showActionMessage(`${actorName} used ACT to deal ${value} damage to ${targetName}!`)
   } else {
     const targetChar = currentFightAllies.find(a => a.name === targetName)
     if (targetChar) {
       targetChar.health = Math.min(targetChar.health + value, characters[targetName].health)
-      showMessage(`${actorName} used ACT to heal ${targetName} for ${value} HP!`)
+      showActionMessage(`${actorName} used ACT to heal ${targetName} for ${value} HP!`)
     }
   }
   setTimeout(() => enemyTurn(), 1000)
@@ -936,7 +970,7 @@ function startTimingMiniGame (target) {
   timingBar.style.display = 'block'
 
   const indicator = timingBar.querySelector('.timing-indicator')
-  indicator.style.animation = 'timingSwing 1.1s infinite linear'
+  indicator.style.animation = 'timingSwing 1.2s infinite linear'
 
   timingBar.onclick = () => {
     const indicator = timingBar.querySelector('.timing-indicator')
@@ -971,7 +1005,7 @@ function startTimingMiniGame (target) {
     const finalDamage = Math.round(baseDamage * damageMultiplier)
 
     dealDamage(target, finalDamage)
-    showMessage(`${message} (${finalDamage} damage)`)
+    showActionMessage(`${message} (${finalDamage} damage)`)
 
     timingBar.style.display = 'none'
     timingBar.onclick = null
@@ -991,7 +1025,7 @@ function useItemOnTarget (target) {
         targetChar.health + selectedItem.value,
         characters[target].health
       )
-      showMessage(`${target} healed for ${selectedItem.value} HP!`)
+      showActionMessage(`${target} healed for ${selectedItem.value} HP!`)
       showDamageEffect(target)
     }
   } else if (selectedItem.type === 'damage') {
@@ -1011,7 +1045,7 @@ function performAct(actorName, type) {
   const manaCost = actData.mana || 0
 
   if (mana < manaCost) {
-    showMessage(`Not enough mana! Need ${manaCost}%`)
+    showActionMessage(`Not enough mana! Need ${manaCost}%`)
     return
   }
 
@@ -1027,12 +1061,12 @@ function performAct(actorName, type) {
   updateMana(-manaCost)
 
   if (type === 'damage') {
-    showMessage(`Select an enemy to deal ${value} damage! (-${manaCost}% mana)`)
+    showActionMessage(`Select an enemy to deal ${value} damage! (-${manaCost}% mana)`)
     selectedAction = 'act_damage'
     selectedTarget = { actorName, value }
     setupTargetSelection(false)
   } else if (type === 'heal') {
-    showMessage(`Select an ally to heal ${value} HP! (-${manaCost}% mana)`)
+    showActionMessage(`Select an ally to heal ${value} HP! (-${manaCost}% mana)`)
     selectedAction = 'act_heal'
     selectedTarget = { actorName, value }
     setupTargetSelection(true)
@@ -1083,7 +1117,7 @@ function dealDamage (target, amount) {
         ally.health -= amount
 
         if (ally.health <= 0) {
-          showMessage(`${target} was knocked out!`)
+          showActionMessage(`${target} was knocked out!`)
           currentFightAllies = currentFightAllies.filter(
             (a) => a.name !== target
           )
@@ -1128,7 +1162,7 @@ function enemyTurn () {
         enemy.health += Math.floor(Math.random() * 7) + 1;
         showHealEffect(enemy.name);
         
-        showMessage(
+        showActionMessage(
           `${enemy.name} attacks ${randomAlly.name} for ${damage} damage!`
         )
       }, index * 1500)
