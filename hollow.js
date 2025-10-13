@@ -467,7 +467,31 @@ const script = {
     { speaker: "Sue", text: "Interested. He dosent seem interested."},
     { speaker: "Mom", text: "Exactly! Oh wait i prepared some snacks for you"},
     { speaker: "Narrator", text: "Mom goes back to the kitchen to get a tray of snacks"},
-    { speaker: "Mom", text: "Dig in!"}
+    { speaker: "Mom", text: "Dig in!"},
+    { speaker: "Narrator", text: "Ben, eyeing the sweets. Decides to rush over the table"},
+    { speaker: "Ben", text: "First!"},
+    { speaker: "Mom", text: "Woah easy! No rush"},
+    { speaker: "Narrator", text: "Nate comes back from with a glass of water in his hand"},
+    { speaker: "Nate", text: "Ben, go slow. you'll choke"},
+    { speaker: "Ben", text: "But i wanna eat!!!!!!!!!!!"},
+    { speaker: "Nate", text: "Jeez fine, eat."},
+    { speaker: "Ben", text: "WEEEEEEEEEEEEEE"},
+    { speaker: "Narratror", text: "Ben, digs through the food. While nate thinks about last night"},
+    { speaker: "Nate", text: "What the hell was that."},
+    { speaker: "Nate", text: "Was that me... Before everything?"},
+    { speaker: "Mom", text: "Ok so-"},
+    { speaker: "Narrator", text: "Nate and the others sit down to talk for hours."},
+    { speaker: "Narrator", text: "Sue notices that its getting dark."},
+    { speaker: "Sue", text: "We should sleep."},
+    { speaker: "Nate", text: "Eh? but we're only gettin-"},
+    { speaker: "Nate", text: "Oh its dark. Well FINE."},
+    { speaker: "Narrator", text: "Ben seemingly slept on the couch sometime while talking."},
+    { speaker: "Nate", text: "Are we just going to leave him here?"},
+    { speaker: "Sue", text: "Let him sleep on the cough"},
+    { speaker: "Mom", text: "One second, ill be right back!"},
+    { speaker: "Narrator", text: "Mom rushes to get a pillow. While nate and sue are tired"},
+    { speaker: "Nate", text: "Im going back to my room, Mom will tell ya where to sleep."},
+    { speaker: "Sue", text: "K See ya bro."}
   ]
 }
 
@@ -502,6 +526,8 @@ function typeWriter (
         element.innerHTML += '</span>'
         i += '</span>'.length
       } else {
+        const currentChar = text.charAt(i);
+
         if (jumble && i > 0 && Math.random() > 0.1) {
           const currentContent = element.innerHTML
           const jumbledContent = currentContent
@@ -518,7 +544,19 @@ function typeWriter (
         }
         i++
       }
-      beepSound.play()
+      beepSound.play();
+      let delay = typingSpeed;
+      
+      if (currentChar === '.' || currentChar === '!') {
+        delay = typingSpeed * 8
+      } else if (currentChar === ',' || currentChar === ';') {
+        delay = typingSpeed * 4 
+      } else if (currentChar === '?' || currentChar === ':') {
+        delay = typingSpeed * 6
+      }
+      
+      typingTimeout = setTimeout(type, delay)
+
       typingTimeout = setTimeout(type, typingSpeed)
     } else {
       if (onComplete) onComplete()
