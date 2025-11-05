@@ -497,74 +497,84 @@ const script = {
 
 // --- Game Logic Functions ---
 
-function typeWriter (
+function typeWriter(
   text,
   element,
   { typingSpeed = 35, jumble = false } = {},
   onComplete
 ) {
-  clearTimeout(typingTimeout)
-  let i = 0
+  clearTimeout(typingTimeout);
+  let i = 0;
   const chars =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
-  element.innerHTML = ''
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
+  element.innerHTML = "";
 
-  function type () {
+  function type() {
     if (i < text.length) {
-      const substr = text.substring(i)
-      if (substr.startsWith('<strong>')) {
-        element.innerHTML += '<strong>'
-        i += '<strong>'.length
-      } else if (substr.startsWith('</strong>')) {
-        element.innerHTML += '</strong>'
-        i += '</strong>'.length
+      const substr = text.substring(i);
+
+      // Handle tags
+      if (substr.startsWith("<strong>")) {
+        element.innerHTML += "<strong>";
+        i += "<strong>".length;
+        return type();
+      } else if (substr.startsWith("</strong>")) {
+        element.innerHTML += "</strong>";
+        i += "</strong>".length;
+        return type();
       } else if (substr.startsWith('<span class="speaker">')) {
-        const tag = '<span class="speaker">'
-        element.innerHTML += tag
-        i += tag.length
-      } else if (substr.startsWith('</span>')) {
-        element.innerHTML += '</span>'
-        i += '</span>'.length
+        const tag = '<span class="speaker">';
+        element.innerHTML += tag;
+        i += tag.length;
+        return type();
+      } else if (substr.startsWith("</span>")) {
+        element.innerHTML += "</span>";
+        i += "</span>".length;
+        return type();
+      }
+
+      // Typing logic
+      if (jumble && i > 0 && Math.random() > 0.1) {
+        const cleanText = element.innerText; // prevents breaking tags
+        const jumbledContent = cleanText
+          .split("")
+          .map((c) =>
+            Math.random() > 0.1
+              ? chars[Math.floor(Math.random() * chars.length)]
+              : c
+          )
+          .join("");
+        element.innerText = jumbledContent + text.charAt(i);
       } else {
-        const currentChar = text.charAt(i);
-
-        if (jumble && i > 0 && Math.random() > 0.1) {
-          const currentContent = element.innerHTML
-          const jumbledContent = currentContent
-            .split('')
-            .map((c) =>
-              Math.random() > 0.1
-                ? chars[Math.floor(Math.random() * chars.length)]
-                : c
-            )
-            .join('')
-          element.innerHTML = jumbledContent + text.charAt(i)
-        } else {
-          element.innerHTML += text.charAt(i)
-        }
-        i++
+        element.innerHTML += text.charAt(i);
       }
-      beepSound.play();
+
+      // Play sound safely (clone to avoid cutoff)
+      if (typeof beepSound !== "undefined") {
+        const sound = beepSound.cloneNode();
+        sound.volume = 0.3;
+        sound.play();
+      }
+
+      i++;
+      const currentChar = text.charAt(i - 1);
       let delay = typingSpeed;
-      
-      if (currentChar === '.' || currentChar === '!') {
-        delay = typingSpeed * 8
-      } else if (currentChar === ',' || currentChar === ';') {
-        delay = typingSpeed * 4 
-      } else if (currentChar === '?' || currentChar === ':') {
-        delay = typingSpeed * 6
-      }
-      
-      typingTimeout = setTimeout(type, delay)
 
-      typingTimeout = setTimeout(type, typingSpeed)
+      // Add pauses for punctuation
+      if (currentChar === "." || currentChar === "!") delay *= 8;
+      else if (currentChar === "," || currentChar === ";") delay *= 4;
+      else if (currentChar === "?" || currentChar === ":") delay *= 6;
+
+      typingTimeout = setTimeout(type, delay);
     } else {
-      if (onComplete) onComplete()
+      if (onComplete) onComplete();
     }
   }
 
-  type()
+  type();
 }
+
+
 function displayDialogue (line) {
   textLineElement.className = ''
 
