@@ -491,7 +491,8 @@ const script = {
     { speaker: "Mom", text: "One second, ill be right back!"},
     { speaker: "Narrator", text: "Mom rushes to get a pillow. While nate and sue are tired"},
     { speaker: "Nate", text: "Im going back to my room, Mom will tell ya where to sleep."},
-    { speaker: "Sue", text: "K See ya bro."}
+    { speaker: "Sue", text: "K See ya."},
+    { speaker: "Narrator", text: "Nate now wonders what he should do"}
   ]
 }
 
