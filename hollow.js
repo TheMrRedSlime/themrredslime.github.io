@@ -522,7 +522,6 @@ const script = {
     { speaker: "Boruto", text: "Hmm, interesting. Never seen seperation before."},
     { speaker: "Nate", text: "???"},
     { speaker: "System", text: "TO BE CONTINUED."}
-    
   ]
 }
 

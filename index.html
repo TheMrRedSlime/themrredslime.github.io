@@ -24,18 +24,24 @@
     <link rel="stylesheet" type="text/css" href="color.css" />
   </head>
   <body>
-    <div id="top-ad" style="position: fixed; top: 0; left: 50%; width: 100%; z-index: 1001 ">
+  <div id="top-ad-container" style="position: fixed; top: 0; width: 100%; display: flex; justify-content: center; z-index: 1001; background: transparent;">
+    <div id="top-ad">
       <script type="text/javascript">
         atOptions = {
           'key' : '7767d335be65d79ab04330516fb624f6',
-        'format' : 'iframe',
-          'height' : 50,
-          'width' : 320,
+          'format' : 'iframe',
+          'height' : 90,
+          'width' : 720,
           'params' : {}
         };
       </script>
       <script type="text/javascript" src="//www.highperformanceformat.com/7767d335be65d79ab04330516fb624f6/invoke.js"></script>
     </div>
+  </div>
+
+    <!-- Push your content down so it's not hidden -->
+    <div style="margin-top: 60px;"></div>
+
     <div class="game-container">
       <div class="dialogue-box" id="dialogueBox">
         <p id="textLine"></p>
@@ -50,7 +56,7 @@
         <button id="messageBoxButton">OK</button>
       </div>
     </div>
-    <div class="fight-overlay" id="fightOverlay" style="display: none">
+    <div class="fight-overlay" id="fightOverlay" style="display: none; justify-content: center; align-items: center;">
       <div class="fight-container">
         <div class="action-message-box" id="actionMessageBox">
           Ready to fight!
