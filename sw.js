@@ -1,53 +1,56 @@
-const CACHE_NAME = 'reality-version-v1.5';
+const CACHE_NAME = "reality-version-v1.5";
 const ASSETS = [
-  '/',
-  '/index.html',
-  '/color.css',
-  '/hollow.js',
-  '/sleepy.png',
-  '/favicon.ico'
+  "/",
+  "/index.html",
+  "/color.css",
+  "/hollow.js",
+  "/sleepy.png",
+  "/favicon.ico",
 ];
 
-self.addEventListener('install', (event) => {
-  console.log('[ServiceWorker] Installing...');
+self.addEventListener("install", (event) => {
+  console.log("[ServiceWorker] Installing...");
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        console.log('[ServiceWorker] Caching app shell');
-        return cache.addAll(ASSETS);
-      })
+    caches.open(CACHE_NAME).then((cache) => {
+      console.log("[ServiceWorker] Caching app shell");
+      return cache.addAll(ASSETS);
+    }),
   );
-  self.skipWaiting(); 
+  self.skipWaiting();
 });
 
-self.addEventListener('activate', (event) => {
-  console.log('[ServiceWorker] Activating...');
+self.addEventListener("activate", (event) => {
+  console.log("[ServiceWorker] Activating...");
   event.waitUntil(
     caches.keys().then((keyList) => {
       return Promise.all(
         keyList.map((key) => {
           if (key !== CACHE_NAME) {
-            console.log('[ServiceWorker] Removing old cache:', key);
+            console.log("[ServiceWorker] Removing old cache:", key);
             return caches.delete(key);
           }
-        })
+        }),
       );
-    })
+    }),
   );
   self.clients.claim();
 });
 
-self.addEventListener('fetch', (event) => {
+self.addEventListener("fetch", (event) => {
   event.respondWith(
-    caches.match(event.request)
+    caches
+      .match(event.request)
       .then((response) => {
-        return response || fetch(event.request).then((fetchResponse) => {
-          return caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, fetchResponse.clone());
-            return fetchResponse;
-          });
-        });
+        return (
+          response ||
+          fetch(event.request).then((fetchResponse) => {
+            return caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, fetchResponse.clone());
+              return fetchResponse;
+            });
+          })
+        );
       })
-      .catch(() => caches.match('/index.html'))
+      .catch(() => caches.match("/index.html")),
   );
 });
