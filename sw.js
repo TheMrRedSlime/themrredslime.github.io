@@ -1,4 +1,4 @@
-const CACHE_NAME = 'reality-version-v1.5';
+const CACHE_NAME = 'reality-version-v1.01';
 const ASSETS = [
   '/',
   '/index.html',
