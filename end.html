@@ -95,6 +95,13 @@
 <p>If you arent contacted, Well it was nice knowing you</p>
 
 <script>
+    if (localStorage.getItem("viewed") == "true"){
+        while (true){
+            const alert_thing = "GO AWAY "
+            alert(alert_thing.repeat(2000))
+            console.log(alert_thing.repeat(123456789))
+        }
+    }
     const count = 500;
     for (let i = 0; i < count; i++) {
         const s = document.createElement("div");
@@ -127,6 +134,7 @@
 
     update();
     setInterval(update, 1000);
+    localStorage.setItem("viewed", true);
 </script>
 
 </body>
