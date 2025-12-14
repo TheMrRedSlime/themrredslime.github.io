@@ -1,18 +1,21 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>The End?</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <head>
+    <meta charset="UTF-8" />
+    <title>The End?</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<!-- Press Start 2P -->
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <!-- Press Start 2P -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
 
-<style>
-    body {
+    <style>
+      body {
         margin: 0;
         height: 100vh;
-        font-family: 'Press Start 2P', cursive;
+        font-family: "Press Start 2P", cursive;
         background: black;
         color: white;
         display: flex;
@@ -21,10 +24,10 @@
         align-items: center;
         overflow: hidden;
         text-align: center;
-    }
+      }
 
-    /* Simple CSS stars (no JS!) */
-    .star {
+      /* Simple CSS stars (no JS!) */
+      .star {
         position: fixed;
         width: 2px;
         height: 2px;
@@ -32,86 +35,91 @@
         border-radius: 50%;
         animation: twinkle 1s infinite alternate;
         opacity: 0.8;
-    }
+      }
 
-    @keyframes twinkle {
-        0% { opacity: 0.5; }
-        100% { opacity: 1; }
-    }
+      @keyframes twinkle {
+        0% {
+          opacity: 0.5;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
 
-    h1 {
+      h1 {
         font-size: 22px;
         margin-bottom: 20px;
-        text-shadow: 
+        text-shadow:
           0 0 10px #999,
           0 0 20px #999,
           0 0 30px #999,
           0 0 40px #999;
-    }
-    p {
+      }
+      p {
         font-size: 0.75em;
-    }
+      }
 
-    #label {
+      #label {
         font-size: 12px;
         margin-bottom: 35px;
         opacity: 0.7;
-    }
+      }
 
-    #timer {
+      #timer {
         font-size: 14px;
         line-height: 28px;
         white-space: pre-line;
-    }
-    .eyatuthin {
-        font-family: 'Press Start 2P', cursive;
-        color: #FF00FF;
-    }
-</style>
-</head>
-<body>
+      }
+      .eyatuthin {
+        font-family: "Press Start 2P", cursive;
+        color: #ff00ff;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>The End?</h1>
+    <div id="timer">Loading...</div>
+    <h3>Farewell</h3>
+    <br />
+    <p>For a long time ive been looking a substitute for my loneliness</p>
+    <p>When my parents werent there for me, They were fighting each other.</p>
+    <p>I can still remember the fighting over the phone</p>
+    <p>So i ran towards the internet.</p>
+    <p>It provided the comfort that my own home couldnt give</p>
+    <p>I got into the wrong croud and started doing sketchy stuff</p>
+    <p>Low level things like getting server members and selling them</p>
+    <p>Phishing sites and whatnot and eventually. After some time</p>
+    <p>It got too serious and</p>
+    <p>I got into bad trouble and i had to run away</p>
+    <p>I created redslime as the innocent child. Never the murderer</p>
+    <p>You all changed that.</p>
+    <p class="eyatuthin">(Dosent Include Eyatu & co.)</p>
+    <p>When you all created chaos i tried to balance it.</p>
+    <p>I wanted to run away from my past. but you all didnt allow me to</p>
+    <p>Each day i look in the mirror. I'm reminded of the mistakes i made</p>
+    <p>I still regret the decisions i did</p>
+    <p>and to satisfy the people who wanted me to fall</p>
+    <p>I never wanted to get in a war. You forced me to choose a side</p>
+    <p>
+      So i've chosen finally. I've decided to quit. You all wanted me to anyway
+    </p>
+    <p>Finally, ive chosen to move on</p>
+    <p>A select few of all will most likely be already contacted by my alt</p>
+    <p>If you arent contacted, Well it was nice knowing you</p>
 
-<h1>The End?</h1>
-<div id="timer">Loading...</div>
-<h3>Farewell</h3>
-<br>
-<p>For a long time ive been looking a substitute for my loneliness</p>
-<p>When my parents werent there for me, They were fighting each other.</p>
-<p>I can still remember the fighting over the phone</p>
-<p>So i ran towards the internet.</p>
-<p>It provided the comfort that my own home couldnt give</p>
-<p>I got into the wrong croud and started doing sketchy stuff</p>
-<p>Low level things like getting server members and selling them</p>
-<p>Phishing sites and whatnot and eventually. After some time</p>
-<p>It got too serious and</p>
-<p>I got into bad trouble and i had to run away</p>
-<p>I created redslime as the innocent child. Never the murderer</p>
-<p>You all changed that.</p>
-<p class="eyatuthin">(Dosent Include Eyatu & co.)</p>
-<p>When you all created chaos i tried to balance it.</p>
-<p>I wanted to run away from my past. but you all didnt allow me to</p>
-<p>Each day i look in the mirror. I'm reminded of the mistakes i made</p>
-<p>I still regret the decisions i did</p>
-<p>and to satisfy the people who wanted me to fall</p>
-<p>I never wanted to get in a war. You forced me to choose a side</p>
-<p>So i've chosen finally. I've decided to quit. You all wanted me to anyway</p>
-<p>Finally, ive chosen to move on</p>
-<p>A select few of all will most likely be already contacted by my alt</p>
-<p>If you arent contacted, Well it was nice knowing you</p>
-
-<script>
-    const count = 500;
-    for (let i = 0; i < count; i++) {
+    <script>
+      const count = 500;
+      for (let i = 0; i < count; i++) {
         const s = document.createElement("div");
         s.className = "star";
         s.style.left = Math.random() * window.innerWidth + "px";
         s.style.top = Math.random() * window.innerHeight + "px";
-        s.style.animationDuration = (1.5 + Math.random()) + "s";
+        s.style.animationDuration = 1.5 + Math.random() + "s";
         document.body.appendChild(s);
-    }
-    const start = new Date("2025-12-08T17:21:00+05:30");
+      }
+      const start = new Date("2025-12-08T17:21:00+05:30");
 
-    function update() {
+      function update() {
         const now = new Date();
         let diff = now - start;
 
@@ -119,21 +127,20 @@
 
         const seconds = Math.floor(diff / 1000) % 60;
         const minutes = Math.floor(diff / 1000 / 60) % 60;
-        const hours   = Math.floor(diff / 1000 / 60 / 60) % 24;
-        const days    = Math.floor(diff / 1000 / 60 / 60 / 24);
+        const hours = Math.floor(diff / 1000 / 60 / 60) % 24;
+        const days = Math.floor(diff / 1000 / 60 / 60 / 24);
 
         const years = Math.floor(days / 365);
         const months = Math.floor((days % 365) / 30);
-        const remDays = days - (years * 365) - (months * 30);
+        const remDays = days - years * 365 - months * 30;
 
         document.getElementById("timer").textContent =
-            `${years}Y:${months}M:${remDays}D:${hours}H:${minutes}M:${seconds}S`;
-    }
+          `${years}Y:${months}M:${remDays}D:${hours}H:${minutes}M:${seconds}S`;
+      }
 
-    update();
-    setInterval(update, 1000);
-    localStorage.setItem("viewed", true);
-</script>
-
-</body>
+      update();
+      setInterval(update, 1000);
+      localStorage.setItem("viewed", true);
+    </script>
+  </body>
 </html>
