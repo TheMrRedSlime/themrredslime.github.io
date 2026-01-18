@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* Make the canvas visible */
+        #canvas { width: 90%; height: 90vh; background: black; display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+
+    <script>
+        var Module = {
+            canvas: (function() {
+                var canvas = document.getElementById('canvas');
+                return canvas;
+            })(),
+            print: (text) => console.log(text),
+            setStatus: (text) => console.log(text)
+        };
+    </script>
+    <script src="a.out.js"></script>
+</body>
+</html>
