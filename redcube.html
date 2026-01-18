@@ -1,46 +1,55 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-  <head>
+<head>
     <style>
-      body {
-        margin: 0;
-        background-color: darkred;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        overflow: hidden;
-      }
-      #canvas {
-        border: 0px none;
-        background-color: black;
-        /* Remove fixed width/height and use max-constraints */
-        max-width: 100%;
-        max-height: 100%;
-      }
+        body { 
+            margin: 0; 
+            background-color: darkred; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            overflow: hidden; 
+        }
+        #canvas { 
+            border: 0px none; 
+            background-color: black;
+            /* Remove fixed width/height and use max-constraints */
+            max-width: 100%;
+            max-height: 100%;
+        }
     </style>
-  </head>
-  <body>
+    <meta content="RedCube" property="og:title" />
+    <meta
+      content="Oldest version of Minecraft or smthin idk"
+      property="og:description"
+    />
+    <meta content="https://themrredslime.site/redcube.html" property="og:url" />
+    <meta
+      content="https://encrypted-tbn2.gstatic.com/faviconV2?url=https://www.minecraft.net&client=VFE&size=256&type=FAVICON&fallback_opts=TYPE,SIZE,URL&nfrp=2"
+      property="og:image"
+    />
+    <meta content="#646464" data-react-helmet="true" name="theme-color" />
+</head>
+<body>
     <canvas id="canvas" oncontextmenu="event.preventDefault()"></canvas>
 
     <script>
-      var Module = {
-        canvas: (function () {
-          var canvas = document.getElementById("canvas");
-          return canvas;
-        })(),
-        print: (text) => console.log(text),
-        setStatus: (text) => console.log(text),
-        preRun: [
-          function () {
-            if (Module.canvas) {
-              Module.canvas.width = 854; // Example 480p width
-              Module.canvas.height = 480; // Example 480p height
-            }
-          },
-        ],
-      };
+        var Module = {
+            canvas: (function() {
+                var canvas = document.getElementById('canvas');
+                return canvas;
+            })(),
+            print: (text) => console.log(text),
+            setStatus: (text) => console.log(text),
+            preRun: [function() {
+                if (Module.canvas) {
+                    Module.canvas.width = 854;  // Example 480p width
+                    Module.canvas.height = 480; // Example 480p height
+                }
+            }]
+        };
     </script>
     <script src="a.out.js"></script>
-  </body>
+</body>
 </html>
