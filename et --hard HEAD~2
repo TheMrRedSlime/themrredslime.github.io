@@ -1,0 +1,738 @@
+[33mcommit 169744decf44e51e8d8496822c22b0ce3a51700c[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Thu Mar 12 09:46:21 2026 +0530
+
+    Revert "slime"
+    
+    This reverts commit 155c2d0f69514f804d661fbe8065987394025e81.
+
+[33mcommit 155c2d0f69514f804d661fbe8065987394025e81[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Thu Mar 12 09:45:41 2026 +0530
+
+    slime
+
+[33mcommit ca7835d36646bea718a2ed86e19d0cf8675d2595[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Wed Feb 11 18:18:37 2026 +0530
+
+    minecraf
+
+[33mcommit 436ddeeb8c8354cba44024c7a3d328ec27bf2464[m
+Author: deepsource-autofix[bot] <62050782+deepsource-autofix[bot]@users.noreply.github.com>
+Date:   Sun Jan 18 13:54:13 2026 +0000
+
+    style: format code with Prettier and StandardJS
+    
+    This commit fixes the style issues introduced in 99d4a6e according to the output
+    from Prettier and StandardJS.
+    
+    Details: None
+
+[33mcommit 99d4a6ef896345a43f1a90d41860ca7c18a9795c[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Sun Jan 18 19:23:32 2026 +0530
+
+    meta lol
+
+[33mcommit 7273453e35c2921a2d36ac532a16c4d0ed3e4351[m
+Merge: 93dfa7e 917df19
+Author: RedSlime. <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Sun Jan 18 18:59:53 2026 +0530
+
+    Merge pull request #29 from TheMrRedSlime/deepsource-transform-0f355321
+    
+    style: format code with Prettier and StandardJS
+
+[33mcommit 917df19b167c7c4feb82bc6fb1e0f6b113cd38c0[m[33m ([m[1;31morigin/deepsource-transform-0f355321[m[33m)[m
+Author: deepsource-autofix[bot] <62050782+deepsource-autofix[bot]@users.noreply.github.com>
+Date:   Sun Jan 18 13:22:47 2026 +0000
+
+    style: format code with Prettier and StandardJS
+    
+    This commit fixes the style issues introduced in 93dfa7e according to the output
+    from Prettier and StandardJS.
+    
+    Details: None
+
+[33mcommit 93dfa7e32cfe5379b60ab7503e28045ff6bf3e27[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Sun Jan 18 18:51:59 2026 +0530
+
+    background change lol
+
+[33mcommit e6a229c38bed37aa8801cdf566a2e508bd649354[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Sun Jan 18 18:51:26 2026 +0530
+
+    Minecraft, Mojang you cant do #### to me
+
+[33mcommit d9014e15c8165cd9fca04900b2aceec7d203f07c[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Sun Jan 18 18:33:27 2026 +0530
+
+    cuber
+
+[33mcommit 9b5ee94029a04c030952e57b42231cc8271b8661[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Sun Jan 18 18:10:37 2026 +0530
+
+    cube
+
+[33mcommit 13f8b8bf0c6ffede8419c21ff8c3c50ab12bd1e6[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Tue Jan 6 21:05:50 2026 +0530
+
+    Grim Reality
+
+[33mcommit f51c55dac86ecfed47efd8f73d501945f2bdf327[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Sun Dec 14 08:09:43 2025 +0530
+
+    WOWIE
+
+[33mcommit 6fa4e381d563420266e415641fff33f4968d7d92[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Sun Dec 14 08:08:38 2025 +0530
+
+    new end update! better than mojang
+
+[33mcommit abafc252c9ae2bbed961c9a109e46ee9dc38ee8b[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Fri Dec 12 19:50:32 2025 +0530
+
+    wow cool. no go away
+
+[33mcommit 6fde98ab97cbd385afa52ded238bd16534a4dc88[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Fri Dec 12 19:32:39 2025 +0530
+
+    Test
+
+[33mcommit 7af6630b2c33b7d4f5d92d452b8d5badf99516c5[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Wed Dec 10 21:36:02 2025 +0530
+
+    some new changes
+
+[33mcommit 12b86c6661524a06146df4b4e5ef301cf922561c[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Wed Dec 10 21:34:26 2025 +0530
+
+    Added the end.
+
+[33mcommit 0147aaf9a30bb152a81013c8b1bdaa53a0bef68b[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Mon Nov 10 16:52:33 2025 +0530
+
+    ad thing
+
+[33mcommit d828e518f3ea434948155532b507babf08ca2b14[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Mon Nov 10 07:16:54 2025 +0530
+
+    ??? please work
+
+[33mcommit 308c4204c49684a3e1e4dcf2ed97913e92716177[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Mon Nov 10 07:14:42 2025 +0530
+
+    tes
+
+[33mcommit e91b762c4b6987d96c4cb442415d0dfa13edd8d7[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Mon Nov 10 07:14:16 2025 +0530
+
+    idk
+
+[33mcommit 2bb4b3163c29978cf083f947d4f0b72221e371cf[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Mon Nov 10 07:07:17 2025 +0530
+
+    AD AGAIN
+
+[33mcommit 348d36d14fe063e0f2d67309544d31199b476729[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Mon Nov 10 06:58:56 2025 +0530
+
+    again
+
+[33mcommit 63cdc35a96fe90748e5672f30362d6460ee6c72a[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Mon Nov 10 06:54:07 2025 +0530
+
+    cool
+
+[33mcommit 395e1d43d13224dcad77c44b840e19d8e1e2a8ab[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Mon Nov 10 06:44:31 2025 +0530
+
+    a
+
+[33mcommit 4b4bf8af20d54c3d63076996611cfe905e7649e1[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Mon Nov 10 06:43:34 2025 +0530
+
+    idk
+
+[33mcommit 548b82e1aeab2d19bf520d57466d145903da3dd6[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Mon Nov 10 06:42:22 2025 +0530
+
+    new changes. and ads idk
+
+[33mcommit 64dd756690c7ed4013cd18f39185ecb40b3d54e0[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Wed Nov 5 20:11:57 2025 +0530
+
+    :
+
+[33mcommit d5bd52bbb3d72fdd30c3eb6611ad0d3d31d6a315[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Wed Nov 5 19:15:59 2025 +0530
+
+    Test
+
+[33mcommit a5b4d25a938f6f2b794806ffbb99a031e920795c[m
+Merge: 5369e53 3e53e6f
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Wed Nov 5 19:14:03 2025 +0530
+
+    Merge branch 'main' of github.com:TheMrRedSlime/themrredslime.github.io
+
+[33mcommit 5369e534d699d43638f8d1ddd1935e58d831dc71[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Wed Nov 5 19:11:36 2025 +0530
+
+    Added Resent, cause WHY NOT!
+
+[33mcommit 3e53e6f9677a4da8d9e93b98e8fc090ae335a339[m
+Author: RedSlime. <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Fri Oct 24 06:30:59 2025 +0530
+
+    Update CNAME
+
+[33mcommit d138af8418b6a6dad713c4648ab50d064a624803[m
+Author: RedSlime. <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Fri Oct 24 06:30:42 2025 +0530
+
+    Update CNAME
+
+[33mcommit 3dbaaefe52d832f09838a85d1c77be762506dfb6[m
+Author: RedSlime. <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Fri Oct 24 06:30:28 2025 +0530
+
+    Create CNAME
+
+[33mcommit ba3935a9affeecaf1c3d2101c96b8d48bfe96751[m
+Author: RedSlime. <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Fri Oct 24 06:30:21 2025 +0530
+
+    Delete CNAME
+
+[33mcommit 67088ad90b6929b8dd57d4ddcc90c6ef9a2b9bea[m
+Author: RedSlime. <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Thu Oct 23 21:06:01 2025 +0530
+
+    Create CNAME
+
+[33mcommit 095d186a0e366ba89db7e40026d27ff805860dd6[m
+Author: RedSlime. <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Thu Oct 23 21:05:55 2025 +0530
+
+    Delete CNAME
+
+[33mcommit 938904807366cf2e989f4e75bc2d329ac62644ee[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Mon Oct 13 21:14:39 2025 +0530
+
+    Resent and & more sleepy code
+
+[33mcommit f22481cb7b64422b31195e8a94cc0d0d112bc974[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Thu Oct 9 19:43:38 2025 +0530
+
+    Yes theres music now. cool?
+
+[33mcommit c0e2fa1b1af69797053191771f3427e6ccc7483f[m
+Merge: ec40d1a 7b84727
+Author: RedSlime. <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Tue Oct 7 19:26:52 2025 +0530
+
+    Merge pull request #11 from TheMrRedSlime/deepsource-transform-ae3bebf6
+    
+    style: format code with Prettier and StandardJS
+
+[33mcommit 7b84727b31f6bb88d4e484ded6476e622a82ef40[m[33m ([m[1;31morigin/deepsource-transform-ae3bebf6[m[33m)[m
+Author: deepsource-autofix[bot] <62050782+deepsource-autofix[bot]@users.noreply.github.com>
+Date:   Tue Oct 7 13:38:42 2025 +0000
+
+    style: format code with Prettier and StandardJS
+    
+    This commit fixes the style issues introduced in ec40d1a according to the output
+    from Prettier and StandardJS.
+    
+    Details: None
+
+[33mcommit ec40d1a055c2f68e31c22ef1d19d78692295bfc5[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Tue Oct 7 18:51:19 2025 +0530
+
+    New on
+
+[33mcommit 2807e1b8d861a37ea23881a378644b592c43ac73[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Tue Oct 7 18:45:43 2025 +0530
+
+    Added Warning hehehehehehheh
+
+[33mcommit 5f54e23d28b4f42a4fe3d2a5aaf23fb07cf1f6cd[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Mon Oct 6 21:19:31 2025 +0530
+
+    Cool new stuff and new content or smthing idk
+
+[33mcommit 8cf84cd34e971470976965fb901cd8a2cce45568[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Mon Oct 6 19:40:45 2025 +0530
+
+    Added Some New ad stuff. And also a toggle if adblock users want to Not view ADS
+
+[33mcommit 49f4ee662fdeffc49928d3d6215dc1999fa447bd[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Mon Oct 6 19:25:05 2025 +0530
+
+    Some new stuff + ads FOR SOME REASON. I NEED MONETIZATION-
+
+[33mcommit 2d66e1ac4f3dcbe732c9b68e7e7ab7cd2c3d9e68[m
+Merge: 74db900 cbe812e
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Thu Oct 2 19:27:59 2025 +0530
+
+    Merge remote-tracking branch 'origin/main'
+
+[33mcommit 74db900cc4623cb165b6aa3608c8808c69a59ad4[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Thu Oct 2 19:23:07 2025 +0530
+
+    Removed useless stuff
+
+[33mcommit cbe812edf85cdca0ea7a59242397e0c67cb8f486[m
+Author: RedSlime. <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Thu Oct 2 18:58:54 2025 +0530
+
+    Update CNAME
+
+[33mcommit 3c6d0af016292191455225063ba3a408f335ab23[m
+Author: RedSlime. <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Thu Oct 2 18:50:15 2025 +0530
+
+    Update CNAME
+
+[33mcommit 47db0a4516bf8fc650515507b791cd40b109eea2[m
+Author: RedSlime. <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Thu Oct 2 18:43:37 2025 +0530
+
+    Create CNAME
+
+[33mcommit 330fbc645f1bdc1eec2799c56c4ffd7fe7494174[m
+Merge: 6853722 6f7c92c
+Author: RedSlime. <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Thu Oct 2 18:27:20 2025 +0530
+
+    Merge pull request #6 from TheMrRedSlime/deepsource-transform-0fc85702
+    
+    style: format code with Prettier and StandardJS
+
+[33mcommit 68537224dde0bd55448bb4f11b3b3f26702b74d1[m
+Author: RedSlime. <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Sun Sep 7 11:00:45 2025 +0530
+
+    Add files via upload
+
+[33mcommit 6f7c92c84f67d38b3df4fe2382898cd86b5ae40e[m[33m ([m[1;31morigin/deepsource-transform-0fc85702[m[33m)[m
+Author: deepsource-autofix[bot] <62050782+deepsource-autofix[bot]@users.noreply.github.com>
+Date:   Sun Aug 24 11:31:39 2025 +0000
+
+    style: format code with Prettier and StandardJS
+    
+    This commit fixes the style issues introduced in 815d6f8 according to the output
+    from Prettier and StandardJS.
+    
+    Details: None
+
+[33mcommit 815d6f82c1921553a76585033398767b1ab656b7[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Sun Aug 24 16:59:04 2025 +0530
+
+    checkers baby
+
+[33mcommit e115b7352d97679b1eeb84ed6a71c6c250e3033b[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Sat Aug 23 20:43:20 2025 +0530
+
+    New code
+
+[33mcommit 2697691541994e289893b171fbbe02af51e9a1ae[m
+Merge: 19299f0 9377579
+Author: RedSlime. <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Fri Aug 15 15:13:19 2025 +0530
+
+    Merge pull request #4 from TheMrRedSlime/deepsource-autofix-61e73f80
+    
+    refactor: remove the console expressions
+
+[33mcommit 19299f0180dd0880221a4443310c28714cfd2af9[m
+Merge: 36a2127 38a78b8
+Author: RedSlime. <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Fri Aug 15 15:12:04 2025 +0530
+
+    Merge pull request #3 from TheMrRedSlime/deepsource-transform-0c223b6c
+    
+    style: format code with Prettier and StandardJS
+
+[33mcommit 937757976ce0d2c72c33144e44ffd895ba93e260[m[33m ([m[1;31morigin/deepsource-autofix-61e73f80[m[33m)[m
+Author: deepsource-autofix[bot] <62050782+deepsource-autofix[bot]@users.noreply.github.com>
+Date:   Fri Aug 15 09:29:57 2025 +0000
+
+    style: format code with Prettier and StandardJS
+    
+    This commit fixes the style issues introduced in 868e541 according to the output
+    from Prettier and StandardJS.
+    
+    Details: https://github.com/TheMrRedSlime/themrredslime.github.io/pull/4
+
+[33mcommit 868e54172b62f2265c95cc8bf3710af395f17a92[m
+Author: deepsource-autofix[bot] <62050782+deepsource-autofix[bot]@users.noreply.github.com>
+Date:   Fri Aug 15 09:29:39 2025 +0000
+
+    refactor: remove the console expressions
+    
+    It is considered a best practice to avoid the use of any `console` methods in JavaScript code that will run on the browser.
+    
+    **NOTE:** If your repository contains a server side project, you can add `"nodejs"` to the `environment` property of analyzer meta in `.deepsource.toml`.
+    This will prevent this issue from getting raised.
+    Documentation for the analyzer meta can be found [here](https://docs.deepsource.com/docs/analyzers-javascript#meta).
+    Alternatively, you can silence this issue for your repository [as shown here](https://deepsource.com/blog/releases-issue-actions).
+    
+    If a specific `console` call is meant to stay for other reasons, you can add [a skipcq comment](https://docs.deepsource.com/docs/issues-ignore-rules#silencing-a-specific-issue) to that line.
+    This will inform other developers about the reason behind the log's presence, and prevent DeepSource from flagging it.
+
+[33mcommit 38a78b8d823c9affe65485548a0ca0e359513315[m[33m ([m[1;31morigin/deepsource-transform-0c223b6c[m[33m)[m
+Author: deepsource-autofix[bot] <62050782+deepsource-autofix[bot]@users.noreply.github.com>
+Date:   Fri Aug 15 09:22:01 2025 +0000
+
+    style: format code with Prettier and StandardJS
+    
+    This commit fixes the style issues introduced in 36a2127 according to the output
+    from Prettier and StandardJS.
+    
+    Details: None
+
+[33mcommit 36a2127bb1d382bc54d29f54d963cc1472fe33bc[m
+Author: deepsource-io[bot] <42547082+deepsource-io[bot]@users.noreply.github.com>
+Date:   Fri Aug 15 09:21:46 2025 +0000
+
+    ci: update .deepsource.toml
+
+[33mcommit bf393e36c6db4bd949eca79fcb3e2279024ab4cd[m
+Merge: de0b8dd 5d86494
+Author: RedSlime. <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Mon Aug 4 20:23:55 2025 +0530
+
+    Merge pull request #2 from TheMrRedSlime/deepsource-autofix-efc774fc
+    
+    refactor: convert logical operator to optional chainining
+
+[33mcommit 5d86494e71938a5ec2c1076cf851274e9fcf0506[m[33m ([m[1;31morigin/deepsource-autofix-efc774fc[m[33m)[m
+Author: deepsource-autofix[bot] <62050782+deepsource-autofix[bot]@users.noreply.github.com>
+Date:   Mon Aug 4 14:52:48 2025 +0000
+
+    style: format code with Prettier and StandardJS
+    
+    This commit fixes the style issues introduced in 63ba85f according to the output
+    from Prettier and StandardJS.
+    
+    Details: https://github.com/TheMrRedSlime/themrredslime.github.io/pull/2
+
+[33mcommit 63ba85f37c8957030705378ce2eb32dd9c8a3396[m
+Author: deepsource-autofix[bot] <62050782+deepsource-autofix[bot]@users.noreply.github.com>
+Date:   Mon Aug 4 14:52:26 2025 +0000
+
+    refactor: convert logical operator to optional chainining
+    
+    The [optional chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining) operator can be used to perform null checks before accessing a property, or calling a function.
+
+[33mcommit de0b8dd942a63ad5ce2862b95ae6693f844c2775[m
+Author: deepsource-io[bot] <42547082+deepsource-io[bot]@users.noreply.github.com>
+Date:   Mon Aug 4 14:45:48 2025 +0000
+
+    ci: update .deepsource.toml
+
+[33mcommit fe2a245ba17cf975c2ad292d708571c89f1cef34[m
+Author: deepsource-io[bot] <42547082+deepsource-io[bot]@users.noreply.github.com>
+Date:   Mon Aug 4 14:45:47 2025 +0000
+
+    ci: add .deepsource.toml
+
+[33mcommit 185b6a756d4e6d4a2d8ee67935d865a5fbadf6a1[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Thu Jul 17 20:47:05 2025 +0530
+
+    ewef
+
+[33mcommit 1cc27af926e8ca302a64f5e06817ccd7c5799eba[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Thu Jul 17 20:39:28 2025 +0530
+
+    test
+
+[33mcommit e2baca88573b933c5de2714f062a3c3aa912eb53[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Mon Jul 14 07:09:30 2025 +0530
+
+    New test. Migrating System (my system)
+
+[33mcommit 4b1a64f5900ac674671f9d67e77723e1396cf09b[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Sun Jul 13 16:18:08 2025 +0530
+
+    Added a countdown ;)
+
+[33mcommit 6ccec7e16f40ed7513e98e0e089af49c6e062339[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Sun Jul 6 21:06:46 2025 +0530
+
+    Added fighting scene and more story! Music later
+
+[33mcommit a0bc13443b13ad2ec120937d74c371118166e9fa[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Sat Jul 5 12:37:13 2025 +0530
+
+    New Description
+
+[33mcommit a54f021f6c5c4d5df8764aef2f63739f43f0fcbd[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Sat Jul 5 09:44:14 2025 +0530
+
+    Edit time. with cool formats i guess
+
+[33mcommit dbd7e09dff432c0e5ca00cb4e769e0490967b69e[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Sat Jul 5 09:27:50 2025 +0530
+
+    New stuff todo. horray
+
+[33mcommit fe5cc569be157896cc560859ec84d77820a207de[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Sat Jul 5 09:12:41 2025 +0530
+
+    Some new funky stuff i guess!
+
+[33mcommit cb9f07266816ba3f2ca92f4acbb96f27629f613f[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Sat Jul 5 08:52:50 2025 +0530
+
+    New readme
+
+[33mcommit d52e9378cc68f3bbe7acade9dc2a455be57ff951[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Sat Jul 5 08:49:23 2025 +0530
+
+    Description update
+
+[33mcommit 71dcf4cb630b1598544b6f69bc7ee724a2c79213[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Sat Jul 5 08:43:45 2025 +0530
+
+    New Icon
+
+[33mcommit 68e8437afe3053646f397304110c55c6af33d4df[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Tue Jul 1 18:11:06 2025 +0530
+
+    Moved sleepy hallucinations to main website
+
+[33mcommit 54f9835c36abfb3093b4eb8365849f0ff4de1615[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Tue Jul 1 18:10:32 2025 +0530
+
+    i give up. no autoplay for me
+
+[33mcommit c3aeb09969bcca446cb8b4dc2f3910bb2022dc7c[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Tue Jul 1 17:44:46 2025 +0530
+
+    Hotfix for autoplay ig?
+
+[33mcommit d5e50fd861751f2e401034ac7f91d060a94062da[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Tue Jul 1 17:41:03 2025 +0530
+
+    Some more additional code
+
+[33mcommit adcddee477fbbe5453bcce42bc089f23f9ed8b7f[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Tue Jul 1 17:39:03 2025 +0530
+
+    this should worknt
+
+[33mcommit d1088e56373d37035fed8fc44009c161221c2f0b[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Tue Jul 1 17:37:29 2025 +0530
+
+    Resized so that music popup no show up
+
+[33mcommit 83d9bfe868b3823ffa4d1a070a64abc667a21d5b[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Tue Jul 1 17:36:55 2025 +0530
+
+    Auto auto play just in case
+
+[33mcommit 0f0a59585355c14092b9a0eea9a343b0757a5da5[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Tue Jul 1 17:28:18 2025 +0530
+
+    some test code
+
+[33mcommit c341815ffb5ad05843a91846d869969f92da4930[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Tue Jul 1 17:24:06 2025 +0530
+
+    New scenes
+
+[33mcommit 6b62f2431d663b96fc6790dc00ac7ec5e06dfada[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Mon Jun 30 22:36:14 2025 +0530
+
+    Finally chess song 2
+
+[33mcommit c23e5980bcb609da2e65209e0d8c7e3e01c1b507[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Mon Jun 30 22:28:48 2025 +0530
+
+    Finally chess song
+
+[33mcommit e3f2dbeafc2b8f0a63d3c1d60a733e4a7cd3896f[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Mon Jun 30 22:14:29 2025 +0530
+
+    Funky build time. hopefully patched the favicon
+
+[33mcommit 7dcfffb922304db3d800243dbb118ad34187580f[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Mon Jun 30 22:11:18 2025 +0530
+
+    New new new stuff
+
+[33mcommit 1c0847bee7c84ce9ed9984b473b18ac813ea81a2[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Mon Jun 30 22:09:46 2025 +0530
+
+    New new stuff!
+
+[33mcommit 6fc182ea462f2e03062a9c881412f5e965b519d7[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Mon Jun 30 22:07:52 2025 +0530
+
+    Some discord cool stuff
+
+[33mcommit 0347ea50b3064818fc53648604ffb0fd059ec636[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Mon Jun 30 21:53:47 2025 +0530
+
+    Some funky changes
+
+[33mcommit 6cc4ca3e06b795e5e55527d3c1422de7da8b6557[m
+Author: RedSlime. <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Fri Jun 27 21:02:52 2025 +0530
+
+    Create sleepy.html
+    
+    Added sleepy hallucinations
+
+[33mcommit b92f00d814ab68100036453c8efe379eb9364335[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Wed May 7 12:13:01 2025 +0530
+
+    Changed README
+
+[33mcommit 673569b46b8514b3ef968feb91c79b00ca4ce811[m
+Author: TheMrRedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Wed May 7 12:02:13 2025 +0530
+
+    Used this for something else
+
+[33mcommit 50e9ee034b6faee914c330df44248e6d45d464da[m
+Author: RedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Sun Aug 6 18:39:01 2023 +0530
+
+    Update world.js
+
+[33mcommit 540cd5fa12ffc0402258b2652f9ebbd6a26086a8[m
+Author: RedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Sun Aug 6 18:38:44 2023 +0530
+
+    Update world.js
+
+[33mcommit 4bfb86614f55438dd329c781af311a5af24d222c[m
+Author: RedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Sun Aug 6 18:38:08 2023 +0530
+
+    Update world.js
+
+[33mcommit 8d608bee36608c3d1ea6adc057cad49dd02db7a7[m
+Author: RedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Sun Aug 6 18:37:40 2023 +0530
+
+    Update world.js
+
+[33mcommit e15c1588bca7607bdb5304f18abf35af61b9c748[m
+Author: RedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Sun Aug 6 18:37:12 2023 +0530
+
+    Add files via upload
+
+[33mcommit beff61d2cae2de213a616c03624b53eaf2cef88d[m
+Author: RedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Sun Aug 6 18:36:49 2023 +0530
+
+    Add files via upload
+
+[33mcommit f1e142c563a2287195e90edc9c05a257b6575ebd[m
+Author: RedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Sun Aug 6 18:33:45 2023 +0530
+
+    Add files via upload
+
+[33mcommit 3429273ec68527a3a784998a2f01357fbdb6da6f[m
+Author: RedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Sun Aug 6 18:30:29 2023 +0530
+
+    Create _config.yml
+
+[33mcommit 2bf8099d408875bab128d1a1b9078ed50f3b737a[m
+Author: RedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Sun Aug 6 18:27:00 2023 +0530
+
+    Update README.md
+
+[33mcommit 01230c8bef30bfb81ee81a99ce86a938183ebb8c[m
+Author: RedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Sun Aug 6 18:26:09 2023 +0530
+
+    Update README.md
+
+[33mcommit 1a639ec293de723b1cec97c735e847d5b1006555[m
+Author: RedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Sun Aug 6 18:25:04 2023 +0530
+
+    Update README.md
+    
+    idk
+
+[33mcommit 120377b9c48b5031fc6d19001c88ddb6ffa189fc[m
+Author: RedSlime <69750444+TheMrRedSlime@users.noreply.github.com>
+Date:   Sun Aug 6 18:23:59 2023 +0530
+
+    Initial commit
